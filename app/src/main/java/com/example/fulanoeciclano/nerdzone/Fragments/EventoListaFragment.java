@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Evento;
+package com.example.fulanoeciclano.nerdzone.Fragments;
 
 
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Evento.Evento_Adapter;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -29,8 +30,6 @@ import java.util.ArrayList;
  */
 public class EventoListaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener
 {
-    private static final String TAG = "EventoListFragment";
-
 
     private DatabaseReference mDatabaseevento;
     private SwipeRefreshLayout swipeatualizar;

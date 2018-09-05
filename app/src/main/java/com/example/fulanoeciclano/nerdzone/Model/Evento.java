@@ -1,8 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Model;
 
 
-
-import com.example.fulanoeciclano.geek.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.IgnoreExtraProperties;
 

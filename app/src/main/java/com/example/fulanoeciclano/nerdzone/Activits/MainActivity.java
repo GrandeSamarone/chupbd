@@ -3,7 +3,6 @@ package com.example.fulanoeciclano.nerdzone.Activits;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
@@ -19,9 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Fragments.TopicoFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.EventoListaFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.InicioFragment;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
+import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
@@ -117,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
                  .add("COMICS", InicioFragment.class )
-                // .add("Noticia",Noticia_Fragment.class)
-                 .add("TOPICOS", BatePapoFragment.class)
+                // .add("Topico",Noticia_Fragment.class)
+                 .add("TOPICOS", TopicoFragment.class)
                  .add("EVENTOS",EventoListaFragment.class)
                 // .add("Tops", RankFragment.class)
                 .create()
@@ -223,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements
     }
     public void DeslogarUsuario(){
 
-            AuthUI.getInstance()
+           /* AuthUI.getInstance()
                     .signOut(this)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         public void onComplete(@NonNull Task<Void> task) {
@@ -234,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
         });
+        */
     }
 
     @Override

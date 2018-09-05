@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Chat;
+package com.example.fulanoeciclano.nerdzone.Topico;
 
 import android.content.Context;
 import android.graphics.PointF;

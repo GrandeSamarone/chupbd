@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Chat;
+package com.example.fulanoeciclano.nerdzone.Topico;
 
 import android.content.Context;
 import android.net.Uri;
@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Comentario;
-import com.example.fulanoeciclano.nerdzone.Model.Noticia;
+import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -49,7 +49,7 @@ import java.util.List;
 
 import static com.example.fulanoeciclano.nerdzone.Helper.App.getUid;
 
-public class ChatDetailActivity extends AppCompatActivity {
+public class TopicoDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "EventoDetailActivity";
 
@@ -78,7 +78,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     private DatabaseReference Recu_icone;
     private DatabaseReference ref;
     private String mCommentIds;
-    private Noticia noticia= new Noticia();
+    private Topico topico = new Topico();
     private List<Comentario> listcomentario = new ArrayList<>();
 
     private View root_view;
@@ -249,7 +249,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                         // Clear the field
                         mCommentField.setText(null);
                         }else{
-                            Toast.makeText(ChatDetailActivity.this, "escreva seu bosta", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TopicoDetailActivity.this, "escreva seu bosta", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -277,7 +277,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         }
 
 
-        private static class CommentAdapter extends RecyclerView.Adapter<ChatDetailActivity.CommentViewHolder> {
+        private static class CommentAdapter extends RecyclerView.Adapter<TopicoDetailActivity.CommentViewHolder> {
             private Context mContext;
             private DatabaseReference mDatabaseReference;
             private ChildEventListener mChildEventListener;
@@ -396,14 +396,14 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public ChatDetailActivity.CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            public TopicoDetailActivity.CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 LayoutInflater inflater = LayoutInflater.from(mContext);
                 View view = inflater.inflate(R.layout.item_comment, parent, false);
-                return new ChatDetailActivity.CommentViewHolder(view);
+                return new TopicoDetailActivity.CommentViewHolder(view);
             }
 
             @Override
-            public void onBindViewHolder(ChatDetailActivity.CommentViewHolder holder, int position) {
+            public void onBindViewHolder(TopicoDetailActivity.CommentViewHolder holder, int position) {
                 final Comentario text = (mComments.get(position));
 
                 final EmojiInformation emojiInformation = EmojiUtils.emojiInformation("");
@@ -471,18 +471,18 @@ public class ChatDetailActivity extends AppCompatActivity {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Noticia object and use the values to update the UI
-                Noticia noticia = dataSnapshot.getValue(Noticia.class);
+                // Get Topico object and use the values to update the UI
+                Topico topico = dataSnapshot.getValue(Topico.class);
                 // [START_EXCLUDE]
-                mAuthorView.setText(noticia.author);
-                mTitleView.setText(noticia.titulo);
-                nomeTopico.setText(noticia.titulo);
-                mBodyView.setText(noticia.mensagem);
+                mAuthorView.setText(topico.author);
+                mTitleView.setText(topico.titulo);
+                nomeTopico.setText(topico.titulo);
+                mBodyView.setText(topico.mensagem);
 
 
 
-                if(noticia.foto!=null) {
-                    Uri uri = Uri.parse(noticia.foto);
+                if(topico.foto!=null) {
+                    Uri uri = Uri.parse(topico.foto);
                     DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
                             .setUri(uri)
                             .setAutoPlayAnimations(true)
@@ -496,7 +496,7 @@ public class ChatDetailActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                Toast.makeText(ChatDetailActivity.this, "Erro ao Carregar Noticia,Verifique a Internet",
+                Toast.makeText(TopicoDetailActivity.this, "Erro ao Carregar Topico,Verifique a Internet",
                         Toast.LENGTH_SHORT).show();
 
             }

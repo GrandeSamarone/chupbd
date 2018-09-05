@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Chat;
+package com.example.fulanoeciclano.nerdzone.Topico;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Noticia;
+import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.database.DataSnapshot;
@@ -126,12 +126,12 @@ public class NewChatActivity extends AppCompatActivity {
 
     // [START write_fan_out]
     private void writeNewPost(String uid, String nome, String foto, String titulo, String mensagem, int quantidade) {
-        // Create new noticia at /user-posts/$userid/$postid and at
+        // Create new topico at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("batepapo").push().getKey();
         Log.i("key",key);
-        Noticia noticia = new Noticia(uid, nome,foto,titulo, mensagem);
-        Map<String, Object> postValues = noticia.toMap();
+        Topico topico = new Topico(uid, nome,foto,titulo, mensagem);
+        Map<String, Object> postValues = topico.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/batepapo/" + key, postValues);

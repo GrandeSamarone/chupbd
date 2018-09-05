@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.fulanoeciclano.nerdzone.Activits.Cadastrar_icon_nome_Activity;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -91,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (sPreferences.getBoolean("firstRun", true)) {
             sPreferences.edit().putBoolean("firstRun", false).apply();
-            Intent it = new Intent(LoginActivity.this,teste.class);
+            Intent it = new Intent(LoginActivity.this,Cadastrar_icon_nome_Activity.class);
             startActivity(it);
         } else {
 

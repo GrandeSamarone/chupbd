@@ -469,7 +469,7 @@ public class EventoDetailActivity extends AppCompatActivity {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Noticia object and use the values to update the UI
+                // Get Topico object and use the values to update the UI
                 Evento evento = dataSnapshot.getValue(Evento.class);
                 // [START_EXCLUDE]
                 mAuthorView.setText(evento.author);
@@ -506,7 +506,7 @@ public class EventoDetailActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-                Toast.makeText(EventoDetailActivity.this, "Erro ao Carregar Noticia,Verifique a Internet",
+                Toast.makeText(EventoDetailActivity.this, "Erro ao Carregar Topico,Verifique a Internet",
                         Toast.LENGTH_SHORT).show();
 
             }

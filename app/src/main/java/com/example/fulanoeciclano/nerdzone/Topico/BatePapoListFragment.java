@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Chat;
+package com.example.fulanoeciclano.nerdzone.Topico;
 
 
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Comentario;
-import com.example.fulanoeciclano.nerdzone.Model.Noticia;
+import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -37,14 +37,12 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public abstract class BatePapoListFragment extends Fragment {
-    private static final String TAG = "EventoListFragment";
 
 
-    private DatabaseReference mDatabase;
-    private FirebaseAuth autenticacao;
+
+    private DatabaseReference mDatabasebatepapao;
     private FirebaseAuth mFirebaseAuth;
     private FloatingActionButton Novo_Topico;
-    private FirebaseRecyclerAdapter<Noticia, BatePapoViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     private Usuario user;
@@ -60,7 +58,7 @@ public abstract class BatePapoListFragment extends Fragment {
                              Bundle savedInstanceState) {
         Fresco.initialize(getContext());
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.batepapo_post_list, container, false);
+        View view =inflater.inflate(R.layout.noticia_post_list, container, false);
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         autenticacao = FirebaseAuth.getInstance();
@@ -129,20 +127,20 @@ public  void verificarTipoUsuario() {
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
 
-        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Noticia>()
-                .setQuery(postsQuery, Noticia.class)
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Topico>()
+                .setQuery(postsQuery, Topico.class)
                 .build();
 
-        mAdapter = new FirebaseRecyclerAdapter<Noticia, BatePapoViewHolder>(options) {
+        mAdapter = new FirebaseRecyclerAdapter<Topico, BatePapoViewHolder>(options) {
 
             @Override
             public BatePapoViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                return new BatePapoViewHolder(inflater.inflate(R.layout.adapterbatepapo, viewGroup, false));
+                return new BatePapoViewHolder(inflater.inflate(R.layout.adaptertopico, viewGroup, false));
             }
 
             @Override
-            protected void onBindViewHolder(BatePapoViewHolder viewHolder, int position, final Noticia model) {
+            protected void onBindViewHolder(BatePapoViewHolder viewHolder, int position, final Topico model) {
                 final DatabaseReference postRef = getRef(position);
 
 
@@ -153,8 +151,8 @@ public  void verificarTipoUsuario() {
                     @Override
                     public void onClick(View v) {
                         // Launch EventoDetailActivity
-                        Intent intent = new Intent(getActivity(), ChatDetailActivity.class);
-                        intent.putExtra(ChatDetailActivity.EXTRA_POST_KEY, postKey);
+                        Intent intent = new Intent(getActivity(), TopicoDetailActivity.class);
+                        intent.putExtra(TopicoDetailActivity.EXTRA_POST_KEY, postKey);
                         startActivity(intent);
                     }
                 });
@@ -166,7 +164,7 @@ public  void verificarTipoUsuario() {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
                 }
 
-                // Bind Noticia to ViewHolder, setting OnClickListener for the star button
+                // Bind Topico to ViewHolder, setting OnClickListener for the star button
                 viewHolder.bindToPost(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View starView) {
@@ -190,7 +188,7 @@ public  void verificarTipoUsuario() {
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                Noticia p = mutableData.getValue(Noticia.class);
+                Topico p = mutableData.getValue(Topico.class);
                 if (p == null) {
                     return Transaction.success(mutableData);
                 }

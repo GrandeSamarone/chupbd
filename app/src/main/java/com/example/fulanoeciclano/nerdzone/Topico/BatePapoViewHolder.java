@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Chat;
+package com.example.fulanoeciclano.nerdzone.Topico;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.fulanoeciclano.nerdzone.Model.Noticia;
+import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -40,15 +40,15 @@ public class BatePapoViewHolder extends RecyclerView.ViewHolder {
         mensagemView = itemView.findViewById(R.id.BatePapo_mensagem);
     }
 
-    public void bindToPost(Noticia noticia, View.OnClickListener starClickListener) {
-       tituloView.setText(noticia.titulo);
-        autorView.setText(noticia.author);
-        numStarsView.setText(String.valueOf(noticia.starCount));
-        mensagemView.setText(noticia.mensagem);
+    public void bindToPost(Topico topico, View.OnClickListener starClickListener) {
+       tituloView.setText(topico.titulo);
+        autorView.setText(topico.author);
+        numStarsView.setText(String.valueOf(topico.starCount));
+        mensagemView.setText(topico.mensagem);
 
 
-        if(noticia.foto!=null) {
-            Uri uri = Uri.parse(noticia.foto);
+        if(topico.foto!=null) {
+            Uri uri = Uri.parse(topico.foto);
             Log.i("url", String.valueOf(uri));
             DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
