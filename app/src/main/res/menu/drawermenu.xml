@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single"
+        android:id="@+id/menutop">
+        <item android:id="@+id/minhascolecoes_menu"
+            android:title="@string/drawer_colecoes_es"
+            android:icon="@drawable/ic_fav_drawer"/>
+
+        <item android:id="@+id/minhaloja_menu"
+            android:title="@string/drawer_loja"
+            android:icon="@drawable/ic_minhaloja"/>
+
+        <item android:id="@+id/meus_evento_menu"
+        android:title="@string/drawer_eventos"
+        android:icon="@drawable/ic_evento_drawer"/>
+
+        <item android:id="@+id/mensagens_menu"
+            android:title="@string/drawer_mensagens"
+            android:icon="@drawable/ic_chat_balao_drawer"/>
+
+        <item android:id="@+id/minha_conta_menu"
+            android:title="@string/drawer_conta"
+            android:icon="@drawable/ic_conta_drawer"/>
+
+            <item android:id="@+id/mercado_menu"
+                android:title="@string/drawer_Criar_loja"
+                android:icon="@drawable/ic_loja_drawer"/>
+
+            <item android:id="@+id/compartilhar_menu"
+                android:title="@string/drawer_Promover"
+                android:icon="@drawable/ic_upgradee"/>
+
+            <item android:id="@+id/minha_conta_dmenu"
+                android:title="@string/drawer_Suporte"
+                android:icon="@drawable/ic_suporte_drawer"/>
+
+            <item android:id="@+id/minha_conta_dmsenu"
+                android:title="@string/drawer_Sair"
+                android:icon="@drawable/ic_sair"/>
+
+    </group>
+
+</menu>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="5dp"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout xmlns:fresco="http://schemas.android.com/tools"
+        android:id="@+id/teste"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_img_usuario"
+
+        android:layout_toEndOf="@+id/chat_img_usuario"
+        android:layout_toRightOf="@+id/chat_img_usuario"
+        android:background="@drawable/drawable_balloon_left"
+        android:paddingBottom="@dimen/paddingBalaoEsqBottom"
+        android:paddingEnd="@dimen/paddingBalaoEsqRight"
+        android:paddingLeft="@dimen/paddingBalaoEsqLeft"
+        android:paddingRight="@dimen/paddingBalaoEsqRight"
+        android:paddingStart="@dimen/paddingBalaoEsqLeft"
+        android:paddingTop="@dimen/paddingBalaoEsqTop">
+
+
+        <TextView
+            android:id="@+id/textNomeExibicao"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/branco"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imgMensagemfoto"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:background="@drawable/padrao"
+             />
+
+        <com.vanniktech.emoji.EmojiTextView
+            android:id="@+id/textMensagemtexto"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            app:emojiSize="@dimen/emoji_size_default"
+            app:layout_constraintTop_toBottomOf="@+id/textNomeExibicao" />
+
+        <TextView
+            android:id="@+id/tempodochat"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:text="00/00/000"
+            android:textColor="@color/branco"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textMensagemtexto" />
+              </android.support.constraint.ConstraintLayout>
+
+<TextView
+    android:id="@+id/tempodatadochat"
+
+    android:textColor="#b4b3b3"
+    android:textSize="10sp"
+    android:layout_gravity="bottom"
+    android:layout_width="wrap_content"
+    android:layout_height="20sp" />
+</LinearLayout>

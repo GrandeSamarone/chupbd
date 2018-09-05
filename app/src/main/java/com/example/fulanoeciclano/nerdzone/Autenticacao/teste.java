@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.autenticacao;
+package com.example.fulanoeciclano.nerdzone.Autenticacao;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.autenticacao;
+package com.example.fulanoeciclano.nerdzone.Autenticacao;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.fulanoeciclano.nerdzone.MainActivity;
+import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

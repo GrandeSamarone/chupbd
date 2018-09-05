@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapseLayoutevento"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleGravity="center|bottom"
+            >
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/bannereventocapa"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/carregandoicone"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarlayout"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                >
+
+                <TextView
+
+                    android:id="@+id/nome_toolbaar"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:typeface="serif"
+                    android:textColor="@color/branco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:id="@+id/post_text_layout"
+                layout="@layout/include_post_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/preto"
+                    android:text="Inicia:"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:textColor="@color/preto"
+                    android:textSize="16sp"
+                    android:id="@+id/datainicialevento"
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00/00/000"/>
+                <TextView
+                    android:textColor="@color/preto"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Termina:"/>
+                <TextView
+                    android:textColor="@color/preto"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="8dp"
+                    android:id="@+id/datafinalevento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00/00/0000"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+                <TextView
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Autor:" />
+                <TextView
+                    android:id="@+id/post_author_evento"
+                    android:layout_marginLeft="5dp"
+                    style="@style/Base.TextAppearance.AppCompat.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    tools:text="someauthor@email.com" />
+
+            </LinearLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_comentario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/comment_form"
+                android:layout_below="@+id/post_text_layout"
+                android:divider="@android:color/transparent"
+                android:paddingBottom="64dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:transcriptMode="alwaysScroll"
+                app:stackFromEnd="true"
+                tools:listitem="@layout/item_comment" />
+        </LinearLayout>
+
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/branco">
+        <ImageView
+            android:id="@+id/botao_post_icone"
+            android:layout_width="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_emotion_chat"/>
+
+        <com.vanniktech.emoji.EmojiEditText
+            android:layout_weight="1"
+            android:id="@+id/caixa_de_texto_comentario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:hint="Comente..."/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_postar_comentario"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_enviarmsgchat_branco_24dp" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

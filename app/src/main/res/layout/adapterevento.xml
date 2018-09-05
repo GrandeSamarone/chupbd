@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="8dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:layout_marginLeft="2dp"
+    android:id="@+id/layoutevento">
+
+
+<android.support.v7.widget.CardView
+    android:id="@+id/cardevento"
+    android:layout_width="100dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:paddingTop="8dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iconeevento"
+        android:layout_width="90sp"
+        android:layout_height="110sp"
+        android:background="@drawable/carregando"
+        android:layout_gravity="center"
+        />
+
+
+    <TextView
+
+        android:text="NomeEvento"
+        android:id="@+id/nomeevento"
+        android:textColor="@color/preto"
+        android:layout_width="90dp"
+        android:textAlignment="center"
+        android:textSize="10sp"
+       android:singleLine="true"
+        android:layout_height="15dp"
+      />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+
+</LinearLayout>
