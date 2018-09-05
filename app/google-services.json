@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "69128761046",
+    "firebase_url": "https://nerdzone-9367a.firebaseio.com",
+    "project_id": "nerdzone-9367a",
+    "storage_bucket": "nerdzone-9367a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69128761046:android:53c74333face31f6",
+        "android_client_info": {
+          "package_name": "com.example.fulanoeciclano.nerdzone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69128761046-fa8cmt7t10k9c4s63ujucbacs978qu54.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fulanoeciclano.nerdzone",
+            "certificate_hash": "47830f9f4e8b621667ed6ac25a3cf965dbee377b"
+          }
+        },
+        {
+          "client_id": "69128761046-t0g4f995n77qld0as7sp5pfah3ct0jf6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzr--Rx_aX-0YJk1QPEZR9LBuI0-axTP4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69128761046-t0g4f995n77qld0as7sp5pfah3ct0jf6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
