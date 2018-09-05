@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Icons.PageIcon;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
@@ -92,7 +94,7 @@ public class MinhaConta extends AppCompatActivity {
         user = new Usuario();
 
         //validar permissoes
-        Permissao.validarPermissoes(permissoesNecessarias,this,1);
+        Permissoes.validarPermissoes(permissoesNecessarias,this,1);
 
 
         //Botao Cadastrar
@@ -155,7 +157,11 @@ public class MinhaConta extends AppCompatActivity {
             case android.R.id.home:
 
                 startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
-                finishAffinity();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    finishAffinity();
+                }else{
+                    finish();
+                }
 
                 break;
 

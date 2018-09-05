@@ -3,8 +3,8 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 import android.util.Log;
 
-import com.example.fulanoeciclano.geek.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.geek.helper.Base64Custom;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.Base64Custom;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;

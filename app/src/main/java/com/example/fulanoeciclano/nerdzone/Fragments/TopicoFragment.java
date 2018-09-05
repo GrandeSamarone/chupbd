@@ -1,8 +1,6 @@
 package com.example.fulanoeciclano.nerdzone.Fragments;
 
-
-import android.app.Fragment;
-import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,8 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 
 
-public class TopicoFragment extends Fragment  implements SwipeRefreshLayout.OnRefreshListener
-{
+public class TopicoFragment extends Fragment  implements SwipeRefreshLayout.OnRefreshListener {
 
     private DatabaseReference mDatabasetopico;
     private SwipeRefreshLayout atualizar_topico;
@@ -46,10 +43,7 @@ public class TopicoFragment extends Fragment  implements SwipeRefreshLayout.OnRe
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Fresco.initialize(getContext());
-        }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.noticia_post_list, container, false);
 

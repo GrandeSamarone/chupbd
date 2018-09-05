@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fulanoeciclano.geek.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.geek.helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.EventoAdapter;
 import com.example.fulanoeciclano.nerdzone.Adapter.GibiAdapter;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Gibi;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;

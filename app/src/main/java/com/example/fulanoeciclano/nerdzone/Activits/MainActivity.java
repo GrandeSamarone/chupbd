@@ -19,9 +19,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.TopicoFragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.EventoListaFragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.InicioFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.TopicoFragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
