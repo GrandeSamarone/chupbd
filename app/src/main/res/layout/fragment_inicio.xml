@@ -22,6 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/background"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,22 +50,20 @@
     </LinearLayout>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="-1dp"
-        android:layout_marginRight="-1dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginRight="-5dp"
         android:elevation="6dp"
         >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/fundoteste2"/>
+            android:background="@drawable/fundoevento"/>
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-
             android:clipToPadding="false"
             android:id="@+id/RecycleViewEventos"
             android:layout_width="match_parent"
@@ -83,10 +82,11 @@
                 android:textSize="18sp"
                 android:paddingTop="8dp"
                 android:paddingLeft="16dp"
-                android:text="Mercado"
+                android:text="Comércio"
 
                />
             <TextView
+                android:id="@+id/maisevento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/primary"
@@ -97,25 +97,22 @@
         </LinearLayout>
 
     <android.support.v7.widget.CardView
-       android:background="@drawable/fundoteste"
         android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="-1dp"
-        android:layout_marginRight="-1dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginRight="-5dp"
         android:elevation="6dp"
         >
 <ImageView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="fitXY"
-    android:background="@drawable/fundoteste"/>
+    android:background="@drawable/fundocomercio"/>
         <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:clipToPadding="false"
             android:id="@+id/RecycleViewMercado"
             android:layout_width="match_parent"
@@ -147,17 +144,22 @@
             />
     </LinearLayout>
     <android.support.v7.widget.CardView
-        app:cardBackgroundColor="@color/cinzabalao"
         android:layout_width="match_parent"
-        android:background="@color/verde"
-        android:layout_height="wrap_content"
-        android:layout_margin="6dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginRight="-5dp"
         android:elevation="6dp"
         >
-
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:background="@drawable/fundoconto"/>
         <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:clipToPadding="false"
             android:id="@+id/RecycleViewGibiDC"
             android:layout_width="match_parent"
@@ -176,7 +178,7 @@
             android:textColor="@color/preto"
             android:textSize="18sp"
             android:paddingLeft="16dp"
-            android:text="Outros"
+            android:text="HQ"
 
             />
         <TextView
@@ -190,16 +192,24 @@
     </LinearLayout>
 
     <android.support.v7.widget.CardView
-        app:cardBackgroundColor="@color/cinzabalao"
         android:layout_width="match_parent"
-        android:background="@color/verde"
-        android:layout_height="wrap_content"
-        android:layout_margin="6dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginRight="-5dp"
         android:elevation="6dp"
         >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:background="@drawable/fundohistorias"/>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:clipToPadding="false"
         android:id="@+id/RecycleViewGibiOutros"
 
         android:layout_width="match_parent"

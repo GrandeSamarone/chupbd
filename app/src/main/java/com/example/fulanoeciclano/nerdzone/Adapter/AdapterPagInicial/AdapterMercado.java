@@ -94,7 +94,7 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
             card = itemView.findViewById(R.id.cardevento);
             mercadocapa = itemView.findViewById(R.id.iconeevento);
             mercadonome = itemView.findViewById(R.id.nomeevento);
-            mercadolayout = itemView.findViewById(R.id.layoutevento);
+
         }
     }
 }

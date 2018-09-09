@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Date.DatePickFragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,7 +55,6 @@ import static com.example.fulanoeciclano.nerdzone.Helper.App.getUid;
 
 public class NewEventoActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    private static final String TAG = "NewEventoActivity";
     private static final String datainicio = "date picker";
     private static final String datafim = "date picker2";
     private static final String TITULO = "Obrigatório";
@@ -69,10 +69,11 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
     private Spinner spinner;
     private Toolbar toolbar;
     // [START declare_database_ref]
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseEvento;
     private Button botaoiniciodata, botaofimdata;
     // [END declare_database_ref]
     private String[] estados ;
+    private Evento eventos;
     private String estado;
     private EditText titulo, subtitulo, mensagem;
     private TextView data_inicio, data_fim;
@@ -89,16 +90,18 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_evento);
+
         final Calendar calendar12 = Calendar.getInstance();
         Log.i("dataa", String.valueOf(calendar12.getTime()));
         //Configuraçoes
         toolbar = findViewById(R.id.toolbarprincipal);
         toolbar.setTitle("Criar Evento");
         setSupportActionBar(toolbar);
+        eventos = new Evento();
 
 
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabaseEvento = FirebaseDatabase.getInstance().getReference();
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         botaofimdata = findViewById(R.id.botaodatafim);
         botaoiniciodata = findViewById(R.id.botaodatainicio);
@@ -143,7 +146,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SalvarPost();
+
             }
         });
 
@@ -303,7 +306,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
                             .child(nomeImagem);
                     //Progress
                     final ProgressDialog progressDialog = new ProgressDialog(this);
-                    progressDialog.setTitle("AGUARDE");
+                    progressDialog.setTitle("Aguarde..");
                     progressDialog.show();
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
@@ -347,7 +350,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
     }
 
 
-    private void SalvarPost() {
+    private Evento  configurarEvento() {
         final String tituloDoEvento = titulo.getText().toString();
         final String subtituloDoEvento = subtitulo.getText().toString();
         final String mensagemDoEvento = mensagem.getText().toString();
@@ -357,18 +360,31 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         final String capaevento = urlimg;
 
 
+        eventos.setTitulo(tituloDoEvento);
+        eventos.setSubtitulo(subtituloDoEvento);
+        eventos.setMensagem(mensagemDoEvento);
+        eventos.setDatainicio(dataDoEventoFim);
+        eventos.setDatafim(dataDoEventoInicio);
+        eventos.setFotoevento(capaevento);
+
+        return  eventos;
+    }
+
+    public void validardados(){
+        eventos = configurarEvento();
+
         // verificando se o titulo está vazio
-        if (TextUtils.isEmpty(tituloDoEvento)) {
+        if (TextUtils.isEmpty(eventos.getTitulo())) {
             titulo.setError(TITULO);
             return;
         }
-        if (TextUtils.isEmpty(subtituloDoEvento)) {
+        if (TextUtils.isEmpty(eventos.getSubtitulo())) {
             titulo.setError(SUBTITULO);
             return;
         }
 
         // Body is required
-        if (TextUtils.isEmpty(mensagemDoEvento)) {
+        if (TextUtils.isEmpty(eventos.getMensagem())) {
             mensagem.setError(MENSAGEM);
             return;
         }
@@ -380,7 +396,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         // [START single_value_read]
         final String userId = getUid();
         Log.i("carz", userId);
-        mDatabase.child("usuarios").child(userId).addListenerForSingleValueEvent(
+        mDatabaseEvento.child("usuarios").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -397,7 +413,6 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
                         // [START_EXCLUDE]
                         setEditingEnabled(true);
                         // [END_EXCLUDE]
@@ -406,6 +421,9 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         // [END single_value_read]
     }
 
+    public void salvarMercado(){
+
+    }
     private void setEditingEnabled(boolean enabled) {
         titulo.setEnabled(enabled);
         mensagem.setEnabled(enabled);
@@ -416,23 +434,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         }
     }
 
-   /*
-    private void writeNewPost(String uid, String nome, String imgperfilusuario, String titulo,
-                              String subtitulo, String capaevento, String mensagem, String datafim, String datainicio, String estadodoevento) {
-        // Create new noticia at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = mDatabase.child("evento").push().getKey();
-        Log.i("key", key);
-        Evento evento = new Evento(uid, nome, imgperfilusuario, capaevento, titulo, subtitulo, mensagem, datafim, datainicio, estadodoevento);
-        Map<String, Object> postValues = evento.toMap();
 
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/evento/" + key, postValues);
-        childUpdates.put("/usuario-evento/" + uid + "/" + key, postValues);
-
-        mDatabase.updateChildren(childUpdates);
-    }
-    */
 }
 
 

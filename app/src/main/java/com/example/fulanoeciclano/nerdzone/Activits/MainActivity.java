@@ -23,6 +23,7 @@ import com.example.fulanoeciclano.nerdzone.Fragments.EventoListaFragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.InicioFragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.TopicoFragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Mercado.MercadoActivity;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.auth.FirebaseUser;

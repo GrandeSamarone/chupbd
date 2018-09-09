@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Activits;
+package com.example.fulanoeciclano.nerdzone.Mercado;
 
 import android.Manifest;
 import android.app.Activity;
@@ -50,10 +50,10 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private AppCompatEditText campotitulo, campodesc, campotelefone, campoendereco,campofraserapida;
     private ImageView imagem1,imagem2,imagem3;
     private StorageReference storageReference;
-    private Spinner campoArtista, campoloja;
+    private Spinner campoLocal, campoloja;
     private Button botaosalvar;
     private DatabaseReference database;
-    private String identificadorUsuario,artistastring,lojastring;
+    private String identificadorUsuario,estadostring,lojastring;
     private FirebaseAuth autenticacao;
     private Mercado mercado;
     private Usuario usuarioLogado;
@@ -86,7 +86,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         campoendereco = findViewById(R.id.desc_endereco);
         campofraserapida= findViewById(R.id.fraserapida_mercado);
         campoloja = findViewById(R.id.spinnerloja);
-        campoArtista = findViewById(R.id.spinnerartista);
+        campoLocal = findViewById(R.id.spinneralocal);
         imagem1 = findViewById(R.id.imageLojaCadastro1);
         imagem1.setOnClickListener(this);
         imagem2 =findViewById(R.id.imageLojaCadastro2);
@@ -174,16 +174,15 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
       //carregar spinner
     private void CarregarDadosSpinner() {
         //
-        String[] artista = getResources().getStringArray(R.array.artista);
+        String[] artista = getResources().getStringArray(R.array.estados);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, artista);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        campoArtista.setAdapter(adapter);
-        campoArtista.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        campoLocal.setAdapter(adapter);
+        campoLocal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                artistastring = parent.getItemAtPosition(position).toString();
+                estadostring = parent.getItemAtPosition(position).toString();
 
-                Toast.makeText(Cadastrar_Novo_MercadoActivity.this, artistastring, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -213,7 +212,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     }
 
     private Mercado configurarMercado(){
-        String artista = campoArtista.getSelectedItem().toString();
+        String estado = campoLocal.getSelectedItem().toString();
         String loja = campoloja.getSelectedItem().toString();
         String titulo = campotitulo.getText().toString();
         String telefone = campotelefone.getText().toString();
@@ -221,8 +220,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         String fraserapida = campofraserapida.getText().toString();
         String endereco = campoendereco.getText().toString();
 
-        mercado.setArtista(artista);
-        mercado.setLoja(loja);
+        mercado.setEstado(estado);
+        mercado.setCategoria(loja);
         mercado.setTitulo(titulo);
         mercado.setTelefone(telefone);
         mercado.setDescricao(descricao);
@@ -235,34 +234,38 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     public void validarDados() {
         mercado = configurarMercado();
         if (listaFotosRecuperadas.size() != 0) {
-            if ( (!lojastring.equals("Categoria Loja"))|| (!artistastring.equals("Categoria Artista"))) {
+            if ( (!lojastring.equals("Categoria"))) {
 
+           if ( (!estadostring.equals("Estado"))) {
+               // verificando se  está vazio
+               if (TextUtils.isEmpty(mercado.getTitulo())) {
+                   campotitulo.setError(padrao);
+                   return;
+               }
+               if (TextUtils.isEmpty(mercado.getFraserapida())) {
+                   campofraserapida.setError(padrao);
+                   return;
+               }
+               if (TextUtils.isEmpty(mercado.getDescricao())) {
+                   campodesc.setError(padrao);
+                   return;
+               }
 
-            // verificando se  está vazio
-            if (TextUtils.isEmpty(mercado.getTitulo())) {
-                campotitulo.setError(padrao);
-                return;
-            }
-                if (TextUtils.isEmpty(mercado.getFraserapida())) {
-                    campofraserapida.setError(padrao);
-                    return;
-                }
-            if (TextUtils.isEmpty(mercado.getDescricao())) {
-                campodesc.setError(padrao);
-                return;
-            }
+               if (TextUtils.isEmpty(mercado.getEndereco())) {
+                   campoendereco.setError(padrao);
+                   return;
+               }
+               if (TextUtils.isEmpty(mercado.getTelefone())) {
+                   campotelefone.setError(padrao);
+                   return;
+               }
+               SalvarMercado();
+           }else{
+               Toast.makeText(this, "Selecione um Estado", Toast.LENGTH_SHORT).show();
+           }
 
-            if (TextUtils.isEmpty(mercado.getEndereco())) {
-                campoendereco.setError(padrao);
-                return;
-            }
-            if (TextUtils.isEmpty(mercado.getTelefone())) {
-                campotelefone.setError(padrao);
-                return;
-            }
-            SalvarMercado();
-        }else {
-                Toast.makeText(this, "preença artista ou loja!", Toast.LENGTH_SHORT).show();
+           }else {
+                Toast.makeText(this, "Selecione uma Categoria", Toast.LENGTH_SHORT).show();
             }
         } else {
                 Toast.makeText(this, "Selecione ao menos uma foto!", Toast.LENGTH_SHORT).show();

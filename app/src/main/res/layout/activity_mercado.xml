@@ -5,25 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.fulanoeciclano.geek.Activitys.MercadoActivity">
 
+    tools:context="com.example.fulanoeciclano.nerdzone.Mercado.MercadoActivity">
     <include android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <LinearLayout
-    android:layout_below="@id/toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleviewmercado"
         android:clipToPadding="false"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"/>
 
-</LinearLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/buton_novo_mercado"
         android:layout_width="wrap_content"

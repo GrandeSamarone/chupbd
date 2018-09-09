@@ -6,9 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <!-- <uses-sdk tools:overrideLibrary="com.firebase.ui.auth" /> -->
     <application
+        android:name=".Helper.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activits.MainActivity" />
-
         <activity android:name=".Autenticacao.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +51,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.fulanoeciclano.nerdzone.Activits.Cadastrar_icon_nome_Activity" />
         </activity>
-
         <activity
             android:name=".Activits.MinhaConta"
             android:label="@string/title_activity_minha_conta"
@@ -68,12 +66,13 @@
             android:name=".Evento.EventoDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activits.Meus_eventos" />
-        <activity android:name=".Activits.MercadoActivity" />
-        <activity android:name=".Activits.Cadastrar_Novo_MercadoActivity" />
-
+        <activity android:name=".Mercado.MercadoActivity" />
+        <activity android:name=".Mercado.Cadastrar_Novo_MercadoActivity" />
         <activity
             android:name=".Evento.DetalheEvento"
             android:label="@string/title_activity_detalhe_evento"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Mercado.Detalhe_Mercado"></activity>
     </application>
+
 </manifest>

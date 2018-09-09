@@ -46,8 +46,8 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         holder.legenda.setText(mercado.getFraserapida());
         }
 
-        if(mercado.getLoja()!=null){
-        holder.categoria.setText(mercado.getLoja());
+        if(mercado.getCategoria()!=null){
+        holder.categoria.setText(mercado.getCategoria());
         }
 
         List<String> urlFotos = mercado.getFotos();
@@ -57,6 +57,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
             Picasso.with(context)
                     .load(stringcapa)
                     .into(holder.capa);
+
         }
     }
 

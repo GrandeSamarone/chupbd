@@ -125,7 +125,6 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.MyviewHold
             eventocapa = itemView.findViewById(R.id.iconeevento);
             card = itemView.findViewById(R.id.cardevento);
             eventonome = itemView.findViewById(R.id.nomeevento);
-            eventolayout = itemView.findViewById(R.id.layoutevento);
 
         }
     }

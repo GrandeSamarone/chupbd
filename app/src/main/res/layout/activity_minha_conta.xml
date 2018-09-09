@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
 
-    tools:context="com.example.fulanoeciclano.geek.Activitys.MinhaConta">
+    tools:context="com.example.fulanoeciclano.nerdzone.Activits.MinhaConta">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

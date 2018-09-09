@@ -41,6 +41,7 @@
 
 
     <string-array name="estados">
+        <item>Estado</item>
         <item>AC</item>
         <item>AL</item>
         <item>AM</item>
@@ -71,10 +72,10 @@
     </string-array>
 
     <string-array name="loja">
-        <item>Categoria Loja</item>
+        <item>Categoria</item>
         <item>Roupas e Acessórios</item>
-        <item>Imóveis</item>
-        <item>Eletronicos</item>
+        <item>HQS</item>
+        <item>Games</item>
         <item>Moda</item>
         <item>Esportes</item>
         <item>Música</item>

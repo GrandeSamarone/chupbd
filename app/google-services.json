@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "69128761046",
-    "firebase_url": "https://nerdzone-9367a.firebaseio.com",
-    "project_id": "nerdzone-9367a",
-    "storage_bucket": "nerdzone-9367a.appspot.com"
+    "project_number": "234664656893",
+    "firebase_url": "https://geeksgibi.firebaseio.com",
+    "project_id": "geeksgibi",
+    "storage_bucket": "geeksgibi.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:69128761046:android:53c74333face31f6",
+        "mobilesdk_app_id": "1:234664656893:android:53c74333face31f6",
         "android_client_info": {
           "package_name": "com.example.fulanoeciclano.nerdzone"
         }
       },
       "oauth_client": [
         {
-          "client_id": "69128761046-fa8cmt7t10k9c4s63ujucbacs978qu54.apps.googleusercontent.com",
+          "client_id": "234664656893-udsp68psec3vk9nnjhmt0q6dh2hu6cse.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.fulanoeciclano.nerdzone",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "69128761046-t0g4f995n77qld0as7sp5pfah3ct0jf6.apps.googleusercontent.com",
+          "client_id": "234664656893-boompl9phu6rv8r2k4f2q752a40a5mq5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBzr--Rx_aX-0YJk1QPEZR9LBuI0-axTP4"
+          "current_key": "AIzaSyBh8855-QHUOpuVweNVGQffq53jtrQxkpw"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "69128761046-t0g4f995n77qld0as7sp5pfah3ct0jf6.apps.googleusercontent.com",
+              "client_id": "234664656893-boompl9phu6rv8r2k4f2q752a40a5mq5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

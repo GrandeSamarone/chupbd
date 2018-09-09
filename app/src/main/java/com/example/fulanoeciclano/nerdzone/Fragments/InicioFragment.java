@@ -1,6 +1,8 @@
 package com.example.fulanoeciclano.nerdzone.Fragments;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,12 +11,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.EventoAdapter;
 import com.example.fulanoeciclano.nerdzone.Adapter.GibiAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
+import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
+import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
+import com.example.fulanoeciclano.nerdzone.Mercado.MercadoActivity;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Gibi;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
@@ -27,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,13 +48,14 @@ public class InicioFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private GibiAdapter adapterDC,adapterOutros;
     private AdapterMercado adapterMercado;
     private EventoAdapter adapterEvento;
-    private ArrayList<Mercado> ListaGibiMercado = new ArrayList<>();
+    private List<Mercado> ListaGibiMercado = new ArrayList<>();
     private ArrayList<Gibi> ListaGibiDC = new ArrayList<>();
     private ArrayList<Gibi> ListaGibiOutros = new ArrayList<>();
     private ArrayList<Evento> ListaEvento = new ArrayList<>();
     private ArrayList<String> mKeys = new ArrayList<>();
     private DatabaseReference GibiMercado;
     private DatabaseReference GibiDC;
+    private Context context;
     private DatabaseReference GibiOutros;
     private DatabaseReference GibiEventos;
     private ChildEventListener valueEventListenerMercado;
@@ -54,6 +63,7 @@ public class InicioFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private ChildEventListener valueEventListenerDC;
     private ChildEventListener valueEventListenerOutros;
     private SwipeRefreshLayout swipeatualizar;
+    private TextView maisventoTxt;
 
 
     public InicioFragment() {
@@ -70,6 +80,14 @@ public class InicioFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         //Configuracoes Iniciais
         swipeatualizar= view.findViewById(R.id.swipe_inicial);
+        maisventoTxt = view.findViewById(R.id.maisevento);
+        maisventoTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(getActivity(), MercadoActivity.class);
+                startActivity(it);
+            }
+        });
 
         swipeatualizar.setOnRefreshListener(InicioFragment.this);
 
@@ -141,6 +159,27 @@ public class InicioFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerViewListaGibiOutros.setAdapter(adapterOutros);
 
 
+
+        recyclerViewListaGibiMercado.addOnItemTouchListener(new RecyclerItemClickListener( getActivity(),
+                recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Mercado mercadoselecionado = ListaGibiMercado.get(position);
+                Intent it = new Intent(getActivity(),Detalhe_Mercado.class);
+                it.putExtra("mercadoelecionado",mercadoselecionado);
+                startActivity(it);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
 
 
         /*recyclerViewListaGibiMarvel.addOnItemTouchListener(new RecyclerItemClickListener(
@@ -256,6 +295,7 @@ public class InicioFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                             Collections.reverse(ListaGibiMercado);
                             adapterMercado.notifyDataSetChanged();
+                            swipeatualizar.setRefreshing(false);
 
                         }
                     }

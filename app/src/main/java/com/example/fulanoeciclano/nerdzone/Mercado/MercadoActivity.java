@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Activits;
+package com.example.fulanoeciclano.nerdzone.Mercado;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 
+import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Adapter.MercadoAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -68,6 +71,27 @@ public class MercadoActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
+       //Aplicar Evento click
+        recyclerViewMercadoPublico.addOnItemTouchListener(new RecyclerItemClickListener(this,
+                recyclerViewMercadoPublico, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Mercado mercadoselecionado = listamercado.get(position);
+                Intent it = new Intent(MercadoActivity.this,Detalhe_Mercado.class);
+                it.putExtra("mercadoelecionado",mercadoselecionado);
+                startActivity(it);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
     }
 
     //Botao Voltar

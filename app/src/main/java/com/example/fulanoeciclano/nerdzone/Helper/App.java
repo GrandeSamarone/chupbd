@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.example.fulanoeciclano.nerdzone.BuildConfig;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -33,7 +34,7 @@ public class App extends Application {
 
         DiskCacheConfig diskCacheConfig = DiskCacheConfig.newBuilder(getApplicationContext())
                 .setBaseDirectoryPath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile(),"hq"))
-                .setBaseDirectoryName("Comic_collection")
+                .setBaseDirectoryName(String.valueOf(R.string.app_name))
                 .setMaxCacheSize(200*1024*1024)//200MB
                 .build();
         ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(this)

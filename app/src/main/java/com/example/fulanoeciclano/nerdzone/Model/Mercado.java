@@ -14,8 +14,8 @@ import java.util.List;
 public class Mercado implements Serializable {
 
     private String idMercado;
-    private String loja;
-    private String artista;
+    private String categoria;
+    private String estado;
     private String titulo;
     private String endereco;
     private String telefone;
@@ -36,8 +36,8 @@ public class Mercado implements Serializable {
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("mercado");
         anuncioref.child(idUsuario)
-                .child(getLoja())
-                .child(getArtista())
+                .child(getCategoria())
+                .child(getEstado())
                 .child(getIdMercado()).setValue(this);
 
       //  salvarAnuncioPublico();
@@ -52,20 +52,21 @@ public class Mercado implements Serializable {
         this.idMercado = idMercado;
     }
 
-    public String getLoja() {
-        return loja;
+
+    public String getCategoria() {
+        return categoria;
     }
 
-    public void setLoja(String loja) {
-        this.loja = loja;
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
-    public String getArtista() {
-        return artista;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setArtista(String artista) {
-        this.artista = artista;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public String getTitulo() {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    tools:context="com.example.fulanoeciclano.geek.Activitys.Cadastrar_icon_nome_Activity">
+    tools:context="com.example.fulanoeciclano.nerdzone.Activits.Cadastrar_icon_nome_Activity">
 
     <include
         android:id="@+id/include2"
