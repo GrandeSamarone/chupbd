@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Mensagem;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.MyVi
 
         if(imagem !=null){
         Uri url = Uri.parse(imagem);
-            Picasso.with(context)
+            Glide.with(context)
                     .load(url)
                     .into(holder.imagem);
 

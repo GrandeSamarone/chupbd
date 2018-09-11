@@ -31,7 +31,7 @@
                 app:stl_clickable="true"
                 app:stl_defaultTabTextColor="@color/custom_tab"
                 app:stl_dividerColor="@color/colorPrimary"
-                app:stl_indicatorColor="@color/branco"
+                app:stl_indicatorColors="@array/custom_tab_colors"
                 app:stl_defaultTabTextAllCaps="true"
                 app:stl_defaultTabTextMinWidth="0dp"
                 app:stl_defaultTabTextSize="12sp"

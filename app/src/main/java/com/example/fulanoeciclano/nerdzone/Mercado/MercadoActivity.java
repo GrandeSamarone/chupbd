@@ -3,6 +3,7 @@ package com.example.fulanoeciclano.nerdzone.Mercado;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,11 +29,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MercadoActivity extends AppCompatActivity {
+public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Toolbar toolbar;
     private FloatingActionButton novoMercado;
     private FirebaseAuth autenticacao;
+    private SwipeRefreshLayout refresh;
     private RecyclerView recyclerViewMercadoPublico;
     private MercadoAdapter adapter;
     private DatabaseReference mercadopublico;
@@ -53,6 +55,19 @@ public class MercadoActivity extends AppCompatActivity {
 
         //Configuraçoes iniciais
         mercado = new Mercado();
+        refresh = findViewById(R.id.refreshmercado);
+        refresh.setOnRefreshListener(this);
+        refresh.post(new Runnable() {
+            @Override
+            public void run() {
+                refresh.setRefreshing(true);
+                RecuperarMercadoPublicos();
+            }
+        });
+        refresh.setColorSchemeResources
+                (R.color.colorPrimaryDark, R.color.amareloclaro,
+                        R.color.accent);
+
         mercadopublico = ConfiguracaoFirebase.getFirebaseDatabase().child("mercado");
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         recyclerViewMercadoPublico = findViewById(R.id.recycleviewmercado);
@@ -69,6 +84,8 @@ public class MercadoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent it = new Intent(MercadoActivity.this, Cadastrar_Novo_MercadoActivity.class);
                 startActivity(it);
+
+
             }
         });
        //Aplicar Evento click
@@ -114,10 +131,6 @@ public class MercadoActivity extends AppCompatActivity {
     }
 
 
-    public void onStart() {
-        super.onStart();
-    RecuperarMercadoPublicos();
-    }
 
     public void onStop() {
         super.onStop();
@@ -127,6 +140,7 @@ public class MercadoActivity extends AppCompatActivity {
     public void RecuperarMercadoPublicos() {
 
         listamercado.clear();
+        refresh.setRefreshing(true);
       valueMercadoListener = mercadopublico.addChildEventListener(new ChildEventListener() {
           @Override
           public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -139,6 +153,7 @@ public class MercadoActivity extends AppCompatActivity {
 
                           Collections.reverse(listamercado);
                           adapter.notifyDataSetChanged();
+                          refresh.setRefreshing(false);
 
                       }
                   }
@@ -167,5 +182,11 @@ public class MercadoActivity extends AppCompatActivity {
       });
 
 
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh.setRefreshing(true);
+        RecuperarMercadoPublicos();
     }
 }

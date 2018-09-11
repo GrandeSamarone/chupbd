@@ -11,14 +11,13 @@
     <RelativeLayout
         android:id="@+id/mercado_top_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:elevation="4dp">
 
     <com.synnapps.carouselview.CarouselView
         android:id="@+id/carousel_foto_mercado"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@drawable/carregando"
         app:pageColor="#00000000"
         app:radius="6dp"
         app:slideInterval="3000"
@@ -36,30 +35,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:layout_alignLeft="@+id/detalhe_mercado_titulo"
+            android:layout_alignLeft="@+id/mercado_detalhe_rating"
             android:layout_marginTop="16dp"
-            android:src="@drawable/ic_close_white_24px" />
+            android:src="@drawable/ic_arrow_back" />
 
-        <TextView
-            android:id="@+id/detalhe_mercado_titulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/AppTheme.Title"
-            android:layout_above="@+id/mercado_detalhe_rating"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            tools:text="Some Restaurant"
-            />
+
 
         <me.zhanghai.android.materialratingbar.MaterialRatingBar
             android:id="@+id/mercado_detalhe_rating"
             style="@style/Widget.MaterialRatingBar.RatingBar.Indicator"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_above="@+id/detalhe_mercado_categoria"
-            android:layout_alignLeft="@+id/detalhe_mercado_titulo"
+             android:layout_alignParentBottom="true"
             app:mrb_progressTint="@android:color/white"
             app:mrb_secondaryProgressTint="@android:color/white" />
 
@@ -76,89 +63,80 @@
             android:textColor="@android:color/white"
             tools:text="(10)" />
 
-        <TextView
-            android:id="@+id/detalhe_mercado_categoria"
-            style="@style/AppTheme.Subheader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/carousel_foto_mercado"
-            android:layout_alignLeft="@+id/carousel_foto_mercado"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            android:textColor="@android:color/white"
-            tools:text="Italian" />
+
 
     </RelativeLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_show_rating_dialog"
+
+    <TextView
+        android:id="@+id/detalhe_mercado_titulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/mercado_top_card"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="-35dp"
-        app:backgroundTint="@color/colorPrimary"
-        android:layout_marginRight="16dp"
-        app:srcCompat="@drawable/ic_chat_24dp" />
+        style="@style/AppTheme.Title"
+     android:layout_below="@id/mercado_top_card"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        tools:text="Some Restaurant"
+        />
 
+    <TextView
+        android:id="@+id/detalhe_mercado_legenda"
+        style="@style/AppTheme.Subheader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_below="@+id/detalhe_mercado_titulo"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:textColor="@color/cinzadisabilitado"
+        tools:text="Italian"
+        android:textStyle="italic"/>
+
+    <ImageView
+
+        android:layout_toRightOf="@+id/img2"
+        android:id="@+id/img1"
+        android:layout_below="@id/mercado_top_card"
+        android:layout_marginTop="8dp"
+        android:layout_width="36dp"
+        android:layout_marginRight="8dp"
+        android:layout_height="36dp"
+        android:background="@drawable/testeff"
+        />
+    <ImageView
+        android:layout_toRightOf="@id/detalhe_mercado_titulo"
+        android:layout_below="@id/mercado_top_card"
+        android:id="@+id/img2"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/testegg"
+        />
     <LinearLayout
     android:id="@+id/liner"
-    android:layout_below="@+id/mercado_top_card"
+    android:layout_below="@+id/detalhe_mercado_legenda"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginLeft="8dp"
-    android:layout_marginTop="8dp"
     android:layout_marginRight="8dp">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+
 
         <TextView
-            android:id="@+id/detalhe_mercado_legenda"
-            android:layout_width="wrap_content"
+
+            android:id="@+id/detalhe_mercado_descricao"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Descricao"
+            android:paddingBottom="10dp"
+            android:paddingTop="8dp"
+            android:textAllCaps="false"
+            android:textColor="@color/cinzaescuro"
             android:textSize="14sp"
-            android:paddingBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:hint="Legenda"
-            android:textColor="@color/greySecondary"
-            android:textStyle="italic"
-            />
+            app:fontFamily="sans-serif" />
 
-        <ImageView
-            android:layout_toRightOf="@+id/img2"
-            android:id="@+id/img1"
-
-            android:layout_width="36dp"
-            android:layout_marginRight="8dp"
-            android:layout_height="36dp"
-            android:background="@drawable/testeff"
-            />
-        <ImageView
-            android:id="@+id/img2"
-            android:layout_toRightOf="@+id/detalhe_mercado_legenda"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/testegg"
-            />
-    </RelativeLayout>
-
-    <TextView
-
-        android:id="@+id/detalhe_mercado_descricao"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:paddingTop="18dp"
-        android:paddingBottom="10dp"
-        android:textColor="@color/cinzaescuro"
-        android:hint="Descricao"
-        />
 
     <TextView
         android:id="@+id/detalhe_mercado_endereco"
@@ -172,26 +150,16 @@
         android:hint="endereco"
         />
 </LinearLayout>
-<RelativeLayout
-android:layout_below="@id/liner"
-    android:layout_margin="16dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/chatbalao"
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_show_rating_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/iconsbalao_chat"/>
-
-
-    <ImageView
-      android:layout_toLeftOf="@id/chatbalao"
-      android:layout_marginRight="16dp"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/iconsbalao_tel"/>
-</RelativeLayout>
-
-
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_chat_24dp"
+        tools:ignore="VectorDrawableCompat" />
 </RelativeLayout>

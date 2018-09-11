@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.MensagensAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.Base64Custom;
@@ -42,7 +43,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
@@ -137,7 +137,7 @@ public class ChatActivity extends AppCompatActivity implements SwipeRefreshLayou
                 String foto = usuariodestinatario.getFoto();
                 if (foto != null) {
                     Uri url = Uri.parse(usuariodestinatario.getFoto());
-                    Picasso.with(getApplicationContext())
+                    Glide.with(getApplicationContext())
                             .load(url)
                             .into(circleImageViewFoto);
                 }
@@ -163,7 +163,7 @@ public class ChatActivity extends AppCompatActivity implements SwipeRefreshLayou
                 String foto = grupo.getFoto();
                 if (foto != null) {
                     Uri url = Uri.parse(foto);
-                    Picasso.with(this)
+                    Glide.with(this)
                             .load(url)
                             .into(circleImageViewFoto);
 
@@ -181,7 +181,7 @@ public class ChatActivity extends AppCompatActivity implements SwipeRefreshLayou
                 String foto = usuariodestinatario.getFoto();
                 if (foto != null) {
                     Uri url = Uri.parse(usuariodestinatario.getFoto());
-                    Picasso.with(this)
+                    Glide.with(this)
                             .load(url)
                             .into(circleImageViewFoto);
 

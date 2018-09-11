@@ -15,6 +15,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -60,6 +62,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private FirebaseUser UsuarioAtual;
     private Toolbar toolbar;
     private AlertDialog dialog;
+    private ImageView gif;
 
 
     private String[] permissoes = new String[]{
@@ -118,9 +121,19 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+
     public void  SalvarMercado(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Salvando...");
+        LayoutInflater layoutInflater = LayoutInflater.from(Cadastrar_Novo_MercadoActivity.this);
+        final View view  = layoutInflater.inflate(R.layout.tela_carregando_gif_analizando,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+        Glide.with(this)
+                .asGif()
+                .load(R.drawable.gif_analizando)
+                .into(imageViewgif);
+        builder.setView(view);
+
         dialog = builder.create();
         dialog.show();
         /*salva no storage*/

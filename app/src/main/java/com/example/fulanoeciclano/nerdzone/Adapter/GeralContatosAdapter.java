@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class GeralContatosAdapter extends RecyclerView.Adapter<GeralContatosAdap
 
         if(usuario.getFoto()!=null){
             Uri uri= Uri.parse(usuario.getFoto());
-            Picasso.with(context)
+            Glide.with(context)
                     .load(uri)
                     .into(holder.foto);
         }else {

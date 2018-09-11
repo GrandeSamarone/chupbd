@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Fragments.EventoListaFragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.InicioFragment;
@@ -32,7 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
-import com.squareup.picasso.Picasso;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -259,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements
           telefone_drawer.setText(UsuarioAtual.getPhoneNumber());
           email_drawer.setText(UsuarioAtual.getEmail());
 
-        Picasso.with(MainActivity.this)
+        Glide.with(MainActivity.this)
                 .load(mPhotoUrl)
                 .into(img_drawer);
         swipe.setRefreshing(false);

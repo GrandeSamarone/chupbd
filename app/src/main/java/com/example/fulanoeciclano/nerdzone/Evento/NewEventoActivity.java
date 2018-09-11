@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Date.DatePickFragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -44,7 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -328,7 +329,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
                             urlimg = url.toString();
 
 
-                            Picasso.with(NewEventoActivity.this)
+                            Glide.with(NewEventoActivity.this)
                                     .load(url)
                                     .into(imgevento);
 

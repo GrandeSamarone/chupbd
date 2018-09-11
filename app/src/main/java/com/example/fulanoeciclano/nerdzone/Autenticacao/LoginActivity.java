@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.Cadastrar_icon_nome_Activity;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -115,7 +118,16 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
       //  Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Carregando...");
+        LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
+        final View view  = layoutInflater.inflate(R.layout.tela_carregando_gif_comscroop,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+        Glide.with(this)
+                .asGif()
+                .load(R.drawable.gif_briguinha)
+                .into(imageViewgif);
+        builder.setView(view);
+
         dialog = builder.create();
         dialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -124,16 +136,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            dialog.dismiss();
+
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = auth.getCurrentUser();
+
                             Intent it = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(it);
+                            dialog.dismiss();
                             finish();
-                            Toast.makeText(LoginActivity.this, "Sucesso", Toast.LENGTH_SHORT).show();
+
                         } else {
                             dialog.dismiss();
-                            Toast.makeText(LoginActivity.this, "Verifique a internet", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Verifique sua conexão com a  internet", Toast.LENGTH_SHORT).show();
                             // If sign in fails, display a message to the user.
                           /* Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();

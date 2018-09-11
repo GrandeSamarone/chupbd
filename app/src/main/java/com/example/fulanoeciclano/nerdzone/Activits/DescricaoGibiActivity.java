@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.GibiAdapter;
 import com.example.fulanoeciclano.nerdzone.Model.Gibi;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -21,7 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +138,7 @@ public class DescricaoGibiActivity extends AppCompatActivity {
         desc_desc_icone.setText(descricao);
 
        //SimpleDraweeView image = findViewById(R.id.image);
-        Picasso.with(DescricaoGibiActivity.this)
+        Glide.with(DescricaoGibiActivity.this)
                 .load(imagemUrl)
                 .into(desc_img_icone );
 

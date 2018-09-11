@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         String stringcapa = urlFotos.get(0);
 
         if (stringcapa != null) {
-            Picasso.with(context)
+            Glide.with(context)
                     .load(stringcapa)
                     .into(holder.capa);
 

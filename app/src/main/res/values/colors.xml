@@ -14,8 +14,8 @@
     <color name="text_enabled">#ffffff</color>
     <color name="text_disabled">#cdccce</color>
     <color name="pretoclaro">#7e7c7c</color>
-    <color name="greySecondary">#8B000000</color>
-    <color name="greyDisabled">#61000000</color>
+    <color name="cinzasecunradrio">#8B000000</color>
+    <color name="cinzadisabilitado">#61000000</color>
     <color name="cinzaescuro">#5c5c5c</color>
     <color name="Corrastag">#ff5a3d</color>
     <color name="bgBottomNavigation">#fe485a</color>
@@ -24,8 +24,8 @@
 
 
     <integer-array name="custom_tab_colors">
-        <item>@color/colorAccent</item>
-        <item>@color/amareloclaro</item>
-        <item>@color/amareloclaro</item>
+        <item>@color/branco</item>
+        <item>@color/branco</item>
+        <item>@color/branco</item>
     </integer-array>
 </resources>

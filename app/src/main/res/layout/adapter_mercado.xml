@@ -49,7 +49,7 @@
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@+id/rating_mercado"
             android:gravity="center_vertical"
-            android:textColor="@color/greyDisabled"
+            android:textColor="@color/cinzadisabilitado"
             tools:text="(10)" />
             <TextView
                 android:id="@+id/textlegenda"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/rating_mercado"
                 android:layout_below="@+id/rating_mercado"
-                android:textColor="@color/greySecondary" />
+                android:textColor="@color/cinzasecunradrio" />
 
             <TextView
                 android:id="@+id/textcategoria"
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:textColor="@color/greySecondary"
+                android:textColor="@color/cinzadisabilitado"
                 />
 
 

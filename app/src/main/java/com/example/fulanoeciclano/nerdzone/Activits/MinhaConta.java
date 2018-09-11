@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -39,7 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
@@ -113,7 +114,7 @@ public class MinhaConta extends AppCompatActivity {
         FirebaseUser usuario =UsuarioFirebase.getUsuarioAtual();
         Uri url= usuario.getPhotoUrl();
         // Uri uriOne= Uri.parse(mArrayListOne.get(position));
-        Picasso.with(MinhaConta.this)
+        Glide.with(MinhaConta.this)
                 .load(url)
                 .into(circleImageViewperfil );
 
@@ -226,7 +227,7 @@ public class MinhaConta extends AppCompatActivity {
 
                     atualizaFotoUsuario(uri);
 
-                    Picasso.with(MinhaConta.this)
+                    Glide.with(MinhaConta.this)
                             .load(uri)
                             .into(circleImageViewperfil);
 
@@ -302,7 +303,7 @@ public class MinhaConta extends AppCompatActivity {
                             Uri url = taskSnapshot.getDownloadUrl();
                             atualizaFotoUsuario(url);
 
-                            Picasso.with(MinhaConta.this)
+                            Glide.with(MinhaConta.this)
                                     .load(url)
                                     .into(circleImageViewperfil);
 

@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-
+   android:id="@+id/refreshmercado"
     tools:context="com.example.fulanoeciclano.nerdzone.Mercado.MercadoActivity">
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <include android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
-
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleviewmercado"
         android:clipToPadding="false"
-        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
@@ -29,4 +33,6 @@
         android:src="@drawable/ic_add_evento"
         app:fabSize="normal"
         android:layout_margin="16dp"/>
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
