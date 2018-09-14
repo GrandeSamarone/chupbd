@@ -68,16 +68,39 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if(currentUser!=null){
+            Verificar();
+        }
+    }
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
+        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+        Glide.with(this)
+                .asGif()
+                .load(R.drawable.gif_briguinha)
+                .into(imageViewgif);
+        builder.setView(view);
+
+        dialog = builder.create();
+        dialog.show();
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        dialog.dismiss();
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            dialog.dismiss();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
@@ -85,7 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-
+                Toast.makeText(this, "Erro, Verifique sua Conexão com a internet e tente Novamente.", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
                 // ...
             }
         }
@@ -105,21 +129,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if(currentUser!=null){
-            Verificar();
-        }
-    }
+
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
       //  Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
-        final View view  = layoutInflater.inflate(R.layout.tela_carregando_gif_comscroop,null);
+        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
         ImageView imageViewgif = view.findViewById(R.id.gifimage);
 
         Glide.with(this)
@@ -140,8 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = auth.getCurrentUser();
 
-                            Intent it = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(it);
+                            Verificar();
                             dialog.dismiss();
                             finish();
 

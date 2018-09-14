@@ -371,8 +371,8 @@ public class MinhaConta extends AppCompatActivity {
         //-pegamos nossa instancia da classe
         LayoutInflater li = getLayoutInflater();
 
-        //inflamos o layout tela_opcao_foto.xml_foto.xml na view
-        View view = li.inflate(R.layout.tela_opcao_foto, null);
+        //inflamos o layout dialog_opcao_foto.xml_foto.xml na view
+        View view = li.inflate(R.layout.dialog_opcao_foto, null);
         //definimos para o botão do layout um clickListener
         view.findViewById(R.id.botaocamera).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
@@ -383,7 +383,7 @@ public class MinhaConta extends AppCompatActivity {
                 if(it.resolveActivity(getPackageManager())!=null)  {
                     startActivityForResult(it, SELECAO_CAMERA);
                 }
-                //desfaz o tela_opcao_foto.
+                //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
             }
         });
@@ -395,7 +395,7 @@ public class MinhaConta extends AppCompatActivity {
                 if(it.resolveActivity(getPackageManager())!=null)  {
                     startActivityForResult(it, SELECAO_GALERIA);
                 }
-                //desfaz o tela_opcao_foto.
+                //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
             }
         });
@@ -407,7 +407,7 @@ public class MinhaConta extends AppCompatActivity {
                 Intent it = new Intent(MinhaConta.this,PageIcon.class);
                 it.putExtra("minhaconta",MINHA_CONTA);
                 startActivityForResult(it, SELECAO_ICONE);
-                //desfaz o tela_opcao_foto.
+                //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
             }
         });

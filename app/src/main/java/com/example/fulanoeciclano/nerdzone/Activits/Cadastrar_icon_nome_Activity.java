@@ -16,8 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Icons.PageIcon;
@@ -56,6 +59,7 @@ public class Cadastrar_icon_nome_Activity extends AppCompatActivity {
     private String nome;
     private String telefone;
     private  FirebaseUser UsuarioAtual;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,22 +205,34 @@ public class Cadastrar_icon_nome_Activity extends AppCompatActivity {
                          .child(identificadorUsuario)
                          .child("perfil.jpg");
          //Progress
-         final ProgressDialog progressDialog = new ProgressDialog(this);
-         progressDialog.setTitle("Aguarde");
-         progressDialog.show();
+         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+         LayoutInflater layoutInflater = LayoutInflater.from(Cadastrar_icon_nome_Activity.this);
+         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_analizando,null);
+         final TextView texto;
+         texto = view.findViewById(R.id.texto);
+         ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+         Glide.with(this)
+                 .asGif()
+                 .load(R.drawable.gif_analizando)
+                 .into(imageViewgif);
+         builder.setView(view);
+
+         dialog = builder.create();
+         dialog.show();
          UploadTask uploadTask = MontarImagemReference.putBytes(dadosImagem);
          //caso de errado
          uploadTask.addOnFailureListener(new OnFailureListener() {
              @Override
              public void onFailure(@NonNull Exception e) {
-                 progressDialog.dismiss();
+                 dialog.dismiss();
                  Toast.makeText(Cadastrar_icon_nome_Activity.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
              }
              //caso o carregamento no firebase de tudo certo
          }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
              @Override
              public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                 progressDialog.dismiss();
+                 dialog.dismiss();
 
                  Uri url= taskSnapshot.getDownloadUrl();
                 //Inserindo no banco de dados
@@ -230,7 +246,7 @@ public class Cadastrar_icon_nome_Activity extends AppCompatActivity {
          }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
              @Override
              public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                  progressDialog.setMessage("Salvando..");
+             texto.setText(R.string.analizando_informa_es_aguarde);
              }
          });
 
@@ -362,8 +378,8 @@ private void InserirUsuario(Uri url) {
         //-pegamos nossa instancia da classe
         LayoutInflater li = getLayoutInflater();
 
-        //inflamos o layout tela_opcao_foto.xml_foto.xml na view
-        View view = li.inflate(R.layout.tela_opcao_foto, null);
+        //inflamos o layout dialog_opcao_foto.xml_foto.xml na view
+        View view = li.inflate(R.layout.dialog_opcao_foto, null);
         //definimos para o botão do layout um clickListener
         view.findViewById(R.id.botaogaleria).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
@@ -372,7 +388,7 @@ private void InserirUsuario(Uri url) {
                 if(it.resolveActivity(getPackageManager())!=null)  {
                     startActivityForResult(it, SELECAO_GALERIA);
                 }
-                //desfaz o tela_opcao_foto.
+                //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
             }
         });
@@ -383,7 +399,7 @@ private void InserirUsuario(Uri url) {
 
                 Intent it = new Intent(Cadastrar_icon_nome_Activity.this,PageIcon.class);
                 startActivityForResult(it, SELECAO_ICONE);
-                //desfaz o tela_opcao_foto.
+                //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
             }
         });

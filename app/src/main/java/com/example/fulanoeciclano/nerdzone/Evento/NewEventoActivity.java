@@ -235,7 +235,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         LayoutInflater li = getLayoutInflater();
 
         //inflamos o layout tela_opcao_foto.xml_foto.xml na view
-        View view = li.inflate(R.layout.tela_opcao_evento, null);
+        View view = li.inflate(R.layout.dialog_opcao_evento, null);
         //definimos para o botão do layout um clickListener
         view.findViewById(R.id.botaocamera).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {

@@ -34,7 +34,7 @@ public class Gifteste extends AppCompatActivity {
     public void  SalvarMercado() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater layoutInflater = LayoutInflater.from(Gifteste.this);
-        final View view = layoutInflater.inflate(R.layout.tela_carregando_gif_analizando, null);
+        final View view = layoutInflater.inflate(R.layout.dialog_carregando_gif_analizando, null);
         ImageView imageViewgif = view.findViewById(R.id.gifimage);
 
         Glide.with(this)
@@ -50,7 +50,7 @@ public class Gifteste extends AppCompatActivity {
     public void  SalvarMercado1() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater layoutInflater = LayoutInflater.from(Gifteste.this);
-        final View view = layoutInflater.inflate(R.layout.tela_carregando_gif_analizando, null);
+        final View view = layoutInflater.inflate(R.layout.dialog_carregando_gif_analizando, null);
         ImageView imageViewgif = view.findViewById(R.id.gifimage);
 
         Glide.with(this)

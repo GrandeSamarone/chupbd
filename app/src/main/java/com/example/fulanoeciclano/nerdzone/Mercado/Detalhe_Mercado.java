@@ -1,8 +1,13 @@
 package com.example.fulanoeciclano.nerdzone.Mercado;
 
+import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,10 +23,13 @@ public class Detalhe_Mercado extends AppCompatActivity {
     private CarouselView fotos;
     private TextView titulo,legenda,descricao,endereco,categoria,estado;
     private Mercado mercadoselecionado;
+    private Dialog dialog;
+    private SharedPreferences preferences = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe__mercado);
+
 
 
         //configuracoes iniciais
@@ -68,6 +76,48 @@ public class Detalhe_Mercado extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        preferences = getSharedPreferences("primeiravez", MODE_PRIVATE);
+        if (preferences.getBoolean("primeiravez", true)) {
+            preferences.edit().putBoolean("primeiravez", false).apply();
+            Dialog_click_foto();
+        }else{
+
+        }
+    }
+
+    private void Dialog_click_foto() {
+
+        LayoutInflater li = getLayoutInflater();
+
+
+        View view = li.inflate(R.layout.dialog_informar_click_foto, null);
+
+
+
+        view.findViewById(R.id.botaoentendi).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+
+
+
+                //desfaz o dialog_opcao_foto.
+                dialog.dismiss();
+            }
+        });
+
+
+
+        //Dialog de tela
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
+
+    }
+
 
     //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
