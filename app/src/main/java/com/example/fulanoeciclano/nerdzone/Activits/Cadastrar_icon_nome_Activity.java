@@ -207,7 +207,7 @@ public class Cadastrar_icon_nome_Activity extends AppCompatActivity {
          //Progress
          AlertDialog.Builder builder = new AlertDialog.Builder(this);
          LayoutInflater layoutInflater = LayoutInflater.from(Cadastrar_icon_nome_Activity.this);
-         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_analizando,null);
+         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_analisando,null);
          final TextView texto;
          texto = view.findViewById(R.id.texto);
          ImageView imageViewgif = view.findViewById(R.id.gifimage);
@@ -226,7 +226,7 @@ public class Cadastrar_icon_nome_Activity extends AppCompatActivity {
              @Override
              public void onFailure(@NonNull Exception e) {
                  dialog.dismiss();
-                 Toast.makeText(Cadastrar_icon_nome_Activity.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
+                 Toast.makeText(Cadastrar_icon_nome_Activity.this, "Erro,verifique sua Conexão com a internet.", Toast.LENGTH_LONG).show();
              }
              //caso o carregamento no firebase de tudo certo
          }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

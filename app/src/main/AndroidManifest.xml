@@ -74,7 +74,8 @@
             android:label="@string/title_activity_detalhe_evento"
             android:theme="@style/AppTheme" />
         <activity android:name=".Mercado.Detalhe_Mercado" />
-        <activity android:name=".Activits.Gifteste"></activity>
+        <activity android:name=".Activits.Gifteste" />
+        <activity android:name=".Activits.AbrirImagem" />
     </application>
 
 </manifest>

@@ -43,7 +43,8 @@ public class AbrirImagemHQ extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 /*
         if (android.os.Build.VERSION.SDK_INT > 11 && android.os.Build.VERSION.SDK_INT < 19) {
             getWindow().getDecorView().setSystemUiVisibility(View.GONE);
@@ -87,18 +88,18 @@ public class AbrirImagemHQ extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
             switch (item.getItemId()) {
-                case R.id.navigation_shop:
+                case R.id.navigation_finish:
                    finish();
                     return true;
-                case R.id.navigation_gifts:
+                case R.id.navigation_zoom:
                     Zoom();
                     return true;
-                case R.id.navigation_cart:
+                case R.id.navigation_voltar:
 
                     viewPager.setCurrentItem(voltar(-1),true);
 
                     return true;
-                case R.id.navigation_profile:
+                case R.id.navigation_prox:
                     viewPager.setCurrentItem(prox(+1),true);
                     return true;
             }
@@ -191,18 +192,10 @@ public class AbrirImagemHQ extends AppCompatActivity {
         LayoutInflater li = getLayoutInflater();
 
         //inflamos o layout tela_opcao_foto.xml_foto.xml na view
-        View view = li.inflate(R.layout.tela_zoom, null);
+        View view = li.inflate(R.layout.dialog_zoom, null);
         //definimos para o botão do layout um clickListener
-        view.findViewById(R.id.entendi).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                //exibe um Toast informativo.
 
 
-
-                //desfaz o tela_opcao_foto.
-                alerta.dismiss();
-            }
-        });
 
         //Dialog de tela
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

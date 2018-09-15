@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Mercado;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -12,19 +13,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.AbrirImagem;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Detalhe_Mercado extends AppCompatActivity {
 
     private CarouselView fotos;
+    private ImageView botaovoltar;
     private TextView titulo,legenda,descricao,endereco,categoria,estado;
     private Mercado mercadoselecionado;
     private Dialog dialog;
     private SharedPreferences preferences = null;
+    private List<Mercado> listafotos = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +46,15 @@ public class Detalhe_Mercado extends AppCompatActivity {
         legenda = findViewById(R.id.detalhe_mercado_legenda);
         descricao = findViewById(R.id.detalhe_mercado_descricao);
         endereco = findViewById(R.id.detalhe_mercado_endereco);
+        botaovoltar = findViewById(R.id.mercado_button_back);
+        botaovoltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Detalhe_Mercado.this,MercadoActivity.class);
+                startActivity(it);
+                finish();
+            }
+        });
       //  categoria = findViewById(R.id.detalhe_mercado_categoria);
 
         //recuperar mercado selecionado
@@ -70,6 +87,19 @@ public class Detalhe_Mercado extends AppCompatActivity {
             fotos.setImageClickListener(new ImageClickListener() {
                 @Override
                 public void onClick(int position) {
+                    /*Bundle bundle = new Bundle();
+                    bundle.putString("id", mercadoselecionado.getIdMercado());
+                    Intent it = new Intent(Detalhe_Mercado.this, AbrirImagem.class);
+                    it.putExtras(bundle);
+                    startActivity(it);
+                    */
+
+
+                    List<String>  ff= mercadoselecionado.getFotos();
+                    Intent it = new Intent(Detalhe_Mercado.this,AbrirImagem.class);
+                    it.putExtra("fotoselecionada", (Serializable) ff);
+                    it.putExtra("nome",mercadoselecionado.getTitulo());
+                    startActivity(it);
 
                 }
             });

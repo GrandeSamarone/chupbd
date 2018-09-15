@@ -95,7 +95,7 @@
         <item>Agro</item>
     </string-array>
     <string name="title_activity_detalhe_evento">DetalheEvento</string>
-    <string name="analizando_informa_es_aguarde">Analizando informações,aguarde.</string>
+    <string name="analizando_informa_es_aguarde">Analisando informações,aguarde.</string>
     <string name="carregando_informa_es">Carregando...</string>
 
 </resources>
