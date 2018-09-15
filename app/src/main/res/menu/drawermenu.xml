@@ -22,7 +22,7 @@
             android:title="@string/drawer_conta"
             android:icon="@drawable/ic_conta_drawer"/>
 
-            <item android:id="@+id/mercado_menu"
+            <item android:id="@+id/comercio_menu"
                 android:title="@string/drawer_Criar_loja"
                 android:icon="@drawable/ic_loja_drawer"/>
 

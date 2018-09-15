@@ -3,10 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:paddingTop="8dp"
-    android:background="@color/primary"
-    android:gravity="center_vertical">
-
+    android:orientation="horizontal"
+   android:background="@drawable/gradiente_toolbar">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/Img_perfil_drawer"
         android:layout_width="70dp"
@@ -14,18 +20,19 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        android:background="@color/colorPrimary"
-        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp"
 
         />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
     <TextView
         android:id="@+id/Nome_usuario_drawer"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginLeft="75dp"
-        android:layout_alignLeft="@id/Img_perfil_drawer"
         android:text="Nome"
         android:textColor="@color/branco"
         android:textStyle="bold"
@@ -34,24 +41,12 @@
     <TextView
         android:id="@+id/Email_usuario_drawer"
         android:layout_width="wrap_content"
-        android:layout_below="@id/Nome_usuario_drawer"
         android:layout_height="22dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginLeft="77dp"
-        android:layout_alignLeft="@id/Img_perfil_drawer"
         android:text="nome@gmail.com"
         android:textColor="@color/brancofraco"
         />
-    <TextView
-        android:id="@+id/Tel_usuario_drawer"
-        android:layout_width="wrap_content"
-        android:layout_below="@id/Nome_usuario_drawer"
-        android:layout_height="22dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginLeft="73dp"
-        android:layout_alignLeft="@id/Img_perfil_drawer"
-        android:text="(92)9938689-89"
-        android:textColor="@color/brancofraco"
-        />
+</LinearLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>

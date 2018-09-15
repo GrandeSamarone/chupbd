@@ -11,8 +11,88 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <include android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
+
+
+    <FrameLayout
+        android:background="@drawable/gradiente_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:elevation="12dp"
+            cardview:cardCornerRadius="4dp"
+            android:foreground="?attr/selectableItemBackground"
+            xmlns:cardview="http://schemas.android.com/apk/res-auto">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/button_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:tint="@color/cinzasecunradrio"
+                    app:srcCompat="@drawable/ic_filter_list_24dp" />
+
+                <LinearLayout
+                    android:id="@+id/text_current_search_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@+id/button_filter"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/text_current_search"
+                        style="@style/AppTheme.Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="geral"
+                        android:textColor="@color/cinzasecunradrio"
+                        tools:text="Filter" />
+
+                    <TextView
+                        android:id="@+id/text_current_sort_by"
+                        style="@style/AppTheme.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Classificado por Estrela"
+                        android:textColor="@color/cinzadisabilitado" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/button_clear_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:tint="@color/cinzasecunradrio"
+                    app:srcCompat="@drawable/ic_close_white_24px" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

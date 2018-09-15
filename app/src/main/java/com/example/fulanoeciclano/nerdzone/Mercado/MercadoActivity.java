@@ -145,8 +145,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
           @Override
           public void onChildAdded(DataSnapshot dataSnapshot, String s) {
               for(DataSnapshot loja:dataSnapshot.getChildren()){
-                  for(DataSnapshot artista:loja.getChildren()){
-                      for(DataSnapshot mercados:artista.getChildren()){
+                  for(DataSnapshot estado:loja.getChildren()){
+                      for(DataSnapshot mercados:estado.getChildren()){
 
                           Mercado mercado = mercados.getValue(Mercado.class);
                           listamercado.add(mercado);

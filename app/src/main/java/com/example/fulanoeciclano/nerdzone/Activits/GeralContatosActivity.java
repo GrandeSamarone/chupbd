@@ -108,7 +108,7 @@ public class GeralContatosActivity extends AppCompatActivity {
 
 
         //Botao Pesquisa
-        SeachView = findViewById(R.id.materialSeachContatos);
+      /*  SeachView = findViewById(R.id.materialSeachContatos);
         SeachView.setHint("Pesquisar");
         SeachView.setHintTextColor(R.color.cinzaclaro);
          SeachView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -132,7 +132,7 @@ public class GeralContatosActivity extends AppCompatActivity {
                  return true;
              }
          });
-
+*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

@@ -27,7 +27,7 @@
     <string name="text_icon_camera">CÂMERA</string>
     <string name="drawer_colecoes_es">Coleções</string>
     <string name="drawer_loja">Loja</string>
-    <string name="drawer_Criar_loja">Mercado</string>
+    <string name="drawer_Criar_loja">Comércio</string>
     <string name="drawer_Promover">Promover</string>
     <string name="drawer_Suporte">Suporte</string>
     <string name="drawer_Sair">Sair</string>
@@ -37,7 +37,7 @@
     <string name="nome_do_evento">Nome do Evento</string>
     <string name="camera_tela_op_evento">Câmera</string>
     <string name="galeria_op_evento">Galeria</string>
-    <string name="mercado">Mercado</string>
+    <string name="mercado">Comércio</string>
 
 
     <string-array name="estados">
