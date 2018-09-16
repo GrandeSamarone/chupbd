@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.EventoAdapter;
-import com.example.fulanoeciclano.nerdzone.Adapter.GibiAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView recyclerViewListaGibiDC;
     private RecyclerView recyclerViewListaGibiOutros;
     private RecyclerView recyclerVieweventos;
-    private GibiAdapter adapterDC,adapterOutros;
     private AdapterMercado adapterMercado;
     private EventoAdapter adapterEvento;
     private List<Mercado> ListaGibiMercado = new ArrayList<>();
@@ -139,80 +137,8 @@ public class MainActivity extends AppCompatActivity implements
                 (R.color.colorPrimaryDark, R.color.amareloclaro,
                         R.color.accent);
 
-
-
-//Recycle
-        recyclerViewListaGibiDC = findViewById(R.id.RecycleViewGibiDC);
-        recyclerViewListaGibiOutros = findViewById(R.id.RecycleViewGibiOutros);
-        recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
-        recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
-
-        GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("mercado");
-        GibiDC = ConfiguracaoFirebase.getFirebaseDatabase().child("DC");
-        GibiOutros = ConfiguracaoFirebase.getFirebaseDatabase().child("Outros");
-        GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
-
-        //Configurar Adapter
-        adapterMercado=new AdapterMercado(ListaGibiMercado,MainActivity.this);
-        adapterDC = new GibiAdapter(ListaGibiDC,MainActivity.this);
-        adapterOutros = new GibiAdapter(ListaGibiOutros,MainActivity.this);
-        adapterEvento = new EventoAdapter(ListaEvento,MainActivity.this);
-
-        //Configurar recycleView Evento
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-        MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerVieweventos.setLayoutManager(layoutManager);
-        recyclerVieweventos.setHasFixedSize(true);
-        recyclerVieweventos.setAdapter(adapterEvento);
-        recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerVieweventos,  R.layout.header_evento));
-
-
-
-        //Configurar recycleView Marvel
-        RecyclerView.LayoutManager layoutManagerMarvel = new LinearLayoutManager
-                (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
-        recyclerViewListaGibiMercado.setHasFixedSize(true);
-        recyclerViewListaGibiMercado.setAdapter(adapterMercado);
-        recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewListaGibiMercado,  R.layout.header_evento));
-
-
-        //Configurar recycleView DC
-        RecyclerView.LayoutManager layoutManagerdc = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerViewListaGibiDC.setLayoutManager(layoutManagerdc);
-        recyclerViewListaGibiDC.setHasFixedSize(true);
-        recyclerViewListaGibiDC.setAdapter(adapterDC);
-
-        //Configurar recycleView Outros
-        RecyclerView.LayoutManager layoutManageroutros = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerViewListaGibiOutros.setLayoutManager(layoutManageroutros);
-        recyclerViewListaGibiOutros.setHasFixedSize(true);
-        recyclerViewListaGibiOutros.setAdapter(adapterOutros);
-
-
-
-        recyclerViewListaGibiMercado.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
-                recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Mercado mercadoselecionado = ListaGibiMercado.get(position);
-                Intent it = new Intent(MainActivity.this,Detalhe_Mercado.class);
-                it.putExtra("mercadoelecionado",mercadoselecionado);
-                startActivity(it);
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        }));
+        //todas configuraões do recycleview
+        Recycleview();
 
 
     }
@@ -253,11 +179,7 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (item.getItemId())
         {
-            case R.id.menusair:
-                DeslogarUsuario();
-                finish();
-                break;
-            case R.id.menuconfiguracoes:
+            case R.id.menufiltro:
                 //abrirConfiguracoes();
                 break;
         }
@@ -287,8 +209,6 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.minhascolecoes_menu) {
-           Intent it = new Intent(MainActivity.this,DescricaoGibiActivity.class);
-           startActivity(it);
         } else if (id == R.id.meus_evento_menu) {
       Intent it = new Intent(MainActivity.this,Meus_eventos.class);
       startActivity(it);
@@ -332,8 +252,7 @@ public class MainActivity extends AppCompatActivity implements
         CarregarInformacoesNoDrawer();
         botoes_Mais();
         RecuperarMercado();
-        RecuperarDC();
-        RecuperarOutros();
+
         RecuperarEvento();
     }
 
@@ -341,8 +260,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onStop() {
         super.onStop();
         GibiMercado.removeEventListener(valueEventListenerMercado);
-        GibiDC.removeEventListener(valueEventListenerDC);
-        GibiOutros.removeEventListener(valueEventListenerOutros);
         GibiEventos.removeEventListener(valueEventListenerEvento);
     }
     public  void CarregarInformacoesNoDrawer(){
@@ -367,8 +284,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onRefresh() {
         RecuperarMercado();
-        RecuperarDC();
-        RecuperarOutros();
         RecuperarEvento();
         CarregarInformacoesNoDrawer();
     }
@@ -414,8 +329,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
     }
-
-
 
     //recupera e nao deixa duplicar
     public void RecuperarMercado(){
@@ -469,97 +382,69 @@ public class MainActivity extends AppCompatActivity implements
     public void remove(Gibi gibi){
         //  GibiMarvel.child(gibi.getKey()).removeValue();
     }
-    //recupera e nao deixa duplicar DC
-    public void RecuperarDC(){
-        ListaGibiDC.clear();
-        swipe.setRefreshing(true);
-        valueEventListenerDC =GibiDC.addChildEventListener(new ChildEventListener() {
+
+
+
+
+
+    private void Recycleview(){
+        //Recycle
+        recyclerViewListaGibiDC = findViewById(R.id.RecycleViewGibiDC);
+        recyclerViewListaGibiOutros = findViewById(R.id.RecycleViewGibiOutros);
+        recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
+        recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
+
+        GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("mercado");
+
+        GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
+
+        //Configurar Adapter
+        adapterMercado=new AdapterMercado(ListaGibiMercado,MainActivity.this);
+        adapterEvento = new EventoAdapter(ListaEvento,MainActivity.this);
+
+        //Configurar recycleView Evento
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerVieweventos.setLayoutManager(layoutManager);
+        recyclerVieweventos.setHasFixedSize(true);
+        recyclerVieweventos.setAdapter(adapterEvento);
+        recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerVieweventos,  R.layout.header_evento));
+
+
+
+        //Configurar recycleView Marvel
+        RecyclerView.LayoutManager layoutManagerMarvel = new LinearLayoutManager
+                (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
+        recyclerViewListaGibiMercado.setHasFixedSize(true);
+        recyclerViewListaGibiMercado.setAdapter(adapterMercado);
+        recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerViewListaGibiMercado,  R.layout.header_evento));
+
+
+
+
+        recyclerViewListaGibiMercado.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
+                recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Gibi gibi = dataSnapshot.getValue(Gibi.class );
-                gibi.setKey(dataSnapshot.getKey());
-                ListaGibiDC.add(0,gibi);
-                adapterDC.notifyDataSetChanged();
-                swipe.setRefreshing(false);
+            public void onItemClick(View view, int position) {
+                Mercado mercadoselecionado = ListaGibiMercado.get(position);
+                Intent it = new Intent(MainActivity.this,Detalhe_Mercado.class);
+                it.putExtra("mercadoelecionado",mercadoselecionado);
+                startActivity(it);
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Gibi gibi =dataSnapshot.getValue(Gibi.class);
-                String key =dataSnapshot.getKey();
-                for(Gibi gb:ListaGibiDC){
-                    if(gb.getKey().equals(key)){
-                        gb.setValues(gibi);
-                        break;
-                    }
-                }
-                adapterDC.notifyDataSetChanged();
-                swipe.setRefreshing(false);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
-
-    //recupera e nao deixa duplicar Outros
-    public void RecuperarOutros(){
-        ListaGibiOutros.clear();
-        swipe.setRefreshing(true);
-        valueEventListenerOutros =GibiOutros.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Gibi gibi = dataSnapshot.getValue(Gibi.class );
-                gibi.setKey(dataSnapshot.getKey());
-                ListaGibiOutros.add(0,gibi);
-                adapterOutros.notifyDataSetChanged();
-                swipe.setRefreshing(false);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Gibi gibi =dataSnapshot.getValue(Gibi.class);
-                String key =dataSnapshot.getKey();
-                for(Gibi gb:ListaGibiOutros){
-                    if(gb.getKey().equals(key)){
-                        gb.setValues(gibi);
-                        break;
-                    }
-                }
-                adapterOutros.notifyDataSetChanged();
-                swipe.setRefreshing(false);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            public void onLongItemClick(View view, int position) {
 
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        }));
 
     }
 

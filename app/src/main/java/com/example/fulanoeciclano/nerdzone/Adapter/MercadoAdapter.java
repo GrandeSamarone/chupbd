@@ -5,15 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
 
-
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by fulanoeciclano on 29/08/2018.
@@ -74,7 +74,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         TextView titulo;
         TextView legenda;
         TextView categoria;
-        ImageView capa;
+        CircleImageView capa;
 
 
 

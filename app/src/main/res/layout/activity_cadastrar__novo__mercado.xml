@@ -20,15 +20,19 @@
     android:scrollbars="vertical">
 
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_marginBottom="16dp"
+        android:scrollbars="horizontal"
         >
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageLojaCadastro1"
             android:layout_width="100dp"
             android:layout_marginRight="8dp"
@@ -36,20 +40,49 @@
            android:background="@drawable/fundoloja"
             />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
+           android:visibility="gone"
             android:id="@+id/imageLojaCadastro2"
             android:layout_marginRight="8dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="@drawable/fundoloja"/>
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:visibility="gone"
             android:id="@+id/imageLojaCadastro3"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginRight="4dp"
             android:background="@drawable/fundoloja"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:visibility="gone"
+            android:id="@+id/imageLojaCadastro4"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/fundoloja"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:visibility="gone"
+            android:id="@+id/imageLojaCadastro5"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/fundoloja"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:visibility="gone"
+            android:id="@+id/imageLojaCadastro6"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/fundoloja"/>
+
+
     </LinearLayout>
+    </HorizontalScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"

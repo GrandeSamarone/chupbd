@@ -73,16 +73,16 @@
 
     <string-array name="loja">
         <item>Categoria</item>
-        <item>Roupas e Acessórios</item>
-        <item>HQS</item>
+        <item>Roupas</item>
+        <item>HQ/Manga</item>
         <item>Games</item>
-        <item>Moda</item>
-        <item>Esportes</item>
-        <item>Música</item>
-        <item>Infantil</item>
-        <item>Agro</item>
+        <item>Papelaria</item>
+        <item>Decoração</item>
+        <item>Cozinha</item>
+        <item>Action Figure</item>
+        <item>Livros</item>
+        <item>Cosplay</item>
     </string-array>
-
     <string-array name="artista">
         <item>Categoria Artista</item>
         <item>Automóveis</item>
@@ -97,5 +97,6 @@
     <string name="title_activity_detalhe_evento">DetalheEvento</string>
     <string name="analizando_informa_es_aguarde">Analisando informações,aguarde.</string>
     <string name="carregando_informa_es">Carregando...</string>
+    <string name="mais_comercio">MAIS</string>
 
 </resources>

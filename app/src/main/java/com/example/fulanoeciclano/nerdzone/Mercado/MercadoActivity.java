@@ -8,9 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Adapter.MercadoAdapter;
@@ -24,6 +27,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,12 +39,14 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     private FloatingActionButton novoMercado;
     private FirebaseAuth autenticacao;
     private SwipeRefreshLayout refresh;
+    private MaterialSearchView SeachView;
     private RecyclerView recyclerViewMercadoPublico;
     private MercadoAdapter adapter;
     private DatabaseReference mercadopublico;
     private ChildEventListener valueMercadoListener;
     private Mercado mercado;
     private List<Mercado> listamercado = new ArrayList<>();
+    private ImageView botaoPesquisar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Configuraçoes iniciais
+
         mercado = new Mercado();
         refresh = findViewById(R.id.refreshmercado);
         refresh.setOnRefreshListener(this);
@@ -109,8 +116,27 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
 
             }
         }));
-    }
 
+        //Botao Pesquisa
+        SeachView = findViewById(R.id.materialSeachComercio);
+        SeachView.setHint("Pesquisar");
+        SeachView.setHintTextColor(R.color.cinzaclaro);
+       // SeachView.setSuggestions(getResources().getStringArray(R.array.estados));
+
+
+    }
+    //botao Pesquisar
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main,menu);
+
+        //Botao Pesquisa
+
+        MenuItem item = menu.findItem(R.id.menuPesquisa);
+        SeachView.setMenuItem(item);
+
+        return super.onCreateOptionsMenu(menu);
+    }
     //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
 

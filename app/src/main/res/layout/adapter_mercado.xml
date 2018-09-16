@@ -9,12 +9,11 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
        >
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/capamercado"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/padrao"/>
+       android:background="@drawable/carregandoicone"/>
 
             <TextView
                 android:id="@+id/texttitulo"

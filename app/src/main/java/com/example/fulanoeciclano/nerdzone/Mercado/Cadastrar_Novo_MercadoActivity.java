@@ -44,13 +44,15 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String padrao = "Obrigatório";
 
 
     private AppCompatEditText campotitulo, campodesc, campotelefone, campoendereco,campofraserapida;
-    private ImageView imagem1,imagem2,imagem3;
+    private CircleImageView imagem1,imagem2,imagem3,imagem4,imagem5,imagem6;
     private StorageReference storageReference;
     private Spinner campoLocal, campoloja;
     private Button botaosalvar;
@@ -62,7 +64,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private FirebaseUser UsuarioAtual;
     private Toolbar toolbar;
     private AlertDialog dialog;
-    private ImageView gif;
+
 
 
     private String[] permissoes = new String[]{
@@ -72,6 +74,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
     private List<String> listaFotosRecuperadas = new ArrayList<>();
     private List<String> listaURLFotos = new ArrayList<>();
+    private String[] pegandoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,13 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         imagem2.setOnClickListener(this);
         imagem3 = findViewById(R.id.imageLojaCadastro3);
         imagem3.setOnClickListener(this);
+        imagem4 = findViewById(R.id.imageLojaCadastro4);
+        imagem4.setOnClickListener(this);
+        imagem5 = findViewById(R.id.imageLojaCadastro5);
+        imagem5.setOnClickListener(this);
+        imagem6 = findViewById(R.id.imageLojaCadastro6);
+        imagem6.setOnClickListener(this);
+
         mercado = new Mercado();
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         database = ConfiguracaoFirebase.getDatabase().getReference().child("mercado");
@@ -140,6 +150,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         for(int i = 0; i< listaFotosRecuperadas.size();i++){
             String urlimagem = listaFotosRecuperadas.get(i);
             int tamanholista = listaFotosRecuperadas.size();
+
             SalvarFotoStorage(urlimagem,tamanholista,i);
         }
     }
@@ -350,6 +361,16 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
             case  R.id.imageLojaCadastro3:
                 EscolherImagem(3);
                 break;
+            case  R.id.imageLojaCadastro4:
+                EscolherImagem(4);
+                break;
+            case  R.id.imageLojaCadastro5:
+                EscolherImagem(5);
+                break;
+            case  R.id.imageLojaCadastro6:
+                EscolherImagem(6);
+                break;
+
 
         }
     }
@@ -370,10 +391,21 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
             // Configurar imagem  no ImageView
             if(requestCode == 1){
                 imagem1.setImageURI(imagemSelecionada);
-            }else if(requestCode == 2){
+              imagem2.setVisibility(View.VISIBLE);
+            } else if(requestCode == 2){
                 imagem2.setImageURI(imagemSelecionada);
+                imagem3.setVisibility(View.VISIBLE);
             }else if(requestCode == 3){
                 imagem3.setImageURI(imagemSelecionada);
+                imagem4.setVisibility(View.VISIBLE);
+            }else if(requestCode == 4){
+                imagem4.setImageURI(imagemSelecionada);
+                imagem5.setVisibility(View.VISIBLE);
+            }else if(requestCode == 5){
+                imagem5.setImageURI(imagemSelecionada);
+                imagem6.setVisibility(View.VISIBLE);
+            }else if(requestCode==6){
+                imagem6.setImageURI(imagemSelecionada);
             }
             listaFotosRecuperadas.add(caminhoImagem);
         }

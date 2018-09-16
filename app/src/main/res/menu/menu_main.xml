@@ -7,13 +7,10 @@
         android:icon="@drawable/ic_search_toolbar"/>
 
     <item
-        android:id="@+id/menuconfiguracoes"
+        android:id="@+id/menufiltro"
         android:title="Configurações"
-        app:showAsAction="never"/>
+        android:icon="@drawable/ic_filter_list_24dp"
+        app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/menusair"
-        android:title="Sair"
-        app:showAsAction="never"/>
 
 </menu>

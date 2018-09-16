@@ -28,15 +28,6 @@
             android:name=".Activits.Cadastrar_icon_nome_Activity"
             android:label="@string/title_activity_cadastrar_icon_nome_"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activits.DescricaoGibiActivity"
-            android:label="@string/title_activity_descricao_gibi"
-            android:parentActivityName=".Activits.MainActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.fulanoeciclano.nerdzone.Activits.MainActivity" />
-        </activity>
         <activity android:name=".Topico.TopicoDetailActivity" />
 
         <meta-data
