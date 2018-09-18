@@ -24,8 +24,8 @@
         android:id="@+id/iconeevento"
         android:layout_width="100sp"
         android:layout_height="120sp"
-        android:background="@drawable/carregando"
         android:layout_gravity="center"
+        android:background="@drawable/carregando"
         />
 
 

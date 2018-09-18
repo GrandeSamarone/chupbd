@@ -1,23 +1,25 @@
-package com.example.fulanoeciclano.nerdzone.Fragments;
+package com.example.fulanoeciclano.nerdzone.Evento;
 
-
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Evento.Evento_Adapter;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,14 +27,14 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class EventoListaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayout.OnRefreshListener
 {
 
     private DatabaseReference mDatabaseevento;
     private SwipeRefreshLayout swipeatualizar;
+    private CircleImageView icone;
     private FirebaseAuth autenticacao;
     private FirebaseAuth mFirebaseAuth;
     private FloatingActionButton Novo_Evento;
@@ -42,21 +44,27 @@ public class EventoListaFragment extends Fragment implements SwipeRefreshLayout.
     private ChildEventListener valueEventListenerEvento;
     private LinearLayoutManager mManager;
     private Usuario user;
-
-    public EventoListaFragment() {
-        // Required empty public constructor
-    }
-
-
+    private Toolbar toolbar;
+    private String mPhotoUrl;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Fresco.initialize(getContext());
-           View view=  inflater.inflate(R.layout.fragment_evento_lista, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_evento__lista);
+
+       icone = findViewById(R.id.icone_img_toolbar_evento);
+        toolbar = findViewById(R.id.toolbarevento);
+        setSupportActionBar(toolbar);
+
+        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
+        mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
+
+        Glide.with(Evento_Lista.this)
+                .load(mPhotoUrl)
+                .into(icone);
 
         //ROLAR PARA ATUALIZAR
-        swipeatualizar= view.findViewById(R.id.swipe_list_evento);
-        swipeatualizar.setOnRefreshListener(EventoListaFragment.this);
+        swipeatualizar= findViewById(R.id.swipe_list_evento);
+        swipeatualizar.setOnRefreshListener(Evento_Lista.this);
 
         swipeatualizar.post(new Runnable() {
             @Override
@@ -71,20 +79,46 @@ public class EventoListaFragment extends Fragment implements SwipeRefreshLayout.
                         R.color.accent);
 
         //Configuracoes Basicas
-        recyclerEvento = view.findViewById(R.id.lista_evento);
+        recyclerEvento = findViewById(R.id.lista_evento);
         mDatabaseevento = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
 
         //Configura Adapter
-        adapterevento = new Evento_Adapter(ListaEvento,getActivity());
+        adapterevento = new Evento_Adapter(ListaEvento,this);
 
         //Adapter
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerEvento.setLayoutManager(layoutManager);
         recyclerEvento.setHasFixedSize(true);
         recyclerEvento.setAdapter(adapterevento);
 
-        return view;
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    //Botao Voltar
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+               // NavUtils.navigateUpFromSameTask(this);
+                startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    finishAffinity();
+                }else{
+                    finish();
+                }
+
+                break;
+
+            default:break;
+        }
+
+        return true;
+    }
+
+
 
     @Override
     public void onRefresh() {
@@ -139,4 +173,5 @@ public class EventoListaFragment extends Fragment implements SwipeRefreshLayout.
 
 
     }
+
 }

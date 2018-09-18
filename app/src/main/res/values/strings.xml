@@ -31,7 +31,7 @@
     <string name="drawer_Promover">Promover</string>
     <string name="drawer_Suporte">Suporte</string>
     <string name="drawer_Sair">Sair</string>
-    <string name="drawer_eventos">Eventos</string>
+    <string name="drawer_eventos">Evento</string>
     <string name="drawer_mensagens">Mensagens</string>
     <string name="drawer_conta">Conta</string>
     <string name="nome_do_evento">Nome do Evento</string>
@@ -98,5 +98,8 @@
     <string name="analizando_informa_es_aguarde">Analisando informações,aguarde.</string>
     <string name="carregando_informa_es">Carregando...</string>
     <string name="mais_comercio">MAIS</string>
+    <string name="drawer_topico">Tópico</string>
+    <string name="drawer_galeria">Galeria</string>
+    <string name="name_evento">Eventos</string>
 
 </resources>

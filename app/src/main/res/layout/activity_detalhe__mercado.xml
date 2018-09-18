@@ -34,9 +34,9 @@
             android:id="@+id/mercado_button_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:layout_alignLeft="@+id/mercado_detalhe_rating"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="0dp"
+
             android:src="@drawable/ic_arrow_back" />
 
 
@@ -149,11 +149,35 @@
         android:drawableLeft="@drawable/ic_location"
         android:hint="endereco"
         />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/preto"
+            android:hint="Criado por: "
+            />
+
+    <TextView
+        android:id="@+id/detalhe_mercado_criador"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/preto"
+        android:hint="asasas "
+        />
+</LinearLayout>
 </LinearLayout>
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_show_rating_dialog"
+        android:id="@+id/fab_entrar_em_contato"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

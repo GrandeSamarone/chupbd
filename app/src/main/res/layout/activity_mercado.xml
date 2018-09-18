@@ -39,7 +39,7 @@
         android:src="@drawable/ic_add_24dp"
         app:fabSize="normal"
         app:ico_size ="44dp"
-        android:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorPrimary"
         android:layout_margin="16dp"/>
     </RelativeLayout>
 </LinearLayout>

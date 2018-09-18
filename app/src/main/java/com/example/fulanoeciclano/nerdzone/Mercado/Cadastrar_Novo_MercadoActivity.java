@@ -57,7 +57,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private Spinner campoLocal, campoloja;
     private Button botaosalvar;
     private DatabaseReference database;
-    private String identificadorUsuario,estadostring,lojastring;
+    private String identificadorUsuario,estadostring,lojastring,autorstring;
     private FirebaseAuth autenticacao;
     private Mercado mercado;
     private Usuario usuarioLogado;
@@ -243,8 +243,10 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         String descricao = campodesc.getText().toString();
         String fraserapida = campofraserapida.getText().toString();
         String endereco = campoendereco.getText().toString();
+        String autor = usuarioLogado.getNome();
 
         mercado.setEstado(estado);
+        mercado.setAutor(autor);
         mercado.setCategoria(loja);
         mercado.setTitulo(titulo);
         mercado.setTelefone(telefone);

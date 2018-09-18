@@ -14,6 +14,7 @@ import java.util.List;
 public class Mercado implements Serializable {
 
     private String idMercado;
+    private String autor;
     private String categoria;
     private String estado;
     private String titulo;
@@ -43,6 +44,13 @@ public class Mercado implements Serializable {
       //  salvarAnuncioPublico();
     }
 
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
 
     public String getIdMercado() {
         return idMercado;

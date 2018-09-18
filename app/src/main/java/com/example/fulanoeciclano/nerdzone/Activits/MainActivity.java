@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.EventoAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements
     private ChildEventListener valueEventListenerEvento;
     private ChildEventListener valueEventListenerDC;
     private ChildEventListener valueEventListenerOutros;
-    private TextView maisventoTxt;
+    private TextView maiseventoTxt,maiscomercioTxt;
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
@@ -191,11 +192,20 @@ public class MainActivity extends AppCompatActivity implements
 
 
   private void botoes_Mais(){
-      maisventoTxt = findViewById(R.id.maisevento);
-      maisventoTxt.setOnClickListener(new View.OnClickListener() {
+      maiseventoTxt = findViewById(R.id.maisevento);
+      maiseventoTxt.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              Intent it = new Intent(MainActivity.this, MercadoActivity.class);
+              Intent it = new Intent(MainActivity.this, Evento_Lista.class);
+              startActivity(it);
+          }
+      });
+
+      maiscomercioTxt= findViewById(R.id.maiscomercio);
+      maiscomercioTxt.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              Intent it = new Intent( MainActivity.this,MercadoActivity.class);
               startActivity(it);
           }
       });
@@ -209,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.minhascolecoes_menu) {
-        } else if (id == R.id.meus_evento_menu) {
+        } else if (id == R.id.minhaloja_menu) {
       Intent it = new Intent(MainActivity.this,Meus_eventos.class);
       startActivity(it);
         } else if (id == R.id.mensagens_menu) {
@@ -221,6 +231,9 @@ public class MainActivity extends AppCompatActivity implements
         }
         else if (id == R.id.comercio_menu) {
             Intent it = new Intent(MainActivity.this,MercadoActivity.class);
+            startActivity(it);
+        }else if (id == R.id.evento_menu) {
+            Intent it = new Intent(MainActivity.this,Evento_Lista.class);
             startActivity(it);
         }
 

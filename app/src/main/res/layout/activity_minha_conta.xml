@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/gradiente_toolbar"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -58,6 +58,7 @@
             android:src="@drawable/ic_add_a_photo"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="8dp"
+            app:backgroundTint="@color/colorPrimary"
             app:layout_anchor="@id/circleImageViewFotoPerfil"
             app:layout_anchorGravity="bottom|end"
             />
@@ -107,6 +108,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_botao_salvar"
+        app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
         android:layout_marginRight="24dp" />
 </android.support.constraint.ConstraintLayout>
