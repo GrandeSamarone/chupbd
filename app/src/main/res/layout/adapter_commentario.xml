@@ -7,7 +7,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/comment_photo"
+        android:id="@+id/commentario_foto"
         android:layout_width="32dp"
         android:layout_height="32dp"
         fresco:roundAsCircle="true"
@@ -22,12 +22,12 @@
         android:orientation="vertical"
         android:layout_marginLeft="10dp"
         android:padding="5dp"
-        android:layout_toRightOf="@+id/comment_photo"
+        android:layout_toRightOf="@+id/commentario_foto"
         android:id="@+id/linearLayout2">
 
         <TextView
 
-            android:id="@+id/comment_author"
+            android:id="@+id/commentario_author"
             android:textColor="@color/preto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
 
         <com.vanniktech.emoji.EmojiTextView
               android:textColor="@color/preto"
-            android:id="@+id/comment_body"
+            android:id="@+id/comentario_mensagem"
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

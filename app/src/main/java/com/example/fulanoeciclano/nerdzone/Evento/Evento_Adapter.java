@@ -1,7 +1,6 @@
 package com.example.fulanoeciclano.nerdzone.Evento;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -94,7 +93,7 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
         });
 
 
-        holder.card.setOnClickListener(new View.OnClickListener() {
+        /*holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
              Intent it = new Intent(context,EventoDetailActivity.class) ;
@@ -108,7 +107,7 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
                 context.startActivity(it);
             }
         });
-
+*/
     }
 
 

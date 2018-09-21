@@ -1,12 +1,14 @@
-<android.support.v4.widget.SwipeRefreshLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_ac_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:fitsSystemWindows="true"
     >
 <android.support.v4.widget.DrawerLayout
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -17,6 +19,7 @@
 
 
         <LinearLayout
+            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -45,7 +48,7 @@
                      android:layout_width="36dp"
                      android:layout_height="36dp"
                      android:layout_alignParentRight="true"
-                     android:layout_marginRight="16dp"
+                     android:layout_marginRight="8dp"
 
                      />
                  </RelativeLayout>

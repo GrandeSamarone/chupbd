@@ -10,7 +10,10 @@
         android:id="@+id/menufiltro"
         android:title="Configurações"
         android:icon="@drawable/ic_filter_list_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
-
+    <item
+        android:id="@+id/menufiltroa"
+        android:title=""
+        app:showAsAction="always" />
 </menu>

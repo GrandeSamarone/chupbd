@@ -47,8 +47,6 @@ import com.vanniktech.emoji.listeners.OnSoftKeyboardOpenListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.fulanoeciclano.nerdzone.Helper.App.getUid;
-
 public class TopicoDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "EventoDetailActivity";
@@ -109,11 +107,11 @@ public class TopicoDetailActivity extends AppCompatActivity {
                 .child("batepapo-comments").child(mPostKey);
 
         // Initialize Views
-        mAuthorView = findViewById(R.id.post_author);
+      //  mAuthorView = findViewById(R.id.post_author);
         nomeTopico = findViewById(R.id.nomeTopico);
         mTitleView = findViewById(R.id.post_title);
         mBodyView = findViewById(R.id.post_body);
-        mAuthorFotoView=findViewById(R.id.post_author_photo);
+      //  mAuthorFotoView=findViewById(R.id.post_author_photo);
         mCommentField = findViewById(R.id.field_comment_text);
         mCommentButton = findViewById(R.id.button_post_comment);
         botao_icone = findViewById(R.id.button_post_icone);
@@ -196,7 +194,7 @@ public class TopicoDetailActivity extends AppCompatActivity {
                 .setOnEmojiPopupShownListener(new OnEmojiPopupShownListener() {
                     @Override
                     public void onEmojiPopupShown() {
-                        botao_icone.setImageResource(R.drawable.teclado);
+                        botao_icone.setImageResource(R.drawable.ic_teclado);
                     }
                 })
                 .setOnSoftKeyboardOpenListener(new OnSoftKeyboardOpenListener() {
@@ -223,7 +221,7 @@ public class TopicoDetailActivity extends AppCompatActivity {
                 .build(mCommentField);
     }
     private void postComment() {
-
+/*
         final String uid = getUid();
         mDatabase.child("usuarios").child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -260,6 +258,7 @@ public class TopicoDetailActivity extends AppCompatActivity {
 
                     }
                 });
+                */
     }
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
@@ -271,9 +270,9 @@ public class TopicoDetailActivity extends AppCompatActivity {
         private CommentViewHolder(View itemView) {
             super(itemView);
 
-            authorView = itemView.findViewById(R.id.comment_author);
-            mensagemView = itemView.findViewById(R.id.comment_body);
-            fotoAuthorView = itemView.findViewById(R.id.comment_photo);
+            authorView = itemView.findViewById(R.id.commentario_author);
+            mensagemView = itemView.findViewById(R.id.comentario_mensagem);
+            fotoAuthorView = itemView.findViewById(R.id.commentario_foto);
         }
 
 
@@ -398,7 +397,7 @@ public class TopicoDetailActivity extends AppCompatActivity {
             @Override
             public TopicoDetailActivity.CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 LayoutInflater inflater = LayoutInflater.from(mContext);
-                View view = inflater.inflate(R.layout.item_comment, parent, false);
+                View view = inflater.inflate(R.layout.adapter_commentario, parent, false);
                 return new TopicoDetailActivity.CommentViewHolder(view);
             }
 

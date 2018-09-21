@@ -1,7 +1,10 @@
 package com.example.fulanoeciclano.nerdzone.Activits;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
@@ -21,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.EventoAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
@@ -38,6 +44,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,12 +115,14 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigat_id);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //carregar icone na toollbar
+        IconeUsuario();
        //esse cod desativa o padrao das cores da naevagacao
         //configuraçoes basica navigation
         navigationView.setItemIconTintList(null);
         View navHeaderView = navigationView.getHeaderView(0);
         img_drawer=navHeaderView.findViewById(R.id.Img_perfil_drawer);
-        img_toolbar = findViewById(R.id.icone_img_toolbar);
         nome_drawer = navHeaderView.findViewById(R.id.Nome_usuario_drawer);
         email_drawer=navHeaderView.findViewById(R.id.Email_usuario_drawer);
 
@@ -141,10 +150,51 @@ public class MainActivity extends AppCompatActivity implements
         //todas configuraões do recycleview
         Recycleview();
 
+        //Trocando Fundo statusbar
+        TrocarFundos_status_bar();
 
     }
 
 
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+        }
+    }
+
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
 
 
     @Override
@@ -178,12 +228,22 @@ public class MainActivity extends AppCompatActivity implements
 
     public boolean  onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.menufiltro:
                 //abrirConfiguracoes();
                 break;
+        }/*
+        case android.R.id.home:
+        // NavUtils.navigateUpFromSameTask(this);
+        startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            finishAffinity();
+        }else{
+            finish();
         }
+
+        break;
+        */
         if(toggle.onOptionsItemSelected(item)){
             return true;
         }
@@ -256,7 +316,10 @@ public class MainActivity extends AppCompatActivity implements
         }
         });
         */
+
     }
+
+
 
     @Override
     protected void onStart() {
@@ -288,9 +351,7 @@ public class MainActivity extends AppCompatActivity implements
                 .load(mPhotoUrl)
                 .into(img_drawer);
 
-        Glide.with(MainActivity.this)
-                .load(mPhotoUrl)
-                .into(img_toolbar);
+
         swipe.setRefreshing(false);
     }
 
@@ -313,35 +374,40 @@ public class MainActivity extends AppCompatActivity implements
 
                 adapterEvento.notifyDataSetChanged();
                 swipe.setRefreshing(false);
-
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             }
-
-
-
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
-
     }
+    private void IconeUsuario() {
+        //Imagem do icone do usuario
+        img_toolbar = findViewById(R.id.icone_img_toolbar);
+        img_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this, MinhaConta.class);
+                startActivity(it);
+            }
+        });
+        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
+        mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
+
+        Glide.with(MainActivity.this)
+                .load(mPhotoUrl)
+                .into(img_toolbar);
+    }
+
 
     //recupera e nao deixa duplicar
     public void RecuperarMercado(){
@@ -370,24 +436,15 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
         swipe.setRefreshing(false);
@@ -424,6 +481,26 @@ public class MainActivity extends AppCompatActivity implements
         recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
                 recyclerVieweventos,  R.layout.header_evento));
 
+        recyclerVieweventos.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
+                recyclerVieweventos, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Evento eventoselecionado = ListaEvento.get(position);
+                Intent it = new Intent(MainActivity.this,DetalheEvento.class);
+                it.putExtra("eventoselecionado",eventoselecionado);
+                startActivity(it);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
 
 
         //Configurar recycleView Marvel
@@ -434,9 +511,6 @@ public class MainActivity extends AppCompatActivity implements
         recyclerViewListaGibiMercado.setAdapter(adapterMercado);
         recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
                 recyclerViewListaGibiMercado,  R.layout.header_evento));
-
-
-
 
         recyclerViewListaGibiMercado.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
                 recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
@@ -458,7 +532,6 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         }));
-
     }
 
 }

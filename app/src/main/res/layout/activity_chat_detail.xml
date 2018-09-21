@@ -9,7 +9,7 @@
 
     >
      <android.support.v7.widget.Toolbar
-    android:id="@+id/toolbarprincipal"
+    android:id="@+id/toolbarchat"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
@@ -28,19 +28,7 @@
 
      </android.support.v7.widget.Toolbar>
 
-    <include
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:layout_below="@id/toolbarprincipal"
-        android:id="@+id/post_author_layout"
-        layout="@layout/include_post_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true" />
+
 
     <include
 
@@ -71,7 +59,7 @@
         app:stackFromEnd="true"
         android:layout_below="@+id/post_text_layout"
         android:layout_above="@+id/comment_form"
-        tools:listitem="@layout/item_comment" />
+        tools:listitem="@layout/adapter_commentario" />
 
     <LinearLayout
         android:id="@+id/comment_form"

@@ -27,18 +27,22 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="@drawable/gradiente" />
+            android:background="@drawable/gradientefundobranco" />
 
         <!-- Back button -->
-        <ImageView
-            android:id="@+id/mercado_button_back"
+        <RelativeLayout
             android:layout_width="wrap_content"
+            android:padding="8dp"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/mercado_detalhe_rating"
+            >
+        <ImageView
+            android:id="@+id/mercado_button_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginTop="0dp"
-
-            android:src="@drawable/ic_arrow_back" />
-
+            android:src="@drawable/ic_back" />
+        </RelativeLayout>
 
 
         <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -184,6 +188,6 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_chat_24dp"
+        app:srcCompat="@drawable/ic_add_chat"
         tools:ignore="VectorDrawableCompat" />
 </RelativeLayout>

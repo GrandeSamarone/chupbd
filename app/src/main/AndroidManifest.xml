@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activits.MainActivity" />
+        <activity android:name=".Activits.MainActivity"/>
+
         <activity android:name=".Autenticacao.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,9 +55,6 @@
         <activity android:name=".Activits.MeusAmigosActivity" />
         <activity android:name=".Activits.AbrirImgChatActivity" />
         <activity android:name=".Evento.NewEventoActivity" />
-        <activity
-            android:name=".Evento.EventoDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activits.Meus_eventos" />
         <activity android:name=".Mercado.MercadoActivity" />
         <activity android:name=".Mercado.Cadastrar_Novo_MercadoActivity" />

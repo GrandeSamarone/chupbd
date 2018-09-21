@@ -108,7 +108,7 @@
             android:layout_height="220dp"
             android:scaleType="centerCrop"
             android:layout_below="@id/tituloeventopostagem"
-            android:background="@drawable/gradiente" />
+            android:background="@drawable/gradientefundobranco" />
 
         <LinearLayout
           android:layout_below="@id/imgeventopostagem"

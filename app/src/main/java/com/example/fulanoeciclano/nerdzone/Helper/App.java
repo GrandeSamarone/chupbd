@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Helper;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatDelegate;
@@ -27,6 +28,8 @@ import static android.app.UiModeManager.MODE_NIGHT_AUTO;
 
 public class App extends Application {
     private FirebaseDatabase data;
+    private Context c;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -55,7 +58,11 @@ public class App extends Application {
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().build());
         }
 
+
+
+
     }
+
     public static String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }

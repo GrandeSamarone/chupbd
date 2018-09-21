@@ -17,13 +17,13 @@
 
         <ImageView
             android:id="@+id/foto_button_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="?attr/selectableItemBackground"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="8dp"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_marginLeft="8dp"

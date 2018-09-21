@@ -352,7 +352,7 @@ public class ChatActivity extends AppCompatActivity implements SwipeRefreshLayou
                 .setOnEmojiPopupShownListener(new OnEmojiPopupShownListener() {
                     @Override
                     public void onEmojiPopupShown() {
-                        botao_icone.setImageResource(R.drawable.teclado);
+                        botao_icone.setImageResource(R.drawable.ic_teclado);
                     }
                 })
                 .setOnSoftKeyboardOpenListener(new OnSoftKeyboardOpenListener() {

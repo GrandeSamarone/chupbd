@@ -3,6 +3,7 @@ package com.example.fulanoeciclano.nerdzone.Mercado;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,26 +18,36 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Adapter.MercadoAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindowFlag;
 
 public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -54,12 +65,15 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     private ImageView botaoPesquisar;
     private SharedPreferences preferences = null;
     private Dialog dialog;
+    private CircleImageView icone;
+    private String mPhotoUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_mercado);
 
+        IconeUsuario();
         toolbar = findViewById(R.id.toolbarprincipal);
         toolbar.setTitle(R.string.mercado);
         setSupportActionBar(toolbar);
@@ -156,8 +170,55 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
             }
         });
 
+        TrocarFundos_status_bar();
 
+    }
 
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+        }
+    }
+
+    private void IconeUsuario() {
+        //Imagem do icone do usuario
+        icone = findViewById(R.id.icone_user_toolbar);
+        icone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MercadoActivity.this, MinhaConta.class);
+                startActivity(it);
+            }
+        });
+        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
+        mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
+
+        Glide.with(MercadoActivity.this)
+                .load(mPhotoUrl)
+                .into(icone);
     }
 
     private void Dialog_Primeiravez() {
