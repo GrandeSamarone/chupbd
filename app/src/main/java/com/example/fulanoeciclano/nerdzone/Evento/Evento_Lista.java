@@ -66,7 +66,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         setContentView(R.layout.activity_evento__lista);
 
 
-        toolbar = findViewById(R.id.toolbarprincipal);
+        toolbar = findViewById(R.id.toolbarsecundario);
         toolbar.setTitle(R.string.name_evento);
         setSupportActionBar(toolbar);
 

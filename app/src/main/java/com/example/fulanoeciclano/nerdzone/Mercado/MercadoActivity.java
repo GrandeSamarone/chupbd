@@ -74,7 +74,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         setContentView(R.layout.activity_mercado);
 
         IconeUsuario();
-        toolbar = findViewById(R.id.toolbarprincipal);
+        toolbar = findViewById(R.id.toolbarsecundario);
         toolbar.setTitle(R.string.mercado);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -181,13 +181,13 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
         }
         if (Build.VERSION.SDK_INT >= 19) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
             //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
         }
         //make fully Android Transparent Status bar
@@ -199,7 +199,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
             systemBarTintManager.setNavigationBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
         }
     }
 

@@ -9,7 +9,7 @@
     tools:context="com.example.fulanoeciclano.nerdzone.Mercado.Cadastrar_Novo_MercadoActivity">
 
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbarsecundario"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

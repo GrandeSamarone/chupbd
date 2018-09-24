@@ -9,20 +9,12 @@
         <item name="colorAccent">@color/colorAccent</item>
        </style>
 
-    <!-- Inclua este style -->
-    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
-        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
-    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
 
-    <!-- Inclua este style, altere o código para a cor que pretender -->
-    <style name="MyActionBarTitleText"
-        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-
-        <!-- Cor vermelha -->
-        <item name="android:textColor">#FFFF0000</item>
     </style>
-<!-- Theme.AppCompat.Light-->
+       <!-- Theme.AppCompat.Light-->
     <style name="botaopadrao" parent="Theme.AppCompat.Light">
 
         <item name="colorControlHighlight">#00bff9</item>
@@ -46,12 +38,5 @@
         <item name="android:layout_marginRight">4dp</item>
 
     </style>
-
-    <style name="AppTheme.PizzaGuy">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">150dp</item>
-    </style>
-
-
 
 </resources>

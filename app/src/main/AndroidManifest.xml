@@ -6,7 +6,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <supports-screens android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true"
+        android:anyDensity="true" />
     <!-- <uses-sdk tools:overrideLibrary="com.firebase.ui.auth" /> -->
     <application
         android:name=".Helper.App"
@@ -27,13 +31,8 @@
         </activity>
         <activity
             android:name=".Activits.Cadastrar_icon_nome_Activity"
-            android:label="@string/title_activity_cadastrar_icon_nome_"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_cadastrar_icon_nome_" />
         <activity android:name=".Topico.TopicoDetailActivity" />
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_application_id" />
 
         <activity
             android:name=".Icons.PageIcon"
@@ -61,8 +60,9 @@
         <activity
             android:name=".Evento.DetalheEvento"
             android:label="@string/title_activity_detalhe_evento"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".Mercado.Detalhe_Mercado" />
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Mercado.Detalhe_Mercado"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Activits.Gifteste" />
         <activity android:name=".Activits.AbrirImagem" />
         <activity android:name=".Evento.Evento_Lista"></activity>

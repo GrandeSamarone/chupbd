@@ -87,7 +87,7 @@ public class TopicoDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_chat_detail);
-      toolbar = findViewById(R.id.toolbarprincipal);
+      toolbar = findViewById(R.id.toolbarsecundario);
         toolbar.setTitle("");
       setSupportActionBar(toolbar);
         // Esta linha precisa ser executada antes de qualquer uso de EmojiTextView, EmojiEditText ou EmojiButton.

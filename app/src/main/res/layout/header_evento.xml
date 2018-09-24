@@ -1,8 +1,9 @@
 <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="91dp"
+    android:layout_height="89dp"
+    android:layout_marginRight="16dp"
     android:orientation="vertical"
-    android:background="@drawable/testeff"
+    android:visibility="invisible"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 

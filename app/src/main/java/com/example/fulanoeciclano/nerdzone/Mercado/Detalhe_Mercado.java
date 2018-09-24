@@ -40,7 +40,7 @@ public class Detalhe_Mercado extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalhe__mercado);
+        setContentView(R.layout.activty_detalhe_mercados);
 
 
 
@@ -119,7 +119,11 @@ public class Detalhe_Mercado extends AppCompatActivity {
             });
         }
 
+
     }
+
+
+
 
     @Override
     protected void onStart() {

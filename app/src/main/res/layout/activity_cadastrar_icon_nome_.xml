@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/include2"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbarsecundario" />
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordimg"

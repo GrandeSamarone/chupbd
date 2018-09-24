@@ -95,7 +95,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         final Calendar calendar12 = Calendar.getInstance();
         Log.i("dataa", String.valueOf(calendar12.getTime()));
         //Configuraçoes
-        toolbar = findViewById(R.id.toolbarprincipal);
+        toolbar = findViewById(R.id.toolbarsecundario);
         toolbar.setTitle("Criar Evento");
         setSupportActionBar(toolbar);
         eventos = new Evento();
