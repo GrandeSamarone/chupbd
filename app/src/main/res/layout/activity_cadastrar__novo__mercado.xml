@@ -33,6 +33,7 @@
         android:scrollbars="horizontal"
         >
 
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageLojaCadastro1"
             android:layout_width="100dp"
@@ -134,7 +135,7 @@
             android:id="@+id/fraserapida_mercado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Legenda Ex: Games e muito mais.."
+            android:hint="@string/legenda_nvo_comercio"
             android:padding="10dp"
             android:maxLength="40"
             android:background="@drawable/bg_edit_text"
@@ -156,7 +157,7 @@
             android:maxLength="400"
             android:layout_width="match_parent"
             android:layout_height="90dp"
-            android:hint="DESCRIÇÃO"
+            android:hint="@string/descricao"
             android:background="@drawable/bg_edit_text"
             android:textAlignment="center"
             android:inputType="textMultiLine"
@@ -174,7 +175,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Telefone"
+            android:hint="Preço (OPCIONAL)"
             android:background="@drawable/bg_edit_text"
             android:textAlignment="center"
             android:inputType="textMultiLine"

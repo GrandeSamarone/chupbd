@@ -98,28 +98,7 @@
         tools:text="Italian"
         android:textStyle="italic"/>
 
-    <ImageView
 
-        android:layout_toRightOf="@+id/img2"
-        android:id="@+id/img1"
-        android:layout_below="@id/mercado_top_card"
-        android:layout_marginTop="8dp"
-        android:layout_width="36dp"
-        android:layout_marginRight="8dp"
-        android:layout_height="36dp"
-        android:background="@drawable/testeff"
-        />
-    <ImageView
-        android:layout_toRightOf="@id/detalhe_mercado_titulo"
-        android:layout_below="@id/mercado_top_card"
-        android:id="@+id/img2"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:background="@drawable/testegg"
-        />
     <LinearLayout
     android:id="@+id/liner"
     android:layout_below="@+id/detalhe_mercado_legenda"

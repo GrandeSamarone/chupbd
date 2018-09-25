@@ -2,6 +2,7 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
@@ -22,11 +23,14 @@ public class Mercado implements Serializable {
     private String telefone;
     private String descricao;
     private String fraserapida;
+    private String data;
     private List<String> fotos;
-
+    private String icone;
+    @JsonIgnore
+    private String key;
     public Mercado() {
         DatabaseReference mercadoref = ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("mercado");
+                .child("comercio");
         setIdMercado(mercadoref.push().getKey());
     }
 
@@ -35,10 +39,9 @@ public class Mercado implements Serializable {
     public void salvar(){
         String idUsuario = ConfiguracaoFirebase.getIdUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("mercado");
-        anuncioref.child(idUsuario)
+                .child("comercio");
+        anuncioref.child(getEstado())
                 .child(getCategoria())
-                .child(getEstado())
                 .child(getIdMercado()).setValue(this);
 
       //  salvarAnuncioPublico();
@@ -60,6 +63,13 @@ public class Mercado implements Serializable {
         this.idMercado = idMercado;
     }
 
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
 
     public String getCategoria() {
         return categoria;
@@ -123,5 +133,26 @@ public class Mercado implements Serializable {
 
     public void setFotos(List<String> fotos) {
         this.fotos = fotos;
+    }
+
+    public String getIcone() {
+        return icone;
+    }
+
+    public void setIcone(String icone) {
+        this.icone = icone;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public void setValues(Mercado mercado) {
+        titulo=mercado.titulo;
+
     }
 }

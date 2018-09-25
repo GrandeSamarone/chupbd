@@ -74,7 +74,7 @@
     <string-array name="loja">
         <item>Categoria</item>
         <item>Roupas</item>
-        <item>HQ/Manga</item>
+        <item>HQ</item>
         <item>Games</item>
         <item>Papelaria</item>
         <item>Decoração</item>
@@ -101,5 +101,8 @@
     <string name="drawer_topico">Tópico</string>
     <string name="drawer_galeria">Galeria</string>
     <string name="name_evento">Eventos</string>
+    <string name="novocomercio">Novo Comércio</string>
+    <string name="legenda_nvo_comercio">Legenda Ex: Games e muito mais..</string>
+    <string name="descricao">DESCRIÇÃO</string>
 
 </resources>

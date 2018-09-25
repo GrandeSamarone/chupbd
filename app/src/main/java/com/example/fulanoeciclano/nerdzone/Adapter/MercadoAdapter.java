@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
@@ -28,7 +29,9 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         this.mercados=mercado;
         this.context=context;
     }
-
+    public List<Mercado> getmercados(){
+        return this.mercados;
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
          View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_mercado,parent,false);
@@ -52,14 +55,18 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         }
 
         List<String> urlFotos = mercado.getFotos();
-        String stringcapa = urlFotos.get(0);
+              if(urlFotos!=null) {
+                  String stringcapa = urlFotos.get(0);
+                  if (stringcapa != null) {
+                      Glide.with(context)
+                              .load(stringcapa)
+                              .into(holder.capa);
 
-        if (stringcapa != null) {
-            Glide.with(context)
-                    .load(stringcapa)
-                    .into(holder.capa);
+                  }else{
+                      Toast.makeText(context, "erro", Toast.LENGTH_SHORT).show();
+                  }
+              }
 
-        }
     }
 
     @Override

@@ -32,4 +32,5 @@
 
     <dimen name="margenRightChat">30dp</dimen>
     <dimen name="margenLeftChat">30dp</dimen>
+    <dimen name="margin_value_10dp">10</dimen>
 </resources>

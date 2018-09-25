@@ -42,7 +42,6 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,12 +60,13 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     private DatabaseReference mercadopublico;
     private ChildEventListener valueMercadoListener;
     private Mercado mercado;
-    private List<Mercado> listamercado = new ArrayList<>();
+    private ArrayList<Mercado> listamercado = new ArrayList<>();
     private ImageView botaoPesquisar;
     private SharedPreferences preferences = null;
     private Dialog dialog;
     private CircleImageView icone;
     private String mPhotoUrl;
+    private LinearLayoutManager mManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,13 +102,15 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
                 (R.color.colorPrimaryDark, R.color.amareloclaro,
                         R.color.accent);
 
-        mercadopublico = ConfiguracaoFirebase.getFirebaseDatabase().child("mercado");
+        mercadopublico = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         recyclerViewMercadoPublico = findViewById(R.id.recycleviewmercado);
-
-        //recycleview
-        recyclerViewMercadoPublico.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewMercadoPublico.setHasFixedSize(true);
+        //recycleview
+        mManager = new LinearLayoutManager(this);
+        mManager.setReverseLayout(true);
+        mManager.setStackFromEnd(true);
+        recyclerViewMercadoPublico.setLayoutManager(mManager);
         adapter = new MercadoAdapter(listamercado, this);
         recyclerViewMercadoPublico.setAdapter(adapter);
 
@@ -127,10 +129,14 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
                 recyclerViewMercadoPublico, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Mercado mercadoselecionado = listamercado.get(position);
-                Intent it = new Intent(MercadoActivity.this,Detalhe_Mercado.class);
-                it.putExtra("mercadoelecionado",mercadoselecionado);
-                startActivity(it);
+                List<Mercado> listMercadoAtualizado = adapter.getmercados();
+
+                if (listMercadoAtualizado.size() > 0) {
+                    Mercado mercadoselecionado = listMercadoAtualizado.get(position);
+                    Intent it = new Intent(MercadoActivity.this, Detalhe_Mercado.class);
+                    it.putExtra("mercadoelecionado", mercadoselecionado);
+                    startActivity(it);
+                }
             }
 
             @Override
@@ -163,7 +169,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
                 }else{
 
 
-                    recarregarContatos();
+                    recarregarMercado();
                 }
 
                 return true;
@@ -174,6 +180,110 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     }
 
+    @Override
+    public void onRefresh() {
+        refresh.setRefreshing(true);
+        RecuperarMercadoPublicos();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    RecuperarMercadoPublicos();
+    }
+
+    public void onStop() {
+        super.onStop();
+        mercadopublico.removeEventListener(valueMercadoListener);
+    }
+
+    public void RecuperarMercadoPublicos() {
+
+        listamercado.clear();
+        refresh.setRefreshing(true);
+      valueMercadoListener = mercadopublico.addChildEventListener(new ChildEventListener() {
+          @Override
+          public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+              for(DataSnapshot categorias:dataSnapshot.getChildren()){
+                  for(DataSnapshot mercados:categorias.getChildren()){
+                              Mercado mercado = mercados.getValue(Mercado.class);
+                              // mercado.setKey(mercados.getKey());
+
+                              listamercado.add(mercado);
+                           //   recyclerViewMercadoPublico.scrollToPosition(listamercado.size()-1);
+                            //   Collections.reverse(listamercado);
+                              adapter.notifyDataSetChanged();
+                              refresh.setRefreshing(false);
+
+                          }
+                      }
+                  }
+
+
+          @Override
+          public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            /*  for(DataSnapshot loja:dataSnapshot.getChildren()){
+                  for(DataSnapshot estado:loja.getChildren()){
+                      for(DataSnapshot mercados:estado.getChildren()){
+                          Mercado mercado = mercados.getValue(Mercado.class);
+                          String key = dataSnapshot.getKey();
+                          for(Mercado merc:listamercado) {
+                              if (mercado.getKey().equals(key)) {
+                                merc.setValues(mercado);
+                                break;
+                              }
+                          }
+                          //   Collections.reverse(listamercado);
+                          adapter.notifyDataSetChanged();
+                          refresh.setRefreshing(false);
+
+                      }
+                  }
+              }
+              */
+          }
+          @Override
+          public void onChildRemoved(DataSnapshot dataSnapshot) {
+          }
+          @Override
+          public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+          }
+          @Override
+          public void onCancelled(DatabaseError databaseError) {
+          }
+      });
+
+
+    }
+
+
+
+    public void PesquisarComercio(String texto) {
+    //  String nick_null =  getString(R.string.buscar_usuario, usuarioAtual.getDisplayName());
+    List<Mercado> listaMercadoBusca = new ArrayList<>();
+        for (Mercado mercados : listamercado) {
+        String nome=mercados.getTitulo().toLowerCase();
+        String descricao = mercados.getDescricao().toLowerCase();
+       // String author = mercados.getAutor().toLowerCase();
+        if(nome.contains(texto)|| descricao.contains(texto)){
+            listaMercadoBusca.add(mercados);
+
+        }
+    }
+    adapter = new MercadoAdapter(listaMercadoBusca, MercadoActivity.this);
+        recyclerViewMercadoPublico.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+}
+
+    public void recarregarMercado(){
+        //textoAviso.setVisibility(View.VISIBLE);
+        adapter = new MercadoAdapter(listamercado, MercadoActivity.this);
+        recyclerViewMercadoPublico.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+
+    //Nao muito uteis
     private void TrocarFundos_status_bar(){
         //mudando a cor do statusbar
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
@@ -215,32 +325,19 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         });
         FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
         mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
-
         Glide.with(MercadoActivity.this)
                 .load(mPhotoUrl)
                 .into(icone);
     }
-
     private void Dialog_Primeiravez() {
         LayoutInflater li = getLayoutInflater();
-
-
         View view = li.inflate(R.layout.dialog_informar_click_foto, null);
-
-
-
         view.findViewById(R.id.botaoentendi).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-
-
-
                 //desfaz o dialog_opcao_foto.
                 dialog.dismiss();
             }
         });
-
-
-
         //Dialog de tela
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(view);
@@ -248,8 +345,6 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         dialog.show();
 
     }
-
-
 
     //botao Pesquisar
     public boolean onCreateOptionsMenu(Menu menu){
@@ -284,91 +379,5 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         }
 
         return true;
-    }
-
-
-
-    public void onStop() {
-        super.onStop();
-        mercadopublico.removeEventListener(valueMercadoListener);
-    }
-
-    public void RecuperarMercadoPublicos() {
-
-        listamercado.clear();
-        refresh.setRefreshing(true);
-      valueMercadoListener = mercadopublico.addChildEventListener(new ChildEventListener() {
-          @Override
-          public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-              for(DataSnapshot loja:dataSnapshot.getChildren()){
-                  for(DataSnapshot estado:loja.getChildren()){
-                      for(DataSnapshot mercados:estado.getChildren()){
-
-                          Mercado mercado = mercados.getValue(Mercado.class);
-                          listamercado.add(mercado);
-
-                          Collections.reverse(listamercado);
-                          adapter.notifyDataSetChanged();
-                          refresh.setRefreshing(false);
-
-                      }
-                  }
-              }
-          }
-
-          @Override
-          public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-          }
-
-          @Override
-          public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-          }
-
-          @Override
-          public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-          }
-
-          @Override
-          public void onCancelled(DatabaseError databaseError) {
-
-          }
-      });
-
-
-    }
-
-    @Override
-    public void onRefresh() {
-        refresh.setRefreshing(true);
-        RecuperarMercadoPublicos();
-    }
-
-    public void PesquisarComercio(String texto) {
-    //  String nick_null =  getString(R.string.buscar_usuario, usuarioAtual.getDisplayName());
-    List<Mercado> listaMercadoBusca = new ArrayList<>();
-        for (Mercado mercados : listamercado) {
-        String nome=mercados.getTitulo().toLowerCase();
-        if(nome.contains(texto)){
-            listaMercadoBusca.add(mercados);
-
-        }else if(listaMercadoBusca.size()==0){
-           // Toast.makeText(this, "zero seu merda", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-    adapter = new MercadoAdapter(listaMercadoBusca, MercadoActivity.this);
-        recyclerViewMercadoPublico.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-}
-
-    public void recarregarContatos(){
-        //textoAviso.setVisibility(View.VISIBLE);
-
-        adapter = new MercadoAdapter(listamercado, MercadoActivity.this);
-        recyclerViewMercadoPublico.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
     }
 }

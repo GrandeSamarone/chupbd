@@ -42,6 +42,10 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
         this.context =c;
         this.listaevento=eventos;
     }
+
+    public List<Evento> getevento(){
+        return this.listaevento;
+    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_evento,parent,false);

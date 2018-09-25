@@ -11,12 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.AbrirImagem;
-import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.synnapps.carouselview.CarouselView;
@@ -24,7 +24,6 @@ import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Detalhe_Mercado extends AppCompatActivity {
@@ -33,10 +32,11 @@ public class Detalhe_Mercado extends AppCompatActivity {
     private FloatingActionButton fabcontato;
     private ImageView botaovoltar;
     private TextView titulo,legenda,descricao,endereco,categoria,estado,criador;
+    private Button botaoavaliar;
     private Mercado mercadoselecionado;
     private Dialog dialog;
+    private AlertDialog alerta;
     private SharedPreferences preferences = null;
-    private List<Mercado> listafotos = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +45,16 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
 
         //configuracoes iniciais
+
         fotos = findViewById(R.id.carousel_foto_mercado);
         titulo = findViewById(R.id.detalhe_mercado_titulo);
+        botaoavaliar = findViewById(R.id.botao_avaliar_mercado);
+        botaoavaliar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Mostra_Dialog_Rating();
+            }
+        });
         legenda = findViewById(R.id.detalhe_mercado_legenda);
         criador = findViewById(R.id.detalhe_mercado_criador);
         descricao = findViewById(R.id.detalhe_mercado_descricao);
@@ -65,8 +73,6 @@ public class Detalhe_Mercado extends AppCompatActivity {
         fabcontato.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(Detalhe_Mercado.this, ChatActivity.class);
-
             }
         });
 
@@ -118,7 +124,6 @@ public class Detalhe_Mercado extends AppCompatActivity {
                 }
             });
         }
-
 
     }
 
@@ -188,6 +193,32 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
         return true;
     }
+    private void Mostra_Dialog_Rating() {
+        //LayoutInflater é utilizado para inflar nosso layout em uma view.
+        //-pegamos nossa instancia da classe
+        LayoutInflater li = getLayoutInflater();
 
+        //inflamos o layout dialog_opcao_foto.xml_foto.xml na view
+        View view = li.inflate(R.layout.dialog_avaliar_rating, null);
+        //definimos para o botão do layout um clickListener
+        view.findViewById(R.id.botaosalvarrating).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                //exibe um Toast informativo.
+
+
+
+                //desfaz o dialog_opcao_foto.
+                alerta.dismiss();
+            }
+        });
+
+
+        //Dialog de tela
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        alerta = builder.create();
+        alerta.show();
+
+    }
 
 }

@@ -106,12 +106,15 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 recyclerEvento, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Evento eventoselecionado = ListaEvento.get(position);
-                Intent it = new Intent(Evento_Lista.this,DetalheEvento.class);
-                it.putExtra("eventoselecionado",eventoselecionado);
-                startActivity(it);
-            }
+                List<Evento> liseventoatualizado = adapterevento.getevento();
 
+                if (liseventoatualizado.size() > 0) {
+                    Evento eventoselecionado = liseventoatualizado.get(position);
+                    Intent it = new Intent(Evento_Lista.this, DetalheEvento.class);
+                    it.putExtra("eventoselecionado", eventoselecionado);
+                    startActivity(it);
+                }
+            }
             @Override
             public void onLongItemClick(View view, int position) {
 
@@ -258,30 +261,19 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 Evento evento = dataSnapshot.getValue(Evento.class );
                 ListaEvento.add(0,evento);
 
-
                 adapterevento.notifyDataSetChanged();
                 swipeatualizar.setRefreshing(false);
 
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             }
-
-
-
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

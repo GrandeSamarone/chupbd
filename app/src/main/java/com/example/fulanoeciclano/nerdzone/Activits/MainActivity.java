@@ -47,7 +47,6 @@ import com.google.firebase.storage.StorageReference;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -161,6 +160,202 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+
+
+
+    @Override
+    public void onRefresh() {
+        RecuperarMercado();
+        RecuperarEvento();
+        CarregarInformacoesNoDrawer();
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //carregar informacao no Drawer
+        CarregarInformacoesNoDrawer();
+        botoes_Mais();
+        RecuperarMercado();
+
+        RecuperarEvento();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        GibiMercado.removeEventListener(valueEventListenerMercado);
+        GibiEventos.removeEventListener(valueEventListenerEvento);
+    }
+
+
+
+    //recupera e nao deixa duplicar
+    public void RecuperarEvento(){
+        ListaEvento.clear();
+        swipe.setRefreshing(true);
+        valueEventListenerEvento =GibiEventos.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Evento evento = dataSnapshot.getValue(Evento.class );
+                ListaEvento.add(0,evento);
+
+
+                adapterEvento.notifyDataSetChanged();
+                swipe.setRefreshing(false);
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+
+
+    //recupera e nao deixa duplicar
+    public void RecuperarMercado(){
+        ListaGibiMercado.clear();
+        swipe.setRefreshing(true);
+        valueEventListenerMercado =GibiMercado.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    for(DataSnapshot categorias:dataSnapshot.getChildren()){
+                        for(DataSnapshot mercados:categorias.getChildren()){
+                                Mercado mercado = mercados.getValue(Mercado.class);
+
+                                ListaGibiMercado.add(mercado);
+                                adapterMercado.notifyDataSetChanged();
+                                swipe.setRefreshing(false);
+
+                            }
+                        }
+                    }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        swipe.setRefreshing(false);
+    }
+    public void remove(Gibi gibi){
+        //  GibiMarvel.child(gibi.getKey()).removeValue();
+    }
+
+    private void Recycleview(){
+        //Recycle
+        recyclerViewListaGibiDC = findViewById(R.id.RecycleViewGibiDC);
+        recyclerViewListaGibiOutros = findViewById(R.id.RecycleViewGibiOutros);
+        recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
+        recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
+
+        GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
+
+        GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
+
+        //Configurar Adapter
+        adapterMercado=new AdapterMercado(ListaGibiMercado,MainActivity.this);
+        adapterEvento = new EventoAdapter(ListaEvento,MainActivity.this);
+
+        //Configurar recycleView Evento
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerVieweventos.setLayoutManager(layoutManager);
+        recyclerVieweventos.setHasFixedSize(true);
+        recyclerVieweventos.setAdapter(adapterEvento);
+        recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerVieweventos,  R.layout.header_evento));
+
+        recyclerVieweventos.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
+                recyclerVieweventos, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Evento eventoselecionado = ListaEvento.get(position);
+                Intent it = new Intent(MainActivity.this,DetalheEvento.class);
+                it.putExtra("eventoselecionado",eventoselecionado);
+                startActivity(it);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
+
+
+        //Configurar recycleView Marvel
+        RecyclerView.LayoutManager layoutManagerMarvel = new LinearLayoutManager
+                (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
+        recyclerViewListaGibiMercado.setHasFixedSize(true);
+        recyclerViewListaGibiMercado.setAdapter(adapterMercado);
+        recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerViewListaGibiMercado,  R.layout.header_evento));
+
+        recyclerViewListaGibiMercado.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
+                recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Mercado mercadoselecionado = ListaGibiMercado.get(position);
+                Intent it = new Intent(MainActivity.this,Detalhe_Mercado.class);
+                it.putExtra("mercadoelecionado",mercadoselecionado);
+                startActivity(it);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
+    }
+
+
+    private void IconeUsuario() {
+        //Imagem do icone do usuario
+        img_toolbar = findViewById(R.id.icone_img_toolbar);
+        img_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this, MinhaConta.class);
+                startActivity(it);
+            }
+        });
+        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
+        mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
+
+        Glide.with(MainActivity.this)
+                .load(mPhotoUrl)
+                .into(img_toolbar);
+    }
+
+
     private void TrocarFundos_status_bar(){
         //mudando a cor do statusbar
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
@@ -256,26 +451,26 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-  private void botoes_Mais(){
-      maiseventoTxt = findViewById(R.id.maisevento);
-      maiseventoTxt.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              Intent it = new Intent(MainActivity.this, Evento_Lista.class);
-              startActivity(it);
-          }
-      });
+    private void botoes_Mais(){
+        maiseventoTxt = findViewById(R.id.maisevento);
+        maiseventoTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this, Evento_Lista.class);
+                startActivity(it);
+            }
+        });
 
-      maiscomercioTxt= findViewById(R.id.maiscomercio);
-      maiscomercioTxt.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              Intent it = new Intent( MainActivity.this,MercadoActivity.class);
-              startActivity(it);
-          }
-      });
+        maiscomercioTxt= findViewById(R.id.maiscomercio);
+        maiscomercioTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent( MainActivity.this,MercadoActivity.class);
+                startActivity(it);
+            }
+        });
 
-  }
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -285,14 +480,14 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
         if (id == R.id.minhascolecoes_menu) {
         } else if (id == R.id.minhaloja_menu) {
-      Intent it = new Intent(MainActivity.this,Meus_eventos.class);
-      startActivity(it);
+            Intent it = new Intent(MainActivity.this,Meus_eventos.class);
+            startActivity(it);
         } else if (id == R.id.mensagens_menu) {
             Intent it = new Intent(MainActivity.this,MeusAmigosActivity.class);
             startActivity(it);
         }else if (id == R.id.minha_conta_menu) {
-        Intent it = new Intent(MainActivity.this,MinhaConta.class);
-        startActivity(it);
+            Intent it = new Intent(MainActivity.this,MinhaConta.class);
+            startActivity(it);
         }
         else if (id == R.id.comercio_menu) {
             Intent it = new Intent(MainActivity.this,MercadoActivity.class);
@@ -323,26 +518,6 @@ public class MainActivity extends AppCompatActivity implements
         */
 
     }
-
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //carregar informacao no Drawer
-        CarregarInformacoesNoDrawer();
-        botoes_Mais();
-        RecuperarMercado();
-
-        RecuperarEvento();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        GibiMercado.removeEventListener(valueEventListenerMercado);
-        GibiEventos.removeEventListener(valueEventListenerEvento);
-    }
     public  void CarregarInformacoesNoDrawer(){
         swipe.setRefreshing(true);
         FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
@@ -350,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements
             mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
         }
         nome_drawer.setText(UsuarioAtual.getDisplayName());
-          email_drawer.setText(UsuarioAtual.getEmail());
+        email_drawer.setText(UsuarioAtual.getEmail());
 
         Glide.with(MainActivity.this)
                 .load(mPhotoUrl)
@@ -359,184 +534,4 @@ public class MainActivity extends AppCompatActivity implements
 
         swipe.setRefreshing(false);
     }
-
-    @Override
-    public void onRefresh() {
-        RecuperarMercado();
-        RecuperarEvento();
-        CarregarInformacoesNoDrawer();
-    }
-    //recupera e nao deixa duplicar
-    public void RecuperarEvento(){
-        ListaEvento.clear();
-        swipe.setRefreshing(true);
-        valueEventListenerEvento =GibiEventos.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Evento evento = dataSnapshot.getValue(Evento.class );
-                ListaEvento.add(0,evento);
-
-
-                adapterEvento.notifyDataSetChanged();
-                swipe.setRefreshing(false);
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-    }
-    private void IconeUsuario() {
-        //Imagem do icone do usuario
-        img_toolbar = findViewById(R.id.icone_img_toolbar);
-        img_toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(MainActivity.this, MinhaConta.class);
-                startActivity(it);
-            }
-        });
-        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
-        mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
-
-        Glide.with(MainActivity.this)
-                .load(mPhotoUrl)
-                .into(img_toolbar);
-    }
-
-
-    //recupera e nao deixa duplicar
-    public void RecuperarMercado(){
-        ListaGibiMercado.clear();
-        swipe.setRefreshing(true);
-        valueEventListenerMercado =GibiMercado.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                for(DataSnapshot loja:dataSnapshot.getChildren()){
-                    for(DataSnapshot artista:loja.getChildren()){
-                        for(DataSnapshot mercados:artista.getChildren()){
-
-                            Mercado mercado = mercados.getValue(Mercado.class);
-                            ListaGibiMercado.add(mercado);
-
-                            Collections.reverse(ListaGibiMercado);
-                            adapterMercado.notifyDataSetChanged();
-                            swipe.setRefreshing(false);
-
-                        }
-                    }
-                }
-
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        swipe.setRefreshing(false);
-    }
-    public void remove(Gibi gibi){
-        //  GibiMarvel.child(gibi.getKey()).removeValue();
-    }
-
-
-
-
-
-    private void Recycleview(){
-        //Recycle
-        recyclerViewListaGibiDC = findViewById(R.id.RecycleViewGibiDC);
-        recyclerViewListaGibiOutros = findViewById(R.id.RecycleViewGibiOutros);
-        recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
-        recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
-
-        GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("mercado");
-
-        GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
-
-        //Configurar Adapter
-        adapterMercado=new AdapterMercado(ListaGibiMercado,MainActivity.this);
-        adapterEvento = new EventoAdapter(ListaEvento,MainActivity.this);
-
-        //Configurar recycleView Evento
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerVieweventos.setLayoutManager(layoutManager);
-        recyclerVieweventos.setHasFixedSize(true);
-        recyclerVieweventos.setAdapter(adapterEvento);
-        recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerVieweventos,  R.layout.header_evento));
-
-        recyclerVieweventos.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
-                recyclerVieweventos, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Evento eventoselecionado = ListaEvento.get(position);
-                Intent it = new Intent(MainActivity.this,DetalheEvento.class);
-                it.putExtra("eventoselecionado",eventoselecionado);
-                startActivity(it);
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        }));
-
-
-        //Configurar recycleView Marvel
-        RecyclerView.LayoutManager layoutManagerMarvel = new LinearLayoutManager
-                (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
-        recyclerViewListaGibiMercado.setHasFixedSize(true);
-        recyclerViewListaGibiMercado.setAdapter(adapterMercado);
-        recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewListaGibiMercado,  R.layout.header_evento));
-
-        recyclerViewListaGibiMercado.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
-                recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Mercado mercadoselecionado = ListaGibiMercado.get(position);
-                Intent it = new Intent(MainActivity.this,Detalhe_Mercado.class);
-                it.putExtra("mercadoelecionado",mercadoselecionado);
-                startActivity(it);
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        }));
-    }
-
 }

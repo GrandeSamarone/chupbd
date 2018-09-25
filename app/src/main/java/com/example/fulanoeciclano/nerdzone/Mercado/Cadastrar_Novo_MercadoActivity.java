@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -45,7 +46,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -70,6 +73,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private FirebaseUser UsuarioAtual;
     private Toolbar toolbar;
     private AlertDialog dialog;
+    private CircleImageView icone;
+    private String urlicone;
 
 
 
@@ -88,7 +93,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_cadastrar__novo__mercado);
 
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Novo Comercio");
+        toolbar.setTitle(R.string.novocomercio);
         setSupportActionBar(toolbar);
 
         //Configuração Basica
@@ -138,37 +143,10 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
 
         TrocarFundos_status_bar();
+        IconeUsuario();
 
     }
 
-    private void TrocarFundos_status_bar(){
-        //mudando a cor do statusbar
-        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
-            systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
-        }
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
-            systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
-            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
-        }
-        //make fully Android Transparent Status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
-            systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setNavigationBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
-        }
-    }
 
     public void  SalvarMercado(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -233,46 +211,6 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         });
     }
 
-      //carregar spinner
-    private void CarregarDadosSpinner() {
-        //
-        String[] artista = getResources().getStringArray(R.array.estados);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, artista);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        campoLocal.setAdapter(adapter);
-        campoLocal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                estadostring = parent.getItemAtPosition(position).toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        //spinner categoria
-        String[] loja = getResources().getStringArray(R.array.loja);
-        ArrayAdapter<String> adaptercat = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, loja);
-        adaptercat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        campoloja.setAdapter(adaptercat);
-
-        campoloja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                lojastring = parent.getItemAtPosition(position).toString();
-                Toast.makeText(Cadastrar_Novo_MercadoActivity.this, lojastring, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
     private Mercado configurarMercado(){
         String estado = campoLocal.getSelectedItem().toString();
         String loja = campoloja.getSelectedItem().toString();
@@ -282,6 +220,10 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         String fraserapida = campofraserapida.getText().toString();
         String endereco = campoendereco.getText().toString();
         String autor = usuarioLogado.getNome();
+        final Calendar calendartempo = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y");// MM'/'dd'/'y;
+        String data = simpleDateFormat.format(calendartempo.getTime());
+
 
         mercado.setEstado(estado);
         mercado.setAutor(autor);
@@ -291,6 +233,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         mercado.setDescricao(descricao);
         mercado.setFraserapida(fraserapida);
         mercado.setEndereco(endereco);
+        mercado.setData(data);
 
         return  mercado;
     }
@@ -337,6 +280,75 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
 
         }
+
+
+
+    //click na imagem para cadastra mercado
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+            case  R.id.imageLojaCadastro1:
+                EscolherImagem(1);
+                break;
+            case  R.id.imageLojaCadastro2:
+                EscolherImagem(2);
+                break;
+            case  R.id.imageLojaCadastro3:
+                EscolherImagem(3);
+                break;
+            case  R.id.imageLojaCadastro4:
+                EscolherImagem(4);
+                break;
+            case  R.id.imageLojaCadastro5:
+                EscolherImagem(5);
+                break;
+            case  R.id.imageLojaCadastro6:
+                EscolherImagem(6);
+                break;
+
+
+        }
+    }
+
+    public  void EscolherImagem(int requestCode){
+        Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(it,requestCode);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Activity.RESULT_OK){
+            Uri imagemSelecionada = data.getData();
+            String caminhoImagem = imagemSelecionada.toString();
+
+            // Configurar imagem  no ImageView
+
+             if(requestCode == 1){
+                imagem1.setImageURI(imagemSelecionada);
+              imagem2.setVisibility(View.VISIBLE);
+            } else if(requestCode == 2){
+                imagem2.setImageURI(imagemSelecionada);
+                imagem3.setVisibility(View.VISIBLE);
+            }else if(requestCode == 3){
+                imagem3.setImageURI(imagemSelecionada);
+                imagem4.setVisibility(View.VISIBLE);
+            }else if(requestCode == 4){
+                imagem4.setImageURI(imagemSelecionada);
+                imagem5.setVisibility(View.VISIBLE);
+            }else if(requestCode == 5){
+                imagem5.setImageURI(imagemSelecionada);
+                imagem6.setVisibility(View.VISIBLE);
+            }else if(requestCode==6){
+                imagem6.setImageURI(imagemSelecionada);
+            }
+            listaFotosRecuperadas.add(caminhoImagem);
+        }
+    }
+
+
 
     //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -385,72 +397,90 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         android.app.AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-
-    //click na imagem para cadastra mercado
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()){
-            case  R.id.imageLojaCadastro1:
-                EscolherImagem(1);
-                break;
-            case  R.id.imageLojaCadastro2:
-                EscolherImagem(2);
-                break;
-            case  R.id.imageLojaCadastro3:
-                EscolherImagem(3);
-                break;
-            case  R.id.imageLojaCadastro4:
-                EscolherImagem(4);
-                break;
-            case  R.id.imageLojaCadastro5:
-                EscolherImagem(5);
-                break;
-            case  R.id.imageLojaCadastro6:
-                EscolherImagem(6);
-                break;
-
-
-        }
-    }
-
-    public  void EscolherImagem(int requestCode){
-        Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(it,requestCode);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == Activity.RESULT_OK){
-            Uri imagemSelecionada = data.getData();
-            String caminhoImagem = imagemSelecionada.toString();
-
-            // Configurar imagem  no ImageView
-            if(requestCode == 1){
-                imagem1.setImageURI(imagemSelecionada);
-              imagem2.setVisibility(View.VISIBLE);
-            } else if(requestCode == 2){
-                imagem2.setImageURI(imagemSelecionada);
-                imagem3.setVisibility(View.VISIBLE);
-            }else if(requestCode == 3){
-                imagem3.setImageURI(imagemSelecionada);
-                imagem4.setVisibility(View.VISIBLE);
-            }else if(requestCode == 4){
-                imagem4.setImageURI(imagemSelecionada);
-                imagem5.setVisibility(View.VISIBLE);
-            }else if(requestCode == 5){
-                imagem5.setImageURI(imagemSelecionada);
-                imagem6.setVisibility(View.VISIBLE);
-            }else if(requestCode==6){
-                imagem6.setImageURI(imagemSelecionada);
+    private void IconeUsuario() {
+        //Imagem do icone do usuario
+        icone = findViewById(R.id.icone_user_toolbar);
+        icone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Cadastrar_Novo_MercadoActivity.this, MinhaConta.class);
+                startActivity(it);
             }
-            listaFotosRecuperadas.add(caminhoImagem);
+        });
+        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
+        String mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
+
+        Glide.with(Cadastrar_Novo_MercadoActivity.this)
+                .load(mPhotoUrl)
+                .into(icone);
+    }
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
         }
     }
 
+    //carregar spinner
+    private void CarregarDadosSpinner() {
+        //
+        String[] artista = getResources().getStringArray(R.array.estados);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, artista);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        campoLocal.setAdapter(adapter);
+        campoLocal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                estadostring = parent.getItemAtPosition(position).toString();
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //spinner categoria
+        String[] loja = getResources().getStringArray(R.array.loja);
+        ArrayAdapter<String> adaptercat = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, loja);
+        adaptercat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        campoloja.setAdapter(adaptercat);
+
+        campoloja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                lojastring = parent.getItemAtPosition(position).toString();
+                Toast.makeText(Cadastrar_Novo_MercadoActivity.this, lojastring, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
 
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    android:padding="8dp"
+    android:background="@color/background">
+
+                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:layout_marginTop="8dp"
+                        android:id="@+id/rate_star"
+                        style="@style/Widget.MaterialRatingBar.RatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:isIndicator="false"
+                        android:maxHeight="80dp"
+                        android:minHeight="40dp"
+                        android:numStars="5"
+                        android:stepSize="1"
+                        app:mrb_progressBackgroundTint="@color/amareloclaro"
+                        app:mrb_progressTint="@color/amareloclaro"
+                        app:mrb_secondaryProgressTint="@color/amareloclaro" />
+
+
+                    <Button
+                        android:id="@+id/botaosalvarrating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ENVIAR"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/primary_dark"
+                        android:background="@drawable/gradiente_transparente"/>
+
+            </LinearLayout>

@@ -296,7 +296,17 @@ public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.On
         RecuperarIconesPretoebranco();
     }
 
-        @Override
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RecuperarIcones();
+        RecuperarDesenho();
+        RecuperarFilmes();
+        RecuperarIconesHeroi();
+        RecuperarIconesPretoebranco();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         Icones_Conf.removeEventListener(valueEventListenerIcone);
