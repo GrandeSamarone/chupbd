@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -17,9 +18,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -41,7 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,17 +60,17 @@ public class MinhaConta extends AppCompatActivity {
     private static final int MINHA_CONTA=12;
 
     private CircleImageView circleImageViewperfil;
+    private ImageView capa_perfil;
     private StorageReference storageReference;
     private String identificadorUsuario;
-    private EditText nomePerfilUsuario;
+    private TextView nome,fraserapida;
     private FloatingActionButton botaotrocarfoto;
-    private ImageView imageatualizarnome;
     private Usuario usuarioLogado;
     private Usuario user;
     private FirebaseUser identificador;
-    private URL url;
-    private String mPhotoUrl;
+    private RelativeLayout relative;
     private AlertDialog alerta;
+    private Toolbar toolbar;
     private com.google.firebase.database.ChildEventListener ChildEventListener;
 
     @Override
@@ -77,18 +78,28 @@ public class MinhaConta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_minha_conta);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Minha Conta");
-        setSupportActionBar(toolbar);
+
 
         //configuracoes iniciais
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         identificador= UsuarioFirebase.getUsuarioAtual();
-      botaotrocarfoto = findViewById(R.id.fabminhaconta);
+        relative = findViewById(R.id.coordimg);
+
+        botaotrocarfoto = findViewById(R.id.fabminhaconta);
         circleImageViewperfil=findViewById(R.id.circleImageViewFotoPerfil);
-        nomePerfilUsuario= findViewById(R.id.editPerfilNome);
-        imageatualizarnome= findViewById(R.id.imagematualizarnome);
+        nome= findViewById(R.id.nomeusuario_perfil);
+        fraserapida = findViewById(R.id.fraserapida_perfil);
+        capa_perfil= findViewById(R.id.capameuperfil);
+        capa_perfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if(it.resolveActivity(getPackageManager())!=null)  {
+                    startActivityForResult(it, SELECAO_GALERIA);
+                }
+            }
+        });
         usuarioLogado=UsuarioFirebase.getDadosUsuarioLogado();
         user = new Usuario();
 
@@ -101,7 +112,7 @@ public class MinhaConta extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlterarNome();
+                //AlterarNome();
 
 
             }
@@ -115,16 +126,7 @@ public class MinhaConta extends AppCompatActivity {
         Glide.with(MinhaConta.this)
                 .load(url)
                 .into(circleImageViewperfil );
-
-        /*   DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                .setUri(url)
-                .setAutoPlayAnimations(true)
-                .build();
-
-        circleImageViewperfil.setController(controllerOne);
-        */
-
-        nomePerfilUsuario.setText(usuarioLogado.getNome());
+       nome.setText(usuarioLogado.getNome());
 
         //Recuperar a imagem Icones da pagina Icones
       botaotrocarfoto.setOnClickListener(new View.OnClickListener() {
@@ -136,40 +138,37 @@ public class MinhaConta extends AppCompatActivity {
 
 
 
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
     }
+    //Botao Voltar
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //Botão adicional na ToolBar voltar
+        switch (item.getItemId()) {
+            case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
+                startActivity(new Intent(this, MainActivity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
+                }else{
+                    finish();
+                }
+                break;
+            default:break;
+        }
+        return true;
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
         RecuperarIcone();
+
     }
 
-    //Botao Voltar
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-
-
-                    finish();
-
-
-                break;
-
-            default:break;
-        }
-
-        return true;
-    }
 
     //Salvar o novo nome do usuario no firebase
+    /*
     private void AlterarNome(){
-        final String nome = nomePerfilUsuario.getText().toString();
+        final String nome = nome.getText().toString();
         final boolean retorno = UsuarioFirebase.atualizarNomeUsuario(nome);
 
 
@@ -198,6 +197,7 @@ public class MinhaConta extends AppCompatActivity {
         }
 
     }
+    */
     //Recebendo Icone
     private void RecuperarIcone() {
 

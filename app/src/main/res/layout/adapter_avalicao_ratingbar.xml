@@ -20,15 +20,14 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_total_number_rating"
+                    android:id="@+id/txt_total_number_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textSize="35sp"
                     android:textStyle="bold"
-                    android:text="3.1"
-                    tools:text="3.1" />
+                    android:text="3.1" />
 
                 <me.zhanghai.android.materialratingbar.MaterialRatingBar
                     android:id="@+id/total_star_rating"
@@ -48,7 +47,7 @@
                     app:mrb_secondaryProgressTint="@color/amareloclaro" />
 
                 <TextView
-                    android:id="@+id/tv_total_pemberi_bintang"
+                    android:id="@+id/txt_total_pemberi_bintang"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

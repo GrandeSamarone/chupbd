@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.example.fulanoeciclano.nerdzone.BuildConfig;
@@ -34,7 +35,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         FirebaseApp.initializeApp(this);
-
+        MultiDex.install(this);
         DiskCacheConfig diskCacheConfig = DiskCacheConfig.newBuilder(getApplicationContext())
                 .setBaseDirectoryPath(new File(Environment.getExternalStorageDirectory().getAbsoluteFile(),"hq"))
                 .setBaseDirectoryName(String.valueOf(R.string.app_name))

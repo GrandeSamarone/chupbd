@@ -21,7 +21,7 @@
     <color name="bgBottomNavigation">#fe485a</color>
     <color name="balaoremetente">#dbf9c4</color>
     <color name="colorFloatingActionBarAccent">#4285F4</color>
-
+    <color name="actionbar_opacity">#33000000</color>
 
     <integer-array name="custom_tab_colors">
         <item>@color/branco</item>

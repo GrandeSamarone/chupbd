@@ -33,4 +33,6 @@
     <dimen name="margenRightChat">30dp</dimen>
     <dimen name="margenLeftChat">30dp</dimen>
     <dimen name="margin_value_10dp">10</dimen>
+    <dimen name="nome_perfil">15sp</dimen>
+    <dimen name="frase_perfil">13sp</dimen>
 </resources>

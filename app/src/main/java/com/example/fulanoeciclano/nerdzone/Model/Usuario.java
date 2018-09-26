@@ -19,7 +19,9 @@ public class Usuario implements Serializable {
     private String id;
     private String tipoconta;
     private String nome;
+    private String frase;
     private String foto;
+    private String Capa;
     private String tiposuario;
 
     public Usuario() {
@@ -66,12 +68,28 @@ public class Usuario implements Serializable {
         this.nome = nome;
     }
 
+    public String getFrase() {
+        return frase;
+    }
+
+    public void setFrase(String frase) {
+        this.frase = frase;
+    }
+
     public String getFoto() {
         return foto;
     }
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public String getCapa() {
+        return Capa;
+    }
+
+    public void setCapa(String capa) {
+        Capa = capa;
     }
 
     public String getTiposuario() {

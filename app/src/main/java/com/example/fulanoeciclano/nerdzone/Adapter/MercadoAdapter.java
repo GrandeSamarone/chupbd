@@ -53,6 +53,9 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         if(mercado.getCategoria()!=null){
         holder.categoria.setText(mercado.getCategoria());
         }
+        if(mercado.getEstado()!=null){
+            holder.estado.setText(mercado.getEstado());
+        }
 
         List<String> urlFotos = mercado.getFotos();
               if(urlFotos!=null) {
@@ -81,6 +84,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         TextView titulo;
         TextView legenda;
         TextView categoria;
+        TextView estado;
         CircleImageView capa;
 
 
@@ -91,6 +95,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
             titulo = itemView.findViewById(R.id.texttitulo);
             legenda = itemView.findViewById(R.id.textlegenda);
             categoria = itemView.findViewById(R.id.textcategoria);
+            estado = itemView.findViewById(R.id.textestado);
            capa = itemView.findViewById(R.id.capamercado);
         }
     }

@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        multiDexEnabled true
+       multiDexEnabled true
         applicationId "com.example.fulanoeciclano.nerdzone"
         minSdkVersion 15
         targetSdkVersion 27
@@ -16,6 +16,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+    aaptOptions{
+        cruncherEnabled = false
     }
 }
 
@@ -58,14 +65,15 @@ dependencies {
     // implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     //  compile 'es.voghdev.pdfviewpager:library:1.0.4'
     implementation 'com.firebase:firebase-client-android:2.5.2'
-
-    //
     //fragment
-    //  implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
-    // implementation 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
+      implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+    implementation 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
 
     //ImagemRedonda
     implementation 'de.hdodenhof:circleimageview:2.1.0'
+
+    //cortar imagem
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
     //Drawer
     implementation("com.mikepenz:materialdrawer:6.0.6@aar") {
         transitive = true
@@ -73,11 +81,13 @@ dependencies {
     // Displaying images
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     //implementation 'com.squareup.picasso:picasso:2.5.2'
+    //zoom
     implementation 'me.relex:photodraweeview:1.1.3'
     implementation 'com.android.volley:volley:1.1.0'
 
     //estrela  nota
     implementation 'me.zhanghai.android.materialratingbar:library:1.0.2'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

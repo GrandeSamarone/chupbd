@@ -1,103 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-
     tools:context="com.example.fulanoeciclano.nerdzone.Activits.MinhaConta">
 
+
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    android:id="@+id/appbarlayoutperfil"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:background="@color/branco">
+
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/collapseLayoutPerfil"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:layout_height="210dp"
+        android:fitsSystemWindows="true"
+        app:contentScrim="@color/branco"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:expandedTitleGravity="center|bottom"
+        app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline">
+
+            <ImageView
+                android:fitsSystemWindows="true"
+                android:id="@+id/capameuperfil"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:background="@drawable/fundo_da_capa_add_evento"/>
+            <View
+                android:fitsSystemWindows="true"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:background="@drawable/gradientefundobranco" />
+            <!-- Back button -->
+
+            <ImageView
+                android:id="@+id/mercado_button_back_perfil"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_back" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarlayout"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
+    </android.support.design.widget.CollapsingToolbarLayout>
+</android.support.design.widget.AppBarLayout>
+
+
+        <LinearLayout
+            app:layout_anchor="@id/collapseLayoutPerfil"
+            android:layout_margin="16dp"
+            app:layout_anchorGravity="bottom|end"
+            android:orientation="vertical"
+            android:gravity="center|bottom"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/gradiente_toolbar"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
-
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordimg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar">
-
+            android:layout_height="wrap_content"
+            >
+      <RelativeLayout
+          android:id="@+id/relativeimgperfil"
+          android:layout_width="100dp"
+          android:layout_height="100dp">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/circleImageViewFotoPerfil"
-            android:layout_width="220dp"
-            android:layout_height="230dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/ic_perfil_minhaconta"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include2"
-            app:layout_constraintVertical_chainStyle="packed"
-            />
-
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+          />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabminhaconta"
-            app:fabSize="normal"
+            app:fabCustomSize="30dp"
+            app:backgroundTint="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_a_photo"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
-            app:backgroundTint="@color/colorPrimary"
-            app:layout_anchor="@id/circleImageViewFotoPerfil"
-            app:layout_anchorGravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             />
-    </android.support.design.widget.CoordinatorLayout>
+      </RelativeLayout>
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/nomeusuario_perfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Marlos trinidad"
+                android:textColor="@color/preto"
+                android:fontFamily="sans-serif"
+                android:letterSpacing="0.1"
+                android:textSize="@dimen/nome_perfil"
+                android:textStyle="bold"
+                android:textAlignment="center"/>
+            <TextView
+                android:id="@+id/fraserapida_perfil"
+                android:layout_marginBottom="8dp"
+                android:textAlignment="center"
+                android:layout_below="@+id/nomeusuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Onde os Fracos nao tem vez."
+                android:fontFamily="sans-serif"
+                android:letterSpacing="0.1"
+                android:textSize="@dimen/frase_perfil"
+                android:textStyle="bold"
+                android:textColor="@color/preto"/>
+
+        </LinearLayout>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/branco"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="16dp"
-        android:paddingTop="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/coordimg">
-
-        <EditText
-            android:id="@+id/editPerfilNome"
-            android:layout_width="325dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:hint="Nome do Usuario" />
-
-        <ImageView
-            android:id="@+id/imagematualizarnome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="@drawable/ic_edit_minhaconta" />
-
-
+        android:orientation="vertical"
+        >
     </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -105,10 +134,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_botao_salvar"
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
         android:layout_marginRight="24dp" />
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

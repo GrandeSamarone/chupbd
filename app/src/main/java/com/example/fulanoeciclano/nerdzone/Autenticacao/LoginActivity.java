@@ -2,6 +2,7 @@ package com.example.fulanoeciclano.nerdzone.Autenticacao;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -81,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
@@ -124,10 +126,20 @@ public class LoginActivity extends AppCompatActivity {
             sPreferences.edit().putBoolean("firstRun", false).apply();
             Intent it = new Intent(LoginActivity.this,Cadastrar_icon_nome_Activity.class);
             startActivity(it);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
+            }else{
+                finish();
+            }
         } else {
 
             Intent it = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(it);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
+            }else{
+                finish();
+            }
 
         }
     }

@@ -2,17 +2,15 @@ package com.example.fulanoeciclano.nerdzone.Adapter;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Model.Icones;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -41,9 +39,6 @@ public class IconeAdapter   extends RecyclerView.Adapter<IconeAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-
-        holder.carmodelo.setRadius(0);
-        holder.carmodelo.setCardElevation(0);
         final Icones icone  = icones.get(position);
 
 
@@ -52,15 +47,16 @@ public class IconeAdapter   extends RecyclerView.Adapter<IconeAdapter.MyViewHold
         if(icone.getUrl() !=null){
             Uri uri = Uri.parse(icone.getUrl());
 
-            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+           /* DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
                     .setAutoPlayAnimations(true)
                     .build();
 
             holder.draweeView.setController(controllerOne);
-            /* Glide.with(c)
+            */
+             Glide.with(c)
             .load(uri)
-            .into(holder.foto);*/
+            .into(holder.draweeView);
 
 
         }else{
@@ -92,12 +88,11 @@ public class IconeAdapter   extends RecyclerView.Adapter<IconeAdapter.MyViewHold
     public class MyViewHolder extends  RecyclerView.ViewHolder{
 
 
-        CardView carmodelo;
-        SimpleDraweeView draweeView;
+
+        ImageView draweeView;
         public MyViewHolder(View itemView) {
             super(itemView);
-            carmodelo = itemView.findViewById(R.id.modelcard);
-            draweeView= (SimpleDraweeView) itemView.findViewById(R.id.drawee_foto);
+            draweeView= itemView.findViewById(R.id.drawee_foto);
         }
     }
 

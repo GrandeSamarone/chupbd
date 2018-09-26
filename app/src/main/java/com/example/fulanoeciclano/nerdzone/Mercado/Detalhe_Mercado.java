@@ -13,12 +13,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.AbrirImagem;
+import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
@@ -26,15 +36,21 @@ import com.synnapps.carouselview.ImageListener;
 import java.io.Serializable;
 import java.util.List;
 
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
+
 public class Detalhe_Mercado extends AppCompatActivity {
 
     private CarouselView fotos;
     private FloatingActionButton fabcontato;
     private ImageView botaovoltar;
-    private TextView titulo,legenda,descricao,endereco,categoria,estado,criador;
+    private TextView titulo,legenda,descricao,endereco,categoria,estado,criador,num_rating;
     private Button botaoavaliar;
     private Mercado mercadoselecionado;
+    private MaterialRatingBar ratingBar;
     private Dialog dialog;
+    private String identificadorUsuario;
+    private DatabaseReference database;
+    private FirebaseDatabase databases;
     private AlertDialog alerta;
     private SharedPreferences preferences = null;
     @Override
@@ -45,16 +61,14 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
 
         //configuracoes iniciais
-
+        identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        database = ConfiguracaoFirebase.getDatabase().getReference().child("rating");
+        databases = FirebaseDatabase.getInstance();
+        num_rating = findViewById(R.id.mercado_num_ratings);
+        ratingBar = findViewById(R.id.rate_star);
         fotos = findViewById(R.id.carousel_foto_mercado);
         titulo = findViewById(R.id.detalhe_mercado_titulo);
-        botaoavaliar = findViewById(R.id.botao_avaliar_mercado);
-        botaoavaliar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Mostra_Dialog_Rating();
-            }
-        });
+
         legenda = findViewById(R.id.detalhe_mercado_legenda);
         criador = findViewById(R.id.detalhe_mercado_criador);
         descricao = findViewById(R.id.detalhe_mercado_descricao);
@@ -73,6 +87,9 @@ public class Detalhe_Mercado extends AppCompatActivity {
         fabcontato.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            Intent it = new Intent(Detalhe_Mercado.this, ChatActivity.class);
+                it.putExtra("chatcontato","asas");
+                startActivity(it);
             }
         });
 
@@ -86,23 +103,23 @@ public class Detalhe_Mercado extends AppCompatActivity {
             descricao.setText(mercadoselecionado.getDescricao());
             endereco.setText(mercadoselecionado.getEndereco());
             criador.setText(mercadoselecionado.getAutor());
-         //   categoria.setText(mercadoselecionado.getCategoria());
+            //   categoria.setText(mercadoselecionado.getCategoria());
 
             //carregar as imagens
 
             ImageListener imageListener = new ImageListener() {
                 @Override
                 public void setImageForPosition(int position, ImageView imageView) {
-              String urlstring = mercadoselecionado.getFotos().get(position);
+                    String urlstring = mercadoselecionado.getFotos().get(position);
 
                     Glide.with(getApplicationContext())
                             .load(urlstring)
-                        .into(imageView);
+                            .into(imageView);
                 }
             };
 
-        fotos.setPageCount(mercadoselecionado.getFotos().size());
-        fotos.setImageListener(imageListener);
+            fotos.setPageCount(mercadoselecionado.getFotos().size());
+            fotos.setImageListener(imageListener);
 
             fotos.setImageClickListener(new ImageClickListener() {
                 @Override
@@ -133,6 +150,7 @@ public class Detalhe_Mercado extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        RatingBar();
         preferences = getSharedPreferences("primeiravezdetalhe", MODE_PRIVATE);
         if (preferences.getBoolean("primeiravezdetalhe", true)) {
             preferences.edit().putBoolean("primeiravezdetalhe", false).apply();
@@ -193,32 +211,34 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
         return true;
     }
-    private void Mostra_Dialog_Rating() {
-        //LayoutInflater é utilizado para inflar nosso layout em uma view.
-        //-pegamos nossa instancia da classe
-        LayoutInflater li = getLayoutInflater();
 
-        //inflamos o layout dialog_opcao_foto.xml_foto.xml na view
-        View view = li.inflate(R.layout.dialog_avaliar_rating, null);
-        //definimos para o botão do layout um clickListener
-        view.findViewById(R.id.botaosalvarrating).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                //exibe um Toast informativo.
+    private void RatingBar() {
+        final DatabaseReference ref = databases.getReference("ratingbar").child("rating")
+                .child(mercadoselecionado.getIdMercado())
+                .child(identificadorUsuario);
 
-
-
-                //desfaz o dialog_opcao_foto.
-                alerta.dismiss();
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    float rating = Float.parseFloat(dataSnapshot.getValue().toString());
+                    // float d= (float) ((number*5) /100);
+                    ratingBar.setRating(rating);
+                    mercadoselecionado.setTotalrating(rating+1);
+                    Toast.makeText(Detalhe_Mercado.this, "total"+mercadoselecionado.getTotalrating(), Toast.LENGTH_SHORT).show();
+                }
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
         });
 
-
-        //Dialog de tela
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view);
-        alerta = builder.create();
-        alerta.show();
-
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (fromUser) ref.setValue(rating);
+            }
+        });
     }
 
 }

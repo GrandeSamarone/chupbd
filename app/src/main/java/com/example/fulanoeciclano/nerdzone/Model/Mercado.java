@@ -15,6 +15,8 @@ import java.util.List;
 public class Mercado implements Serializable {
 
     private String idMercado;
+    private int numRatings;
+    private double totalrating;
     private String autor;
     private String categoria;
     private String estado;
@@ -153,6 +155,21 @@ public class Mercado implements Serializable {
 
     public void setValues(Mercado mercado) {
         titulo=mercado.titulo;
+    }
 
+    public int getNumRatings() {
+        return numRatings;
+    }
+
+    public void setNumRatings(int numRatings) {
+        this.numRatings = numRatings;
+    }
+
+    public double getTotalrating() {
+        return totalrating;
+    }
+
+    public void setTotalrating(double totalrating) {
+        this.totalrating = totalrating;
     }
 }

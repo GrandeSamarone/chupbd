@@ -209,7 +209,7 @@
  <include
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
-     layout="@layout/adapter_avalicao_ratingbar"/>
+     layout="@layout/dialog_avaliar_rating"/>
 
         <Button
             android:id="@+id/botao_avaliar_mercado"

@@ -2,6 +2,7 @@ package com.example.fulanoeciclano.nerdzone.Icons;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 
 import com.example.fulanoeciclano.nerdzone.Activits.Cadastrar_icon_nome_Activity;
@@ -27,21 +29,24 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindowFlag;
 
 public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView recyclerViewaleatorio,recyclerViewdesenho,recyclerViewfilmes
             ,recyclerViewheroi,recyclerViewpretoebranco;
     private SwipeRefreshLayout swipeicone;
     private DatabaseReference Icones_Conf,Icones_Desenho,Icones_Filmes,Icones_Heroi,Icones_PretoeBranco;
-
     private ArrayList<Icones> Listicones = new ArrayList<>();
     private ArrayList<Icones> ListDesenho = new ArrayList<>();
     private ArrayList<Icones> ListFilmes = new ArrayList<>();
     private ArrayList<Icones> ListHeroi = new ArrayList<>();
     private ArrayList<Icones> ListPretoebranco = new ArrayList<>();
+
     private IconeAdapter adapterIcone,adapterDesenho,adapterFilme,adapterHeroi,adapterPretoebranco;
     private ValueEventListener valueEventListenerIcone,valueEventListenerIconeDesenho
             ,valueEventListenerIconeFilme,valueEventListenerHeroi,valueEventListenerPretoeBRanco;
@@ -53,7 +58,7 @@ public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.On
         Fresco.initialize(this);
         setContentView(R.layout.activity_page_icon);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarIcone);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarsecundario);
         toolbar.setTitle("Escolha um Icone");
         setSupportActionBar(toolbar);
 
@@ -94,26 +99,21 @@ public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.On
 
         //Configuracao RecycleView
         recyclerViewaleatorio.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerViewaleatorio.setHasFixedSize(true);
         recyclerViewaleatorio.setAdapter(adapterIcone);
         //Configuracao RecycleView
         recyclerViewdesenho.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerViewdesenho.setHasFixedSize(true);
         recyclerViewdesenho.setAdapter(adapterDesenho);
 
         //Configuracao RecycleView
         recyclerViewfilmes.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerViewfilmes.setHasFixedSize(true);
         recyclerViewfilmes.setAdapter(adapterFilme);
 
         //Configuracao RecycleView
         recyclerViewheroi.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerViewheroi.setHasFixedSize(true);
         recyclerViewheroi.setAdapter(adapterHeroi);
 
         //Configuracao RecycleView
         recyclerViewpretoebranco.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerViewpretoebranco.setHasFixedSize(true);
         recyclerViewpretoebranco.setAdapter(adapterPretoebranco);
 
 
@@ -274,7 +274,7 @@ public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.On
         //Botão adicional na ToolBar voltar
         switch (item.getItemId()) {
             case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
-                startActivity(new Intent(this, Cadastrar_icon_nome_Activity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
+                //startActivity(new Intent(this, Cadastrar_icon_nome_Activity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
                 }else{
@@ -299,11 +299,13 @@ public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.On
     @Override
     protected void onStart() {
         super.onStart();
+        TrocarFundos_status_bar();
         RecuperarIcones();
         RecuperarDesenho();
         RecuperarFilmes();
         RecuperarIconesHeroi();
         RecuperarIconesPretoebranco();
+
     }
 
     @Override
@@ -454,6 +456,34 @@ public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.On
         }
 
     }
-
+    //Nao muito uteis
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+    }
 
 }

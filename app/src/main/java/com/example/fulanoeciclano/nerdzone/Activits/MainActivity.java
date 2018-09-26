@@ -161,8 +161,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
-
     @Override
     public void onRefresh() {
         RecuperarMercado();
@@ -432,6 +430,10 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.menufiltro:
                 //abrirConfiguracoes();
                 break;
+            case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
+                Intent intent = new Intent(this, MainActivity.class); // essa é activity Inicial do app
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // adiciona a flag para a intent
+                startActivity(intent);
         }/*
         case android.R.id.home:
         // NavUtils.navigateUpFromSameTask(this);
