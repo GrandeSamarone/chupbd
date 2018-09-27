@@ -23,7 +23,8 @@
             app:contentScrim="@color/branco"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:expandedTitleGravity="center|bottom"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline">
+            app:expandedTitleTextAppearance
+                ="@style/TextAppearance.AppCompat.Headline">
             <RelativeLayout
                 android:fitsSystemWindows="true"
                 android:layout_width="match_parent"

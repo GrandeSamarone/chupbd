@@ -275,11 +275,9 @@ public class PageIcon extends AppCompatActivity implements SwipeRefreshLayout.On
         switch (item.getItemId()) {
             case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
                 //startActivity(new Intent(this, Cadastrar_icon_nome_Activity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
-                }else{
+
                     finish();
-                }
+
                 break;
             default:break;
         }

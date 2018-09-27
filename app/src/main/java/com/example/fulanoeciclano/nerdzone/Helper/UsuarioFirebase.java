@@ -22,13 +22,7 @@ public class UsuarioFirebase {
         String identificadorUsuario;
         FirebaseAuth usuario = ConfiguracaoFirebase.getFirebaseAutenticacao();
         String email =usuario.getCurrentUser().getEmail();
-        String telefone = usuario.getCurrentUser().getPhoneNumber();
-        if(email!=null){
              identificadorUsuario= Base64Custom.codificarBase64(email);
-        } else{
-             identificadorUsuario= Base64Custom.codificarBase64(telefone);
-        }
-
 
         return identificadorUsuario;
     }

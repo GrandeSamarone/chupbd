@@ -2,6 +2,7 @@ package com.example.fulanoeciclano.nerdzone.Activits;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,23 +10,32 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Fragments.Art_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Contos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Livros_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Topicos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Icons.PageIcon;
@@ -37,40 +47,58 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MinhaConta extends AppCompatActivity {
+public class MinhaConta extends AppCompatActivity implements Main, View.OnClickListener {
 
     private String[] permissoesNecessarias = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
     };
-
+    File file;
+    Uri uri;
     private ImageButton imageButtonCamera,imageButtonGaleria;
     private static final int SELECAO_CAMERA=100;
+    private static final int SELECAO_CORTADA=300;
+    private static final int SELECAO_CORTADA_CAPA=350;
     private static final int SELECAO_GALERIA=200;
+    private static final int SELECAO_CAPA=50;
     private static final int SELECAO_ICONE=300;
     private static final int MINHA_CONTA=12;
-
+    private Intent CamIntent,GalIntent,CropIntent;
     private CircleImageView circleImageViewperfil;
     private ImageView capa_perfil;
+    private LinearLayout btn_voltar;
     private StorageReference storageReference;
     private String identificadorUsuario;
     private TextView nome,fraserapida;
     private FloatingActionButton botaotrocarfoto;
     private Usuario usuarioLogado;
     private Usuario user;
-    private FirebaseUser identificador;
+    private FirebaseUser usuario;
     private RelativeLayout relative;
     private AlertDialog alerta;
-    private Toolbar toolbar;
+    private ViewPager mViewPager;
+    private DatabaseReference database;
     private com.google.firebase.database.ChildEventListener ChildEventListener;
 
     @Override
@@ -81,25 +109,21 @@ public class MinhaConta extends AppCompatActivity {
 
 
         //configuracoes iniciais
+        database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
-        identificador= UsuarioFirebase.getUsuarioAtual();
         relative = findViewById(R.id.coordimg);
 
-        botaotrocarfoto = findViewById(R.id.fabminhaconta);
         circleImageViewperfil=findViewById(R.id.circleImageViewFotoPerfil);
         nome= findViewById(R.id.nomeusuario_perfil);
         fraserapida = findViewById(R.id.fraserapida_perfil);
+        botaotrocarfoto = findViewById(R.id.fabminhaconta);
+        botaotrocarfoto.setOnClickListener(this);
         capa_perfil= findViewById(R.id.capameuperfil);
-        capa_perfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if(it.resolveActivity(getPackageManager())!=null)  {
-                    startActivityForResult(it, SELECAO_GALERIA);
-                }
-            }
-        });
+        capa_perfil.setOnClickListener(this);
+        btn_voltar=findViewById(R.id.perfil_button_back_perfil);
+       btn_voltar.setOnClickListener(this);
+
         usuarioLogado=UsuarioFirebase.getDadosUsuarioLogado();
         user = new Usuario();
 
@@ -107,39 +131,31 @@ public class MinhaConta extends AppCompatActivity {
         Permissoes.validarPermissoes(permissoesNecessarias,this,1);
 
 
-        //Botao Cadastrar
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btn_atualizar_cadastro);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //AlterarNome();
 
 
-            }
-        });
 
-        //Recuperar dados do Usuario
-
-        FirebaseUser usuario =UsuarioFirebase.getUsuarioAtual();
-        Uri url= usuario.getPhotoUrl();
-        // Uri uriOne= Uri.parse(mArrayListOne.get(position));
-        Glide.with(MinhaConta.this)
-                .load(url)
-                .into(circleImageViewperfil );
-       nome.setText(usuarioLogado.getNome());
-
-        //Recuperar a imagem Icones da pagina Icones
-      botaotrocarfoto.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              Escolher_Foto_Perfil();
-          }
-      });
+        //Configurar Abas
+        final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
+                getSupportFragmentManager(),
+                FragmentPagerItems.with(this)
+                        .add("COMICS", Livros_Perfil_Fragment.class )
+                        // .add("Noticia",Noticia_Fragment.class)
+                        .add("TOPICOS", Topicos_Perfil_Fragment.class)
+                        .add("EVENTOS",Contos_Perfil_Fragment.class)
+                        .add("ARTS",Art_Perfil_Fragment.class)
+                        // .add("Tops", RankFragment.class)
+                        .create()
+        );
+        SmartTabLayout ViewPageTab = findViewById(R.id.SmartTabLayoutperfil);
+        mViewPager = findViewById(R.id.viewPagerperfil);
+        mViewPager.setAdapter(adapter);
+        ViewPageTab.setViewPager(mViewPager);
 
 
 
     }
-    //Botao Voltar
+
+        //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
         //Botão adicional na ToolBar voltar
         switch (item.getItemId()) {
@@ -158,12 +174,123 @@ public class MinhaConta extends AppCompatActivity {
 
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.capameuperfil:
+                Intent its = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (its.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(its, SELECAO_CAPA);
+                }
+                break;
+            case R.id.fabminhaconta:
+                Escolher_Foto_Perfil();
+                break;
+            case R.id.perfil_button_back_perfil:
+                Intent it = new Intent(MinhaConta.this,MainActivity.class);
+                startActivity(it);
+                finish();
+                break;
+        }
+    }
+    @Override
     protected void onStart() {
         super.onStart();
+
         RecuperarIcone();
+        CarregarDados_do_Usuario();
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.unregisterEventBus();
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.registerEventBus();
+    }
+
+    @Override
+    public void registerEventBus() {
+
+        try {
+            EventBus.getDefault().register(this);
+        }catch (Exception Err){
+
+
+        }
+
+    }
+
+    @Override
+    public void unregisterEventBus() {
+        try {
+            EventBus.getDefault().unregister(this);
+        }catch (Exception e){
+
+        }
+
+    }
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void setUserOfDrawer(String account) {
+        Toast.makeText(this, account, Toast.LENGTH_SHORT).show();
+        Log.i("eeo34",account);
+    }
+
+
+    private void CarregarDados_do_Usuario(){
+        usuario = UsuarioFirebase.getUsuarioAtual();
+        String email = usuario.getEmail();
+        ChildEventListener=database.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                assert perfil != null;
+
+                String capa = perfil.getCapa();
+                Glide.with(MinhaConta.this)
+                        .load(capa)
+                        .into(capa_perfil );
+
+                String icone = perfil.getFoto();
+                Glide.with(MinhaConta.this)
+                        .load(icone)
+                        .into(circleImageViewperfil );
+
+                nome.setText(perfil.getNome());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     //Salvar o novo nome do usuario no firebase
     /*
@@ -250,24 +377,33 @@ public class MinhaConta extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             Bitmap imagem = null;
+            Bitmap capa = null;
 
             try {
                 switch (requestCode) {
                     case SELECAO_CAMERA:
-                        imagem = (Bitmap) data.getExtras().get("data");
+                      //  uri = data.getData();
+                        CropImage();
                         break;
                     case SELECAO_GALERIA:
-                        Uri localImagemSelecionada = data.getData();
-                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada);
+                        uri = data.getData();
+                        CropImage();
                         break;
-
+                    case SELECAO_CAPA:
+                        Uri localImagemSelecionada = data.getData();
+                        capa = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada);
+                        break;
+                    case SELECAO_CORTADA:
+                        if(data != null)
+                        { imagem = (Bitmap) data.getExtras().get("data");
+                        }
+                        break;
 
                 }
                 if (imagem != null) {
-                    circleImageViewperfil.setImageBitmap(imagem);
                     //Recuperar dados da imagem  para o  Firebase
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    imagem.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                     byte[] dadosImagem = baos.toByteArray();
 
                     //Salvar no Firebase
@@ -278,7 +414,7 @@ public class MinhaConta extends AppCompatActivity {
                             .child("perfil.jpg");
                     //Progress
                     final ProgressDialog progressDialog = new ProgressDialog(this);
-                    progressDialog.setTitle("Carregando...");
+                    progressDialog.setTitle("Aguarde");
                     progressDialog.show();
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
@@ -312,6 +448,54 @@ public class MinhaConta extends AppCompatActivity {
                         }
                     });
 
+                }else if(capa!=null){
+                    //Recuperar dados da imagem  para o  Firebase
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    capa.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] dadosImagem = baos.toByteArray();
+
+                    //Salvar no Firebase
+                    StorageReference imagemRef = storageReference
+                            .child("imagens")
+                            .child("perfil")
+                            .child(identificadorUsuario)
+                            .child("capa.jpg");
+                    //Progress
+                    final ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setTitle("Aguarde");
+                    progressDialog.show();
+                    UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
+                    //caso de errado
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(MinhaConta.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
+                        }
+                        //caso o carregamento no firebase de tudo certo
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(MinhaConta.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
+
+                            Uri url = taskSnapshot.getDownloadUrl();
+                            atualizaCapaUsuario(url);
+
+                            Glide.with(MinhaConta.this)
+                                    .load(url)
+                                    .into(capa_perfil);
+
+                        }
+
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                            progressDialog.setMessage("Carregando... "/* + (int) progress + "%"*/);
+                        }
+                    });
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -320,17 +504,43 @@ public class MinhaConta extends AppCompatActivity {
     }
 
 
+    private void CropImage() {
+
+        try{
+            CropIntent = new Intent("com.android.camera.action.CROP");
+            CropIntent.setDataAndType(uri,"image/*");
+            CropIntent.putExtra("crop","true");
+            CropIntent.putExtra("outputX",180);
+            CropIntent.putExtra("outputY",180);
+            CropIntent.putExtra("aspectX",3);
+            CropIntent.putExtra("aspectY",4);
+            CropIntent.putExtra("scaleUpIfNeeded",true);
+            CropIntent.putExtra("return-data",true);
+
+            startActivityForResult(CropIntent,SELECAO_CORTADA);
+        }
+        catch (ActivityNotFoundException ex)
+        {
+
+        }
+    }
+
+
     public void atualizaFotoUsuario(Uri url) {
         boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
-        if(retorno){
+        if (retorno) {
             usuarioLogado.setFoto(url.toString());
             usuarioLogado.atualizar();
         }
         Toast.makeText(this, "Sua foto foi alterada", Toast.LENGTH_SHORT).show();
-
-
-
     }
+        private void atualizaCapaUsuario(Uri url) {
+            boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
+            if(retorno){
+                usuarioLogado.setCapa(url.toString());
+                usuarioLogado.atualizarCapa();
+            }
+        }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[]
             permissions, @NonNull int[] grantResults) {
@@ -372,12 +582,21 @@ public class MinhaConta extends AppCompatActivity {
         view.findViewById(R.id.botaocamera).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 //exibe um Toast informativo.
-
-
-                Intent it=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if(it.resolveActivity(getPackageManager())!=null)  {
-                    startActivityForResult(it, SELECAO_CAMERA);
+                if(Build.VERSION.SDK_INT>=24){
+                    try{
+                        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                        StrictMode.setVmPolicy(builder.build());
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
+                CamIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                file = new File(Environment.getExternalStorageDirectory(),
+                        "file"+String.valueOf(System.currentTimeMillis())+".jpg");
+                uri = Uri.fromFile(file);
+                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
+                CamIntent.putExtra("return-data",true);
+                startActivityForResult(CamIntent,SELECAO_CAMERA);
                 //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
             }
@@ -386,10 +605,8 @@ public class MinhaConta extends AppCompatActivity {
         view.findViewById(R.id.botaogaleria).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
 
-                Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if(it.resolveActivity(getPackageManager())!=null)  {
-                    startActivityForResult(it, SELECAO_GALERIA);
-                }
+                GalIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(Intent.createChooser(GalIntent,"Select Image from Gallery"),SELECAO_GALERIA);
                 //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
             }
@@ -415,6 +632,7 @@ public class MinhaConta extends AppCompatActivity {
         alerta.show();
 
     }
+
 
 
 }

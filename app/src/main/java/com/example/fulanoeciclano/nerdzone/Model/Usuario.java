@@ -41,14 +41,28 @@ public class Usuario implements Serializable {
         Map<String,Object> valoresUsuario = ConverterparaMap();
         usuariosref.updateChildren(valoresUsuario);
     }
+    public void atualizarCapa(){
+        String identificadorUSuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
 
+        DatabaseReference usuariosref = database.child("usuarios")
+                .child(identificadorUSuario);
+        Map<String,Object> valorUsuario = ConverterCapaparaMap();
+        usuariosref.updateChildren(valorUsuario);
+    }
+
+
+    @Exclude
+    public Map<String,Object> ConverterCapaparaMap(){
+        HashMap<String,Object> usuarioMap = new HashMap<>();
+        usuarioMap.put("capa",getCapa());
+        return usuarioMap;
+    }
     @Exclude
     public Map<String,Object> ConverterparaMap(){
         HashMap<String,Object> usuarioMap = new HashMap<>();
         usuarioMap.put("nome",getNome());
         usuarioMap.put("foto",getFoto());
-
-
 
         return usuarioMap;
     }

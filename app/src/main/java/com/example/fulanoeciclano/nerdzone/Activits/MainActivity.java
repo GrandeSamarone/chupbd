@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +30,7 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
+import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
@@ -46,12 +48,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends AppCompatActivity implements Main,
         NavigationView.OnNavigationItemSelectedListener,
         SwipeRefreshLayout.OnRefreshListener {
 
@@ -74,20 +78,22 @@ public class MainActivity extends AppCompatActivity implements
     private ChildEventListener valueEventListenerMercado;
     private ChildEventListener valueEventListenerEvento;
     private ChildEventListener valueEventListenerDC;
-    private ChildEventListener valueEventListenerOutros;
+    private ChildEventListener valueEventListenerOutros,ChildEventListenerperfil;
     private TextView maiseventoTxt,maiscomercioTxt;
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout mdrawer;
     private CircleImageView img_drawer,img_toolbar;
+    private ImageView capadrawer;
     private TextView nome_drawer;
     private TextView email_drawer;
     private StorageReference storageReference;
-    private DatabaseReference database;
     private String identificadorUsuario;
     private String mPhotoUrl;
     private Usuario usuarioLogado;
+    private FirebaseUser usuario;
+    private DatabaseReference database;
     private SwipeRefreshLayout swipe;
     SharedPreferences sPreferences = null;
 
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
+        database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
 
 
         //Verifica se é a primeira vez da instalacao
@@ -127,12 +133,12 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.setItemIconTintList(null);
         View navHeaderView = navigationView.getHeaderView(0);
         img_drawer=navHeaderView.findViewById(R.id.Img_perfil_drawer);
+        capadrawer= navHeaderView.findViewById(R.id.capadrawer);
         nome_drawer = navHeaderView.findViewById(R.id.Nome_usuario_drawer);
         email_drawer=navHeaderView.findViewById(R.id.Email_usuario_drawer);
 
           //Configuracoes Originais
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
-        database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         usuarioLogado = new Usuario();
 
@@ -143,7 +149,10 @@ public class MainActivity extends AppCompatActivity implements
         swipe.post(new Runnable() {
             @Override
             public void run() {
-                    CarregarInformacoesNoDrawer();
+                RecuperarMercado();
+                RecuperarEvento();
+                CarregarInformacoesNoDrawer();
+                IconeUsuario();
             }
         });
 
@@ -160,12 +169,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     @Override
     public void onRefresh() {
         RecuperarMercado();
         RecuperarEvento();
         CarregarInformacoesNoDrawer();
+        IconeUsuario();
     }
     @Override
     protected void onStart() {
@@ -174,8 +183,46 @@ public class MainActivity extends AppCompatActivity implements
         CarregarInformacoesNoDrawer();
         botoes_Mais();
         RecuperarMercado();
-
+        IconeUsuario();
         RecuperarEvento();
+        CarregarDados_do_Usuario();
+        EventBus.getDefault().postSticky("MulekeDoido");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.unregisterEventBus();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.registerEventBus();
+    }
+
+    @Override
+    public void registerEventBus() {
+
+        try {
+            EventBus.getDefault().register(this);
+        }catch (Exception Err){
+
+
+        }
+
+    }
+
+    @Override
+    public void unregisterEventBus() {
+        try {
+            EventBus.getDefault().unregister(this);
+        }catch (Exception e){
+
+        }
+
     }
 
     @Override
@@ -183,6 +230,69 @@ public class MainActivity extends AppCompatActivity implements
         super.onStop();
         GibiMercado.removeEventListener(valueEventListenerMercado);
         GibiEventos.removeEventListener(valueEventListenerEvento);
+    }
+
+    public  void CarregarInformacoesNoDrawer(){
+       /* swipe.setRefreshing(true);
+        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
+        if(UsuarioAtual.getPhotoUrl()!=null){
+            mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
+        }
+        nome_drawer.setText(UsuarioAtual.getDisplayName());
+        email_drawer.setText(UsuarioAtual.getEmail());
+
+        Glide.with(MainActivity.this)
+                .load(mPhotoUrl)
+                .into(img_drawer);
+
+
+        swipe.setRefreshing(false);
+        */
+    }
+
+    private void CarregarDados_do_Usuario(){
+        usuario = UsuarioFirebase.getUsuarioAtual();
+        String email = usuario.getEmail();
+        ChildEventListenerperfil=database.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                assert perfil != null;
+
+                String capa = perfil.getCapa();
+                Glide.with(MainActivity.this)
+                        .load(capa)
+                        .into(capadrawer );
+
+                String icone = perfil.getFoto();
+                Glide.with(MainActivity.this)
+                        .load(icone)
+                        .into(img_drawer );
+
+                nome_drawer.setText(perfil.getNome());
+                email_drawer.setText(perfil.getTipoconta());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -431,9 +541,7 @@ public class MainActivity extends AppCompatActivity implements
                 //abrirConfiguracoes();
                 break;
             case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
-                Intent intent = new Intent(this, MainActivity.class); // essa é activity Inicial do app
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // adiciona a flag para a intent
-                startActivity(intent);
+
         }/*
         case android.R.id.home:
         // NavUtils.navigateUpFromSameTask(this);
@@ -520,20 +628,5 @@ public class MainActivity extends AppCompatActivity implements
         */
 
     }
-    public  void CarregarInformacoesNoDrawer(){
-        swipe.setRefreshing(true);
-        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
-        if(UsuarioAtual.getPhotoUrl()!=null){
-            mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
-        }
-        nome_drawer.setText(UsuarioAtual.getDisplayName());
-        email_drawer.setText(UsuarioAtual.getEmail());
 
-        Glide.with(MainActivity.this)
-                .load(mPhotoUrl)
-                .into(img_drawer);
-
-
-        swipe.setRefreshing(false);
-    }
 }
