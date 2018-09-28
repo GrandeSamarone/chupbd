@@ -22,7 +22,7 @@
             android:fitsSystemWindows="true"
             android:background="@drawable/gradiente_toolbar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:expandedTitleGravity="center|bottom"
+
             >
 
             <com.facebook.drawee.view.SimpleDraweeView
@@ -32,11 +32,15 @@
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
                 />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:background="@drawable/gradientefundobranco"
+                android:fitsSystemWindows="true" />
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbarlayout"
                 android:layout_width="match_parent"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 >

@@ -60,11 +60,9 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
         holder.titulo.setText(evento.getTitulo());
         holder.numcurtidasEvento.setText(String.valueOf(evento.curtirCount));
         holder.subpostagem.setText(evento.getSubtitulo());
-        holder.datafim.setText(evento.getDatafim());
-        holder.datainicio.setText(evento.getDatainicio());
 
-        if(evento.fotoevento!=null) {
-            Uri uri = Uri.parse(evento.fotoevento);
+        if(evento.capaevento!=null) {
+            Uri uri = Uri.parse(evento.capaevento);
             Log.i("url", String.valueOf(uri));
             DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
@@ -159,8 +157,6 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titulo;
-        private TextView datainicio;
-        private TextView datafim;
         private TextView subpostagem;
         private ImageView botaocurtir;
         private SimpleDraweeView imgevento;
@@ -170,8 +166,6 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
             super(itemView);
 
             titulo = itemView.findViewById(R.id.tituloeventopostagem);
-            datainicio = itemView.findViewById(R.id.data_evento_inicio);
-            datafim = itemView.findViewById(R.id.data_evento_fim);
             subpostagem = itemView.findViewById(R.id.subpostagem);
             card = itemView.findViewById(R.id.cardclickevento);
             imgevento = itemView.findViewById(R.id.imgeventopostagem);

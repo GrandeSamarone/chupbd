@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
-import com.example.fulanoeciclano.nerdzone.Adapter.EventoAdapter;
+import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.EventoAdapterPagInicial;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     private RecyclerView recyclerViewListaGibiOutros;
     private RecyclerView recyclerVieweventos;
     private AdapterMercado adapterMercado;
-    private EventoAdapter adapterEvento;
+    private EventoAdapterPagInicial adapterEvento;
     private List<Mercado> ListaGibiMercado = new ArrayList<>();
     private ArrayList<Gibi> ListaGibiDC = new ArrayList<>();
     private ArrayList<Gibi> ListaGibiOutros = new ArrayList<>();
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements Main,
         IconeUsuario();
         RecuperarEvento();
         CarregarDados_do_Usuario();
-        EventBus.getDefault().postSticky("MulekeDoido");
+        //EventBus.getDefault().postSticky("MulekeDoido");
     }
 
     @Override
@@ -304,11 +304,13 @@ public class MainActivity extends AppCompatActivity implements Main,
         valueEventListenerEvento =GibiEventos.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Evento evento = dataSnapshot.getValue(Evento.class );
-                ListaEvento.add(0,evento);
+                for (DataSnapshot estado : dataSnapshot.getChildren()) {
+                    Evento evento = estado.getValue(Evento.class);
+                    ListaEvento.add(0, evento);
 
-                adapterEvento.notifyDataSetChanged();
-                swipe.setRefreshing(false);
+                    adapterEvento.notifyDataSetChanged();
+                    swipe.setRefreshing(false);
+                }
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -379,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements Main,
 
         //Configurar Adapter
         adapterMercado=new AdapterMercado(ListaGibiMercado,MainActivity.this);
-        adapterEvento = new EventoAdapter(ListaEvento,MainActivity.this);
+        adapterEvento = new EventoAdapterPagInicial(ListaEvento,MainActivity.this);
 
         //Configurar recycleView Evento
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(

@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.example.fulanoeciclano.nerdzone.Adapter.EventoAdapter;
+import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.EventoAdapterPagInicial;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -32,7 +32,7 @@ public class Meus_eventos extends AppCompatActivity {
     private Evento evento;
     private AlertDialog alerta;
     private List<Evento> lista_Meus_Eventos=new ArrayList<>();
-    private EventoAdapter mAdapter;
+    private EventoAdapterPagInicial mAdapter;
     private ChildEventListener childEventListenerMeus_Eventos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class Meus_eventos extends AppCompatActivity {
         identificadoUsuario= UsuarioFirebase.getIdentificadorUsuario();
         meus_eventosref=database.child("evento").orderByChild("uid").equalTo(getUid());
         Log.i("putaquepariu",getUid());
-         mAdapter = new EventoAdapter(lista_Meus_Eventos,Meus_eventos.this);
+         mAdapter = new EventoAdapterPagInicial(lista_Meus_Eventos,Meus_eventos.this);
         recyclerView_meus_eventos = findViewById(R.id.recycler_meus_eventos);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Meus_eventos.this);
        recyclerView_meus_eventos.setLayoutManager(layoutManager);

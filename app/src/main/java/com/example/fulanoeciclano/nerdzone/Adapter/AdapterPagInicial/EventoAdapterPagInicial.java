@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Adapter;
+package com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial;
 
 import android.content.Context;
 import android.net.Uri;
@@ -24,12 +24,12 @@ import java.util.List;
  * Created by fulanoeciclano on 17/07/2018.
  */
 
-public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.MyviewHolder> {
+public class EventoAdapterPagInicial extends RecyclerView.Adapter<EventoAdapterPagInicial.MyviewHolder> {
 
     private Context context;
     private List<Evento> eventos;
 
-    public  EventoAdapter(List<Evento> listeventos, Context c){
+    public EventoAdapterPagInicial(List<Evento> listeventos, Context c){
 
         this.context=c;
         this.eventos=listeventos;
@@ -45,31 +45,12 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.MyviewHold
     @Override
     public void onBindViewHolder(MyviewHolder holder, int position) {
 
-       /*
-        final DatabaseReference postRef = position;
-        // Set click listener for the whole post view
-        final String postKey = postRef.getKey();
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Launch EventoDetailActivity
-                Intent intent = new Intent(context, EventoDetailActivity.class);
-                intent.putExtra(EventoDetailActivity.EXTRA_POST_KEY, postKey);
-                context.startActivity(intent);
-            }
-        });
-*/
-
         final Evento ev = eventos.get(position);
-
-
-        boolean cabecalho = ev.author.isEmpty();
-
         holder.eventonome.setText(ev.titulo);
 
-        if(ev.fotoevento!=null){
+        if(ev.capaevento!=null){
 
-            Uri uri = Uri.parse(ev.fotoevento);
+            Uri uri = Uri.parse(ev.capaevento);
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                     .setProgressiveRenderingEnabled(true)
                     .build();
@@ -87,18 +68,6 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.MyviewHold
             holder.eventocapa.setController(controller);
 //            holder.foto.getHierarchy().setRetryImage(R.drawable.emoji_google_1f3ca_1f3fb);
 
-      holder.card.setRadius(9);
-
-        }else {
-          /* if (cabecalho) {
-               holder.eventocapa.setImageResource(R.drawable.icone_grupo);
-               holder.eventonome.setVisibility(View.GONE);
-           } else {
-               holder.eventocapa.setImageResource(R.drawable.padrao);
-           }
-           holder.eventocapa.setImageResource(R.drawable.carregando);
-       }
-       */
         }
     }
 

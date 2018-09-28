@@ -1,6 +1,9 @@
 package com.example.fulanoeciclano.nerdzone.Evento;
 
+import android.app.Activity;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +30,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
@@ -120,13 +126,16 @@ public class DetalheEvento extends AppCompatActivity {
         recyclerViewcomentarios.setAdapter(adapter);
 
 
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.background));
+        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.branco));
         eventoselecionado = (Evento) getIntent().getSerializableExtra("eventoselecionado");
         if(eventoselecionado!=null){
 
             titutoevento.setText(eventoselecionado.getTitulo());
             mensagem_evento.setText(eventoselecionado.getMensagem());
             Author_evento_View.setText(eventoselecionado.getAuthor());
-            Uri uri = Uri.parse(eventoselecionado.getFotoevento());
+            collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
+            Uri uri = Uri.parse(eventoselecionado.getCapaevento());
             DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
                     .setAutoPlayAnimations(true)
@@ -138,7 +147,6 @@ public class DetalheEvento extends AppCompatActivity {
         mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("evento-comentario").child(getUid());
 
-        Log.i("comentaasd", String.valueOf(mCommentsReference));
         //emotion
         root_view=findViewById(R.id.root_view);
         emojiPopup = EmojiPopup.Builder.fromRootView(root_view).build(edit_chat_emoji);
@@ -152,9 +160,7 @@ public class DetalheEvento extends AppCompatActivity {
         });
 
 
-        collapsingToolbarLayout.setTitle("Marlos");
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.preto));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.primary));
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -197,6 +203,7 @@ public class DetalheEvento extends AppCompatActivity {
                     }
                 });
     */
+
     }
 
 
@@ -257,6 +264,46 @@ public class DetalheEvento extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+    }
+
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
     }
 
 }

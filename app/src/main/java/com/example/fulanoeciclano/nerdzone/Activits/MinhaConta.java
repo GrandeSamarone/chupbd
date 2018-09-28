@@ -242,7 +242,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void setUserOfDrawer(String account) {
-        Toast.makeText(this, account, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this, account, Toast.LENGTH_SHORT).show();
         Log.i("eeo34",account);
     }
 

@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -15,9 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Date.DatePickFragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -37,24 +40,27 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
+import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindowFlag;
 import static com.example.fulanoeciclano.nerdzone.Helper.App.getUid;
 
-public class NewEventoActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
     private static final String datainicio = "date picker";
     private static final String datafim = "date picker2";
@@ -68,14 +74,15 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
     private Usuario usuarioLogado;
     private String identificadorUsuario;
     private Spinner spinner;
+    private CircleImageView icone;
     private Toolbar toolbar;
     // [START declare_database_ref]
     private DatabaseReference mDatabaseEvento;
     private Button botaoiniciodata, botaofimdata;
     // [END declare_database_ref]
-    private String[] estados ;
+    private String[] estados;
     private Evento eventos;
-    private String estado;
+    private String estado,idAutor;
     private EditText titulo, subtitulo, mensagem;
     private TextView data_inicio, data_fim;
     private ImageView imgevento;
@@ -83,6 +90,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
     private String urlimg;
     private DatePickerDialog datePickerDialog;
     private int dia, mes, ano;
+    private AlertDialog dialog;
 
 
     private FloatingActionButton botaoSalvar;
@@ -98,10 +106,10 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         toolbar = findViewById(R.id.toolbarsecundario);
         toolbar.setTitle("Criar Evento");
         setSupportActionBar(toolbar);
+
+
+        //Configuracao Inicial
         eventos = new Evento();
-
-
-
         mDatabaseEvento = FirebaseDatabase.getInstance().getReference();
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         botaofimdata = findViewById(R.id.botaodatafim);
@@ -109,70 +117,41 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         imgevento = findViewById(R.id.img_add_foto_evento);
+        imgevento.setOnClickListener(this);
         titulo = findViewById(R.id.titulo_evento);
         subtitulo = findViewById(R.id.subtitulo_evento);
         data_inicio = findViewById(R.id.data_topico_inicio);
+        data_inicio.setOnClickListener(this);
         data_fim = findViewById(R.id.data_topico_fim);
+        data_fim.setOnClickListener(this);
         mensagem = findViewById(R.id.desc_evento);
         botaoSalvar = findViewById(R.id.btn_salvar_topico);
+        botaoSalvar.setOnClickListener(this);
         spinner = findViewById(R.id.spnilocalidade);
 
 
-        //Adicionando Estados no ArrayList
-        estados = getResources().getStringArray(R.array.estados);
-        //Cria um ArrayAdapter usando um padrão de layout da classe R do android, passando o ArrayList nomes
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, estados);
-        ArrayAdapter<String> spinnerArrayAdapter = arrayAdapter;
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(spinnerArrayAdapter);
-        //Método do Spinner para capturar o item selecionado
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        TrocarFundos_status_bar();
+        IconeUsuario();
+        CarregarDadosSpinner();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int posicao, long id) {
-                //pega nome pela posição
-                    estado = parent.getItemAtPosition(posicao).toString();
-                //imprime um Toast na tela com o nome que foi selecionado
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.img_add_foto_evento:
+                Intent intent = CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .getIntent(Cadastrar_Novo_Evento.this);
+                startActivityForResult(intent, SELECAO_GALERIA);
+                break;
 
-                Toast.makeText(NewEventoActivity.this, estado, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        botaoSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        imgevento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Escolher_Foto_Evento();
-            }
-        });
-
-
-        //######Guardando a  data#########
-        data_inicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.data_topico_inicio:
                 DialogFragment datePicker = new DatePickFragment();
                 datePicker.show(getSupportFragmentManager(), datainicio);
-            }
-        });
-
-
-        data_fim.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                DatePicker datePicker = new DatePicker(NewEventoActivity.this);
+                break;
+            case R.id.data_topico_fim:
+                DatePicker datePickera = new DatePicker(Cadastrar_Novo_Evento.this);
                 final Calendar calendar1 = Calendar.getInstance();
                 Log.i("dataa", String.valueOf(calendar1.getTime()));
                 ano = calendar1.get(Calendar.YEAR);
@@ -180,7 +159,7 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
                 dia = calendar1.get(Calendar.DAY_OF_MONTH);
 
 
-                datePickerDialog = new DatePickerDialog(NewEventoActivity.this, new DatePickerDialog.OnDateSetListener() {
+                datePickerDialog = new DatePickerDialog(Cadastrar_Novo_Evento.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int ano, int mes, int dia) {
                         final String currentDate = DateFormat.getDateInstance().format(calendar1.getTime());
@@ -189,13 +168,13 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
                 }, ano, mes, dia);
 
                 datePickerDialog.show();
-
-
-            }
-
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                break;
+            case R.id.btn_salvar_topico:
+                validardados();
+                break;
+        }
     }
+
     //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -203,15 +182,17 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
 
             case android.R.id.home:
 
-               finish();
+                finish();
 
                 break;
 
-            default:break;
+            default:
+                break;
         }
 
         return true;
     }
+
     @Override
     public void onDateSet(DatePicker view, int ano, int mes, int dia) {
 
@@ -228,49 +209,9 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
 
     }
 
-    //dialog de opcoes
-    private void Escolher_Foto_Evento() {
-        //LayoutInflater é utilizado para inflar nosso layout em uma view.
-        //-pegamos nossa instancia da classe
-        LayoutInflater li = getLayoutInflater();
-
-        //inflamos o layout tela_opcao_foto.xml_foto.xml na view
-        View view = li.inflate(R.layout.dialog_opcao_evento, null);
-        //definimos para o botão do layout um clickListener
-        view.findViewById(R.id.botaocamera).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                //exibe um Toast informativo.
 
 
-                Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (it.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(it, SELECAO_CAMERA);
-                }
-                //desfaz o tela_opcao_foto.
-                alerta.dismiss();
-            }
-        });
 
-        view.findViewById(R.id.botaogaleria).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-
-                Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if (it.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(it, SELECAO_GALERIA);
-                }
-                //desfaz o tela_opcao_foto.
-                alerta.dismiss();
-            }
-        });
-
-
-        //Dialog de tela
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view);
-        alerta = builder.create();
-        alerta.show();
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -282,11 +223,14 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
             try {
                 switch (requestCode) {
                     case SELECAO_CAMERA:
-                        imagem = (Bitmap) data.getExtras().get("data");
+                        CropImage.ActivityResult resultCAMERA = CropImage.getActivityResult(data);
+                        Uri resultUriCAMERA = resultCAMERA.getUri();
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUriCAMERA);
                         break;
                     case SELECAO_GALERIA:
-                        Uri localImagemSelecionada = data.getData();
-                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada);
+                        CropImage.ActivityResult resultGALERIA = CropImage.getActivityResult(data);
+                        Uri resultUriGALERIA = resultGALERIA.getUri();
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUriGALERIA);
                         break;
 
 
@@ -315,21 +259,21 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(NewEventoActivity.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Cadastrar_Novo_Evento.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
                         }
                         //caso o carregamento no firebase de tudo certo
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(NewEventoActivity.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Cadastrar_Novo_Evento.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
 
                             Uri url = taskSnapshot.getDownloadUrl();
                             // SalvarPost(url);
                             urlimg = url.toString();
 
 
-                            Glide.with(NewEventoActivity.this)
+                            Glide.with(Cadastrar_Novo_Evento.this)
                                     .load(url)
                                     .into(imgevento);
 
@@ -351,27 +295,30 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
     }
 
 
-    private Evento  configurarEvento() {
+    private Evento configurarEvento() {
         final String tituloDoEvento = titulo.getText().toString();
         final String subtituloDoEvento = subtitulo.getText().toString();
         final String mensagemDoEvento = mensagem.getText().toString();
         final String dataDoEventoFim = data_fim.getText().toString();
         final String dataDoEventoInicio = data_inicio.getText().toString();
-        final String estadoDoEvento = estado;
+        final String estadoDoEvento = spinner.getSelectedItem().toString();
+        final String id = identificadorUsuario;
         final String capaevento = urlimg;
 
 
         eventos.setTitulo(tituloDoEvento);
+        eventos.setIdUsuario(id);
         eventos.setSubtitulo(subtituloDoEvento);
         eventos.setMensagem(mensagemDoEvento);
         eventos.setDatainicio(dataDoEventoFim);
         eventos.setDatafim(dataDoEventoInicio);
-        eventos.setFotoevento(capaevento);
+        eventos.setEstado(estadoDoEvento);
+        eventos.setCapaevento(capaevento);
 
-        return  eventos;
+        return eventos;
     }
 
-    public void validardados(){
+    public void validardados() {
         eventos = configurarEvento();
 
         // verificando se o titulo está vazio
@@ -390,52 +337,87 @@ public class NewEventoActivity extends AppCompatActivity implements DatePickerDi
             return;
         }
 
-        // Disable button so there are no multi-posts
-        setEditingEnabled(false);
-        Toast.makeText(this, "Postando...", Toast.LENGTH_SHORT).show();
-
+        eventos.salvar();
+        Toast.makeText(this, "Evento Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
+        Intent it = new Intent( Cadastrar_Novo_Evento.this,Evento_Lista.class);
+        startActivity(it);
+        finish();
         // [START single_value_read]
         final String userId = getUid();
-        Log.i("carz", userId);
-        mDatabaseEvento.child("usuarios").child(userId).addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-/*
-                        writeNewPost(userId, usuarioLogado.getNome(), usuarioLogado.getFoto(), tituloDoEvento
-                                , subtituloDoEvento, capaevento, mensagemDoEvento, dataDoEventoFim, dataDoEventoInicio, estadoDoEvento);
-*/
-
-                        // Finish this Activity, back to the stream
-                        setEditingEnabled(true);
-                        finish();
-                        // [END_EXCLUDE]
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // [START_EXCLUDE]
-                        setEditingEnabled(true);
-                        // [END_EXCLUDE]
-                    }
-                });
-        // [END single_value_read]
-    }
-
-    public void salvarMercado(){
 
     }
-    private void setEditingEnabled(boolean enabled) {
-        titulo.setEnabled(enabled);
-        mensagem.setEnabled(enabled);
-        if (enabled) {
-            botaoSalvar.setVisibility(View.VISIBLE);
-        } else {
-            botaoSalvar.setVisibility(View.GONE);
+
+
+
+
+    private void TrocarFundos_status_bar() {
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
         }
     }
 
+    private void IconeUsuario() {
+        //Imagem do icone do usuario
+        icone = findViewById(R.id.icone_user_toolbar);
+        icone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Cadastrar_Novo_Evento.this, MinhaConta.class);
+                startActivity(it);
+            }
+        });
+        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
+        String mPhotoUrl = UsuarioAtual.getPhotoUrl().toString();
 
+        Glide.with(Cadastrar_Novo_Evento.this)
+                .load(mPhotoUrl)
+                .into(icone);
+    }
+
+    //carregar spinner
+    private void CarregarDadosSpinner() {
+        //
+        String[] artista = getResources().getStringArray(R.array.estados);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, artista);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                estado = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
 }
 
 

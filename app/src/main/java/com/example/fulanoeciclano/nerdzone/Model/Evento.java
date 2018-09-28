@@ -7,6 +7,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // [START post_class]
@@ -18,7 +19,9 @@ public class Evento implements Serializable {
     public String titulo;
     public String subtitulo;
     public String imgperfilusuario;
-    public String fotoevento;
+    public String idUsuario;
+    public String capaevento;
+    private List<String> fotoseventos;
     public String mensagem;
     public String datainicio;
     public String datafim;
@@ -32,6 +35,16 @@ public class Evento implements Serializable {
         DatabaseReference eventoref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("evento");
         setUid(eventoref.push().getKey());
+    }
+
+    public void salvar(){
+        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("evento");
+        anuncioref.child(getEstado())
+                .child(getUid()).setValue(this);
+
+        //  salvarAnuncioPublico();
     }
 
     /*public Evento(String uid, String author, String imgperfilusuario,String fotoevento, String titulo,
@@ -112,12 +125,28 @@ public class Evento implements Serializable {
         this.imgperfilusuario = imgperfilusuario;
     }
 
-    public String getFotoevento() {
-        return fotoevento;
+    public String getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setFotoevento(String fotoevento) {
-        this.fotoevento = fotoevento;
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getCapaevento() {
+        return capaevento;
+    }
+
+    public void setCapaevento(String capaevento) {
+        this.capaevento = capaevento;
+    }
+
+    public List<String> getFotoseventos() {
+        return fotoseventos;
+    }
+
+    public void setFotoseventos(List<String> fotoseventos) {
+        this.fotoseventos = fotoseventos;
     }
 
     public String getMensagem() {

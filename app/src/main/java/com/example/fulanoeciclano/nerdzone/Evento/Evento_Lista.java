@@ -1,5 +1,6 @@
 package com.example.fulanoeciclano.nerdzone.Evento;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 
@@ -39,8 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindowFlag;
 
 public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayout.OnRefreshListener
 {
@@ -69,8 +69,17 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         toolbar = findViewById(R.id.toolbarsecundario);
         toolbar.setTitle(R.string.name_evento);
         setSupportActionBar(toolbar);
-
         IconeUsuario();
+
+        Novo_Evento = findViewById(R.id.fab_novo_evento);
+        Novo_Evento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Evento_Lista.this,Cadastrar_Novo_Evento.class);
+                startActivity(it);
+            }
+        });
+
 
 
         //ROLAR PARA ATUALIZAR
@@ -157,6 +166,40 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
 
     }
 
+    //recupera e nao deixa duplicar
+    public void RecuperarEventos(){
+        ListaEvento.clear();
+        swipeatualizar.setRefreshing(true);
+        valueEventListenerEvento =mDatabaseevento.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot estado : dataSnapshot.getChildren()) {
+                    Evento evento = estado.getValue(Evento.class);
+                    ListaEvento.add(0, evento);
+
+                    adapterevento.notifyDataSetChanged();
+                    swipeatualizar.setRefreshing(false);
+
+                }
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
     private void TrocarFundos_status_bar(){
         //mudando a cor do statusbar
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
@@ -164,13 +207,13 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
         }
         if (Build.VERSION.SDK_INT >= 19) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
             //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
         }
         //make fully Android Transparent Status bar
@@ -182,10 +225,20 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
             systemBarTintManager.setNavigationBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbar);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
         }
     }
 
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
 
     //botao Pesquisar
     public boolean onCreateOptionsMenu(Menu menu){
@@ -251,37 +304,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         mDatabaseevento.removeEventListener(valueEventListenerEvento);
     }
 
-    //recupera e nao deixa duplicar
-    public void RecuperarEventos(){
-        ListaEvento.clear();
-        swipeatualizar.setRefreshing(true);
-        valueEventListenerEvento =mDatabaseevento.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Evento evento = dataSnapshot.getValue(Evento.class );
-                ListaEvento.add(0,evento);
 
-                adapterevento.notifyDataSetChanged();
-                swipeatualizar.setRefreshing(false);
-
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
 
     private void PesquisarEvento(String texto) {
 //  String nick_null =  getString(R.string.buscar_usuario, usuarioAtual.getDisplayName());
