@@ -104,5 +104,7 @@
     <string name="novocomercio">Novo Comércio</string>
     <string name="legenda_nvo_comercio">Legenda Ex: Games e muito mais..</string>
     <string name="descricao">DESCRIÇÃO</string>
+    <string name="_0_n_perfil">0</string>
+    <string name="fans_perfil">Fans</string>
 
 </resources>

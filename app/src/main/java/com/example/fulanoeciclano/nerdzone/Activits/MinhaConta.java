@@ -2,7 +2,6 @@ package com.example.fulanoeciclano.nerdzone.Activits;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -58,6 +56,8 @@ import com.google.firebase.storage.UploadTask;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -84,7 +84,6 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     private static final int SELECAO_CAPA=50;
     private static final int SELECAO_ICONE=300;
     private static final int MINHA_CONTA=12;
-    private Intent CamIntent,GalIntent,CropIntent;
     private CircleImageView circleImageViewperfil;
     private ImageView capa_perfil;
     private LinearLayout btn_voltar;
@@ -177,10 +176,10 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.capameuperfil:
-                Intent its = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if (its.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(its, SELECAO_CAPA);
-                }
+                Intent intent = CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .getIntent(this);
+                startActivityForResult(intent,SELECAO_CAPA );
                 break;
             case R.id.fabminhaconta:
                 Escolher_Foto_Perfil();
@@ -379,26 +378,24 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
             Bitmap imagem = null;
             Bitmap capa = null;
 
+
             try {
                 switch (requestCode) {
                     case SELECAO_CAMERA:
-                      //  uri = data.getData();
-                        CropImage();
+                        CropImage.ActivityResult resultCAMERA = CropImage.getActivityResult(data);
+                        Uri resultUriCAMERA = resultCAMERA.getUri();
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUriCAMERA);
                         break;
                     case SELECAO_GALERIA:
-                        uri = data.getData();
-                        CropImage();
+                        CropImage.ActivityResult resultGALERIA = CropImage.getActivityResult(data);
+                        Uri resultUriGALERIA = resultGALERIA.getUri();
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUriGALERIA);
                         break;
                     case SELECAO_CAPA:
-                        Uri localImagemSelecionada = data.getData();
-                        capa = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada);
+                        CropImage.ActivityResult resultCAPA = CropImage.getActivityResult(data);
+                        Uri resultUriCAPA = resultCAPA.getUri();
+                        capa = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUriCAPA);
                         break;
-                    case SELECAO_CORTADA:
-                        if(data != null)
-                        { imagem = (Bitmap) data.getExtras().get("data");
-                        }
-                        break;
-
                 }
                 if (imagem != null) {
                     //Recuperar dados da imagem  para o  Firebase
@@ -504,28 +501,6 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     }
 
 
-    private void CropImage() {
-
-        try{
-            CropIntent = new Intent("com.android.camera.action.CROP");
-            CropIntent.setDataAndType(uri,"image/*");
-            CropIntent.putExtra("crop","true");
-            CropIntent.putExtra("outputX",180);
-            CropIntent.putExtra("outputY",180);
-            CropIntent.putExtra("aspectX",3);
-            CropIntent.putExtra("aspectY",4);
-            CropIntent.putExtra("scaleUpIfNeeded",true);
-            CropIntent.putExtra("return-data",true);
-
-            startActivityForResult(CropIntent,SELECAO_CORTADA);
-        }
-        catch (ActivityNotFoundException ex)
-        {
-
-        }
-    }
-
-
     public void atualizaFotoUsuario(Uri url) {
         boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
         if (retorno) {
@@ -590,25 +565,24 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                         e.printStackTrace();
                     }
                 }
-                CamIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                file = new File(Environment.getExternalStorageDirectory(),
-                        "file"+String.valueOf(System.currentTimeMillis())+".jpg");
-                uri = Uri.fromFile(file);
-                CamIntent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-                CamIntent.putExtra("return-data",true);
-                startActivityForResult(CamIntent,SELECAO_CAMERA);
-                //desfaz o dialog_opcao_foto.
+                Intent intent = CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .getIntent(MinhaConta.this);
+                startActivityForResult(intent,SELECAO_CAMERA ); //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
+
             }
         });
 
         view.findViewById(R.id.botaogaleria).setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
 
-                GalIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(Intent.createChooser(GalIntent,"Select Image from Gallery"),SELECAO_GALERIA);
-                //desfaz o dialog_opcao_foto.
+                Intent intent = CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .getIntent(MinhaConta.this);
+                startActivityForResult(intent,SELECAO_GALERIA );
                 alerta.dismiss();
+
             }
         });
         view.findViewById(R.id.botaoicones).setOnClickListener(new View.OnClickListener() {
@@ -621,6 +595,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 startActivityForResult(it, SELECAO_ICONE);
                 //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
+
             }
         });
 

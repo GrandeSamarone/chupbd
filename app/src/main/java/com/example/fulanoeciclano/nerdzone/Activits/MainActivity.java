@@ -307,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements Main,
                 Evento evento = dataSnapshot.getValue(Evento.class );
                 ListaEvento.add(0,evento);
 
-
                 adapterEvento.notifyDataSetChanged();
                 swipe.setRefreshing(false);
             }

@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +44,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -312,8 +313,10 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     }
 
     public  void EscolherImagem(int requestCode){
-        Intent it = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(it,requestCode);
+        Intent intent = CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .getIntent(this);
+        startActivityForResult(intent,requestCode );
     }
 
     @Override
@@ -321,9 +324,10 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == Activity.RESULT_OK){
-            Uri imagemSelecionada = data.getData();
-            String caminhoImagem = imagemSelecionada.toString();
 
+            CropImage.ActivityResult resultCAMERA = CropImage.getActivityResult(data);
+            Uri imagemSelecionada = resultCAMERA.getUri();
+            String caminhoImagem = imagemSelecionada.toString();
             // Configurar imagem  no ImageView
 
              if(requestCode == 1){

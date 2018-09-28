@@ -142,13 +142,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0_n_perfil"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Seguidores"
+                android:text="@string/fans_perfil"
                 android:textAlignment="center"/>
 
 </LinearLayout>
@@ -160,7 +160,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0_n_perfil"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
             <TextView
@@ -178,7 +178,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0_n_perfil"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
             <TextView
@@ -195,7 +195,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0_n_perfil"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
             <TextView
@@ -212,7 +212,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/_0_n_perfil"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
             <TextView
