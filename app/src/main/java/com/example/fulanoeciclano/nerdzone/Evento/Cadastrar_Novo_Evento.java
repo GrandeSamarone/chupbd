@@ -169,6 +169,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
 
                 datePickerDialog.show();
                 break;
+
             case R.id.btn_salvar_topico:
                 validardados();
                 break;
@@ -239,7 +240,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
                     imgevento.setImageBitmap(imagem);
                     //Recuperar dados da imagem  para o  Firebase
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    imagem.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                     byte[] dadosImagem = baos.toByteArray();
                     String nomeImagem = UUID.randomUUID().toString();
                     //Salvar no Firebase
@@ -327,7 +328,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
             return;
         }
         if (TextUtils.isEmpty(eventos.getSubtitulo())) {
-            titulo.setError(SUBTITULO);
+            subtitulo.setError(SUBTITULO);
             return;
         }
 
@@ -336,12 +337,18 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
             mensagem.setError(MENSAGEM);
             return;
         }
+        if ( (!eventos.getEstado().equals("Estado"))) {
+
 
         eventos.salvar();
         Toast.makeText(this, "Evento Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
         Intent it = new Intent( Cadastrar_Novo_Evento.this,Evento_Lista.class);
         startActivity(it);
         finish();
+
+        }else{
+            Toast.makeText(this, "Selecione um Estado", Toast.LENGTH_SHORT).show();
+        }
         // [START single_value_read]
         final String userId = getUid();
 

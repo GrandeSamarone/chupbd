@@ -17,13 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
@@ -110,7 +108,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         recyclerEvento.setLayoutManager(layoutManager);
         recyclerEvento.setHasFixedSize(true);
         recyclerEvento.setAdapter(adapterevento);
-
+/*
         recyclerEvento.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
                 recyclerEvento, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -134,7 +132,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
 
             }
         }));
-
+*/
 //Botao Pesquisa
         SeachView = findViewById(R.id.materialSeachComercio);
         SeachView.setHint("Pesquisar");
@@ -176,7 +174,6 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 for (DataSnapshot estado : dataSnapshot.getChildren()) {
                     Evento evento = estado.getValue(Evento.class);
                     ListaEvento.add(0, evento);
-
                     adapterevento.notifyDataSetChanged();
                     swipeatualizar.setRefreshing(false);
 

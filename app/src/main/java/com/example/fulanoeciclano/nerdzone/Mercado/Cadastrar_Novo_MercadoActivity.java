@@ -151,6 +151,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
     public void  SalvarMercado(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
         LayoutInflater layoutInflater = LayoutInflater.from(Cadastrar_Novo_MercadoActivity.this);
         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_analisando,null);
         ImageView imageViewgif = view.findViewById(R.id.gifimage);

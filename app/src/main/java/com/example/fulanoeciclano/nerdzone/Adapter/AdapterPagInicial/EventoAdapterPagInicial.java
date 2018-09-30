@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -67,8 +69,16 @@ public class EventoAdapterPagInicial extends RecyclerView.Adapter<EventoAdapterP
 */
             holder.eventocapa.setController(controller);
 //            holder.foto.getHierarchy().setRetryImage(R.drawable.emoji_google_1f3ca_1f3fb);
-
         }
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(context, DetalheEvento.class);
+                it.putExtra("id_do_evento",ev.getUid());
+                it.putExtra("UR_do_evento",ev.getEstado());
+                context.startActivity(it);
+            }
+        });
     }
 
     @Override

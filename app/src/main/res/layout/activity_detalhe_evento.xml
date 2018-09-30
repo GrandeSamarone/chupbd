@@ -78,16 +78,21 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:layout_marginBottom="8dp"
                 android:textColor="@color/preto"
                 android:textSize="18sp"
                 tools:text="Titulo" />
+
+
             <TextView
-                android:textColor="@color/cinzaescuro"
-                android:textSize="16sp"
                 android:id="@+id/detalhe_evento_mensagem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:textAllCaps="false"
+                android:textColor="@color/cinzaescuro"
+                android:textSize="16sp"
+                app:fontFamily="sans-serif-condensed"
                 tools:text="topico" />
 
 
@@ -136,21 +141,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp">
-                <TextView
-                    android:textColor="@color/cinzaescuro"
-                    android:textSize="14sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Autor:"/>
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/icone_author"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:visibility="gone"/>
+                  />
                 <TextView
                     android:textColor="@color/primary_dark"
                     android:textSize="14sp"
-                    android:id="@+id/post_author_evento"
+                    android:id="@+id/author_evento"
                     android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

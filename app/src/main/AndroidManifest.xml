@@ -6,11 +6,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <supports-screens android:smallScreens="true"
-        android:normalScreens="true"
+
+    <supports-screens
+        android:anyDensity="true"
         android:largeScreens="true"
-        android:xlargeScreens="true"
-        android:anyDensity="true" />
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
     <!-- <uses-sdk tools:overrideLibrary="com.firebase.ui.auth" /> -->
     <application
         android:name=".Helper.App"
@@ -20,7 +23,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -28,11 +30,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
-        <activity android:name=".Activits.MainActivity"/>
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".Activits.MainActivity" />
         <activity android:name=".Autenticacao.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +48,6 @@
             android:name=".Activits.Cadastrar_icon_nome_Activity"
             android:label="@string/title_activity_cadastrar_icon_nome_" />
         <activity android:name=".Topico.TopicoDetailActivity" />
-
         <activity
             android:name=".Icons.PageIcon"
             android:label="@string/title_activity_page_icon1"
@@ -71,11 +74,16 @@
             android:name=".Evento.DetalheEvento"
             android:label="@string/title_activity_detalhe_evento"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Mercado.Detalhe_Mercado"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Mercado.Detalhe_Mercado"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activits.Gifteste" />
         <activity android:name=".Activits.AbrirImagem" />
-        <activity android:name=".Evento.Evento_Lista"></activity>
+        <activity android:name=".Evento.Evento_Lista" />
+        <activity
+            android:name=".PerfilAmigos.Perfil"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activits.teste"></activity>
     </application>
 
 </manifest>

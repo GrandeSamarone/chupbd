@@ -7,67 +7,44 @@
     android:layout_marginBottom="@dimen/margenBalaoBottom"
     android:layout_marginLeft="@dimen/margenLeftChat"
     android:layout_marginStart="@dimen/margenLeftChat">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
 
     <RelativeLayout
         android:layout_alignParentRight="true"
         android:id="@+id/layout"
-
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/drawable_balloon_right"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/paddingBalaoDirBottom"
-        android:paddingEnd="@dimen/paddingBalaoDirRight"
-        android:paddingLeft="@dimen/paddingBalaoDirLeft"
-        android:paddingRight="@dimen/paddingBalaoDirRight"
-        android:paddingStart="@dimen/paddingBalaoDirLeft"
-        android:paddingTop="@dimen/paddingBalaoDirTop"
+        android:background="@drawable/out_message_bg"
+        android:paddingBottom="@dimen/paddingBalaoEsqBottom"
+        android:paddingEnd="@dimen/paddingBalaoEsqRight"
+        android:paddingLeft="@dimen/paddingBalaoEsqLeft"
+        android:paddingRight="@dimen/paddingBalaoEsqRight"
+        android:paddingStart="@dimen/paddingBalaoEsqLeft"
+        android:paddingTop="@dimen/paddingBalaoEsqTop"
         >
-        <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-            android:orientation="vertical">
-        <TextView
-            android:text="Jamilton Damasceno"
-            android:id="@+id/textNomeExibicao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"/>
-        <ImageView
-            android:id="@+id/imgMensagemfoto"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:background="@drawable/padrao"
-            />
 
             <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/textMensagemtexto"
                 style="@style/TextAppearance.AppCompat.Small"
+
+                android:textColor="@color/preto"
+                android:text="Mensagem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
-                app:emojiSize="@dimen/emoji_size_default"/>
+                app:emojiSize="@dimen/emoji_size_only_emojis"/>
 
-            <TextView
-                android:id="@+id/tempodochat"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:text="00/00/000"
-                android:textColor="@color/branco"
-                android:textSize="10sp"
-                android:layout_marginTop="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textMensagemtexto" />
-
-        </LinearLayout>
     </RelativeLayout>
+    <TextView
+        android:id="@+id/tempodochat"
 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00/00/000"
+        android:textColor="@color/branco"
+        android:textSize="10sp"
+        android:layout_below="@+id/layout"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
 
-</RelativeLayout>
-
+        />
 </RelativeLayout>

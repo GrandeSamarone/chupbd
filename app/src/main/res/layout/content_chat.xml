@@ -42,14 +42,15 @@
             android:background="@drawable/fundo_mensagem_chat">
             <ImageView
                 android:id="@+id/button_chat_icone"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_emotion_chat"/>
             <com.vanniktech.emoji.EmojiEditText
                 android:id="@+id/editMensagem"
                 android:layout_marginLeft="5dp"
                 android:layout_width="250dp"
                 android:background="@android:color/white"
+
                 android:inputType="textMultiLine"
                 android:layout_height="wrap_content"
                 android:hint="Comente..."/>

@@ -27,7 +27,6 @@ import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.EventoAdapterPagInicial;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
@@ -391,28 +390,6 @@ public class MainActivity extends AppCompatActivity implements Main,
         recyclerVieweventos.setAdapter(adapterEvento);
         recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
                 recyclerVieweventos,  R.layout.header_evento));
-
-        recyclerVieweventos.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
-                recyclerVieweventos, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Evento eventoselecionado = ListaEvento.get(position);
-                Intent it = new Intent(MainActivity.this,DetalheEvento.class);
-                it.putExtra("eventoselecionado",eventoselecionado);
-                startActivity(it);
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        }));
-
 
         //Configurar recycleView Marvel
         RecyclerView.LayoutManager layoutManagerMarvel = new LinearLayoutManager

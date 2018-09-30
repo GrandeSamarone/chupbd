@@ -1,20 +1,16 @@
 package com.example.fulanoeciclano.nerdzone.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Mensagem;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 
 import java.util.List;
 
@@ -61,33 +57,8 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.MyVi
             holder.tempo.setText("00/00/0000");
         }
 
+        holder.mensagem.setText(msg);
 
-        if(imagem !=null){
-        Uri url = Uri.parse(imagem);
-            Glide.with(context)
-                    .load(url)
-                    .into(holder.imagem);
-
-
-            //caso o nome nao esteja vazio
-            if(!nome.isEmpty()){
-                holder.nome.setText(nome);
-            }else{
-                holder.nome.setVisibility(View.GONE);
-            }
-            //Esconder o texto
-            holder.mensagem.setVisibility(View.GONE);
-        }else{
-           holder.mensagem.setText(msg);
-             nome =mensagem.getNome();
-            if(!nome.isEmpty()){
-                holder.nome.setText(nome);
-            }else{
-                holder.nome.setVisibility(View.GONE);
-            }
-           //esconder a imagem
-            holder.imagem.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -109,18 +80,15 @@ return  TIPO_REMETENTE;
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView mensagem;
-        TextView nome,tempo,tempodatadochat;
-        ImageView imagem;
+        TextView tempo,tempodatadochat;
         SimpleDraweeView Usuario_Foto;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mensagem= itemView.findViewById(R.id.textMensagemtexto);
-            imagem = itemView.findViewById(R.id.imgMensagemfoto);
-            nome = itemView.findViewById(R.id.textNomeExibicao);
             Usuario_Foto = itemView.findViewById(R.id.chat_img_usuario);
             tempo = itemView.findViewById(R.id.tempodochat);
-            tempodatadochat= itemView.findViewById(R.id.tempodatadochat);
+
         }
     }
 

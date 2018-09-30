@@ -1,9 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Evento;
 
-import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,24 +11,27 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_comentario;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Comentario;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
+import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
@@ -67,14 +68,17 @@ public class DetalheEvento extends AppCompatActivity {
     private  android.support.v7.widget.AppCompatButton botao_env_msg;
     private DatabaseReference mDatabase;
     private static RecyclerView recyclerViewcomentarios;
-    private Usuario usuarioLogado;
+    private String usuarioLogado;
     private String mCommentIds;
     private Adapter_comentario adapter;
     private Comentario comentar = new Comentario();
     private List<Comentario> listcomentario = new ArrayList<>();
-
+    private DatabaseReference database_evento,database_usuario;
+    private com.google.firebase.database.ChildEventListener ChildEventListenerevento;
     private View root_view;
     private EmojiPopup emojiPopup;
+    private ChildEventListener ChildEventListeneruser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,20 +89,16 @@ public class DetalheEvento extends AppCompatActivity {
 
 
         //configuracoes iniciais
+        database_evento = ConfiguracaoFirebase.getDatabase().getReference().child("evento");
+        database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         collapsingToolbarLayout = findViewById(R.id.collapseLayoutevento);
         EmojiManager.install(new GoogleEmojiProvider());
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
+        usuarioLogado =  UsuarioFirebase.getIdentificadorUsuario();
+        Log.i("sadsds",usuarioLogado);
 
-       /* // Initialize Database
-        mPostReference = FirebaseDatabase.getInstance().getReference()
-                .child("evento").child(mPostKey);
-        mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("evento-comments").child(mPostKey);
-*/
 
         // Initialize Views
-        Author_evento_View = findViewById(R.id.post_author_evento);
        // datafinal = findViewById(R.id.datafinal);
       //  datainicial = findViewById(R.id.datainicial);
        // toolbarnomeevento= findViewById(R.id.nomeevento_toolbaar);
@@ -107,9 +107,10 @@ public class DetalheEvento extends AppCompatActivity {
         botao_env_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostarComentario();
+
             }
         });
+        Author_evento_View = findViewById(R.id.author_evento);
         mensagem_evento = findViewById(R.id.detalhe_evento_mensagem);
         AuthorFoto_evento_View=findViewById(R.id.icone_author);
         eventobanner = findViewById(R.id.bannereventocapa);
@@ -128,22 +129,7 @@ public class DetalheEvento extends AppCompatActivity {
 
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.background));
         collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.branco));
-        eventoselecionado = (Evento) getIntent().getSerializableExtra("eventoselecionado");
-        if(eventoselecionado!=null){
 
-            titutoevento.setText(eventoselecionado.getTitulo());
-            mensagem_evento.setText(eventoselecionado.getMensagem());
-            Author_evento_View.setText(eventoselecionado.getAuthor());
-            collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
-            Uri uri = Uri.parse(eventoselecionado.getCapaevento());
-            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-
-            eventobanner.setController(controllerOne);
-
-        }
         mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("evento-comentario").child(getUid());
 
@@ -160,41 +146,126 @@ public class DetalheEvento extends AppCompatActivity {
         });
 
 
-
+        CarregarDados_do_Evento();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+    private void CarregarDados_do_Evento(){
 
-    private void PostarComentario() {
-        final String uid = getUid();
-       // mDatabase.child("usuarios").child(uid)
-                /*.addListenerForSingleValueEvent(new ValueEventListener() {
+        String ids=getIntent().getStringExtra("id_do_evento");
+        String estado= getIntent().getStringExtra("UR_do_evento");
+        ChildEventListenerevento=database_evento    .child(estado).orderByChild("uid")
+                .equalTo(ids).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Evento evento = dataSnapshot.getValue(Evento.class );
+                assert evento != null;
+
+
+                Uri uri = Uri.parse(evento.getCapaevento());
+                DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                        .setUri(uri)
+                        .setAutoPlayAnimations(true)
+                        .build();
+
+                eventobanner.setController(controllerOne);
+
+                mensagem_evento.setText(evento.getMensagem());
+                Author_evento_View.setText(evento.getAuthor());
+               titutoevento.setText(evento.getTitulo());
+                collapsingToolbarLayout.setTitle(evento.getTitulo());
+                CarregarDados_do_Criador_do_Evento(evento.getIdUsuario());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void CarregarDados_do_Criador_do_Evento(String idusuario){
+
+        ChildEventListeneruser=database_usuario.orderByChild("id")
+                .equalTo(idusuario).addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Usuario user = dataSnapshot.getValue(Usuario.class );
+                        assert user != null;
 
 
-                        String authorName =usuarioLogado.getNome();
-                        String  authorFoto= String.valueOf(usuarioLogado.getFoto());
-                        String mensagem = edit_chat_emoji.getText().toString();
+                        String foto =user.getFoto();
+                        Glide.with(DetalheEvento.this)
+                                .load(foto)
+                                .into(AuthorFoto_evento_View );
 
+                        Author_evento_View.setText(user.getNome());
+                        if(!usuarioLogado.equals(user.getId())){
+                        Author_evento_View.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                        comentar.setAuthor(authorName);
-                        comentar.setFoto(authorFoto);
-                        comentar.setText(mensagem);
+                                Intent it = new Intent(DetalheEvento.this, Perfil.class);
+                                it.putExtra("id",user.getId());
+                                startActivity(it);
+                            }
+                        });
+                            AuthorFoto_evento_View.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(DetalheEvento.this, Perfil.class);
+                                    it.putExtra("id",user.getId());
+                                    startActivity(it);
+                                }
+                            });
+                        }else {
+                            Author_evento_View.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                        /*
-                        Comentario commentario = new Comentario
-                                (uid, authorName, comentariotexto,authorFoto,totalcomentario);
-                        if(!comentariotexto.isEmpty()){
-
-
-                            // Push the comment, it will appear in the list
-                            mCommentsReference.push().setValue(commentario);
-
-                            // Clear the field
-                            edit_chat_emoji.setText(null);
-                        }else{
-                            Toast.makeText(DetalheEvento.this, "Deixe algo importante", Toast.LENGTH_SHORT).show();
+                                    Intent it = new Intent(DetalheEvento.this, MinhaConta.class);
+                                    it.putExtra("id",user.getId());
+                                    startActivity(it);
+                                }
+                            });
+                            AuthorFoto_evento_View.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(DetalheEvento.this, MinhaConta.class);
+                                    it.putExtra("id",user.getId());
+                                    startActivity(it);
+                                }
+                            });
                         }
+
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
                     }
 
                     @Override
@@ -202,9 +273,49 @@ public class DetalheEvento extends AppCompatActivity {
 
                     }
                 });
-    */
-
     }
+
+
+    private void CarregarDados_Comentario_Evento(String idusuario){
+
+        ChildEventListeneruser=database_usuario.orderByChild("id")
+                .equalTo(idusuario).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Usuario user = dataSnapshot.getValue(Usuario.class );
+                        assert user != null;
+
+
+                        String foto =user.getFoto();
+                        Glide.with(DetalheEvento.this)
+                                .load(foto)
+                                .into(AuthorFoto_evento_View );
+
+                        Author_evento_View.setText(user.getNome());
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
 
 
     private void setUpEmojiPopup() {
@@ -266,44 +377,6 @@ public class DetalheEvento extends AppCompatActivity {
         return true;
     }
 
-    private void TrocarFundos_status_bar(){
-        //mudando a cor do statusbar
-        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
-            systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
-        }
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
-            systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
-            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
-        }
-        //make fully Android Transparent Status bar
-        if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
-            systemBarTintManager.setStatusBarTintEnabled(true);
-            systemBarTintManager.setNavigationBarTintEnabled(true);
-            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
-        }
-    }
 
-    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
 
 }

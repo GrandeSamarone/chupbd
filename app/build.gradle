@@ -71,7 +71,8 @@ dependencies {
 
     //ImagemRedonda
     implementation 'de.hdodenhof:circleimageview:2.1.0'
-
+    //efeito no botao curti
+    implementation 'com.github.varunest:sparkbutton:1.0.6'
     //cortar imagem
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
     //Drawer
