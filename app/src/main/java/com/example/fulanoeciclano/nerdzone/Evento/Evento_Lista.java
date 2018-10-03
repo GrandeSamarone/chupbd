@@ -7,16 +7,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
@@ -32,6 +38,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -57,7 +64,12 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
     private LinearLayoutManager mManager;
     private Usuario user;
     private Toolbar toolbar;
-    private String mPhotoUrl;
+    private DatabaseReference database;
+    private FirebaseUser usuario;
+    private ChildEventListener ChildEventListenerperfil;
+    private String filtroEstado;
+    private AlertDialog alerta;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +79,9 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         toolbar = findViewById(R.id.toolbarsecundario);
         toolbar.setTitle(R.string.name_evento);
         setSupportActionBar(toolbar);
-        IconeUsuario();
 
+
+        database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         Novo_Evento = findViewById(R.id.fab_novo_evento);
         Novo_Evento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +174,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TrocarFundos_status_bar();
+        CarregarDados_do_Usuario();
 
     }
 
@@ -263,16 +277,54 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 }else{
                     finish();
                 }
-
                 break;
+            case R.id.menufiltro:
+                FiltrarPorEstadoeTempo();
+                break;
+
 
             default:break;
         }
 
         return true;
     }
+    private void CarregarDados_do_Usuario(){
+        usuario = UsuarioFirebase.getUsuarioAtual();
+        String email = usuario.getEmail();
+        ChildEventListenerperfil=database.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                assert perfil != null;
 
-    private void IconeUsuario() {
+
+                String icone = perfil.getFoto();
+                IconeUsuario(icone);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void IconeUsuario(String url) {
         //Imagem do icone do usuario
         icone = findViewById(R.id.icone_user_toolbar);
         icone.setOnClickListener(new View.OnClickListener() {
@@ -280,13 +332,13 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
             public void onClick(View v) {
                 Intent it = new Intent(Evento_Lista.this, MinhaConta.class);
                 startActivity(it);
+
             }
         });
-        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
-        mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
+
 
         Glide.with(Evento_Lista.this)
-                .load(mPhotoUrl)
+                .load(url)
                 .into(icone);
     }
 
@@ -325,6 +377,112 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         adapterevento = new Evento_Adapter(ListaEvento, Evento_Lista.this);
         recyclerEvento.setAdapter(adapterevento);
         adapterevento.notifyDataSetChanged();
+    }
+
+
+    public void FiltrarPorEstadoeTempo(){
+
+        LayoutInflater li = getLayoutInflater();
+
+        //inflamos o layout dialog_opcao_foto.xml_foto.xml na view
+        View view = li.inflate(R.layout.dialog_spinner_evento, null);
+        //definimos para o botão do layout um clickListener
+        final Spinner spinnerEstado = view.findViewById(R.id.spinnerFiltroEstado);
+        String [] estado= getResources().getStringArray(R.array.estados);
+        ArrayAdapter<String> adapterestado = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,estado);
+        adapterestado.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerEstado.setAdapter(adapterestado);
+
+        spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filtroEstado = spinnerEstado.getSelectedItem().toString();
+                // RecuperarAnunciosPorEstado();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        view.findViewById(R.id.spinnerok).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                //exibe um Toast informativo.
+
+                filtroEstado = spinnerEstado.getSelectedItem().toString();
+
+              if (filtroEstado.equals("Estado")) {
+                    Toast.makeText(getApplicationContext(), "Selecione um Estado.", Toast.LENGTH_SHORT).show();
+                } else {
+                    RecuperarMercadoPorCategoriaeEstado(filtroEstado);
+                    alerta.dismiss();
+                }
+            }
+        });
+
+        view.findViewById(R.id.spinnercancelar).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                //exibe um Toast informativo.
+
+                alerta.dismiss();
+
+            }
+        });
+
+        view.findViewById(R.id.spinnerlimpar).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                //exibe um Toast informativo.
+
+                Intent it = new Intent(getApplicationContext(),Evento_Lista.class);
+                startActivity(it);
+
+            }
+        });
+        //Dialog de tela
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Filtrar Evento");
+        builder.setView(view);
+        alerta = builder.create();
+        alerta.show();
+
+    }
+
+
+    public void RecuperarMercadoPorCategoriaeEstado(String estado) {
+
+
+        //Configurar por estado
+        mDatabaseevento = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("evento")
+                .child(estado);
+        mDatabaseevento.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ListaEvento.clear();
+                for (DataSnapshot eventos : dataSnapshot.getChildren()) {
+
+                    Evento evento = eventos.getValue(Evento.class);
+                    ListaEvento.add(evento);
+
+
+                }
+                adapterevento = new Evento_Adapter(ListaEvento, Evento_Lista.this);
+                recyclerEvento.setAdapter(adapterevento);
+                adapterevento.notifyDataSetChanged();
+                //Collections.reverse(listaanuncios);
+                //adapter.notifyDataSetChanged();
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

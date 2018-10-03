@@ -43,34 +43,37 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
         Mercado mercado = mercados.get(position);
-        if(mercado.getTitulo()!=null){
-        holder.titulo.setText(mercado.getTitulo());
-        }
-        if(mercado.getDescricao()!=null){
-        holder.legenda.setText(mercado.getFraserapida());
+
+            if (mercado.getTitulo() != null) {
+                holder.titulo.setText(mercado.getTitulo());
+            }
+            if (mercado.getDescricao() != null) {
+                holder.legenda.setText(mercado.getFraserapida());
+            }
+
+            if (mercado.getCategoria() != null) {
+                holder.categoria.setText(mercado.getCategoria());
+            }
+            if (mercado.getEstado() != null) {
+                holder.estado.setText(mercado.getEstado());
+            }
+
+            List<String> urlFotos = mercado.getFotos();
+            if (urlFotos != null) {
+                String stringcapa = urlFotos.get(0);
+                if (stringcapa != null) {
+                    Glide.with(context)
+                            .load(stringcapa)
+                            .into(holder.capa);
+
+                } else {
+                    Toast.makeText(context, "erro", Toast.LENGTH_SHORT).show();
+                }
+            }
+
         }
 
-        if(mercado.getCategoria()!=null){
-        holder.categoria.setText(mercado.getCategoria());
-        }
-        if(mercado.getEstado()!=null){
-            holder.estado.setText(mercado.getEstado());
-        }
 
-        List<String> urlFotos = mercado.getFotos();
-              if(urlFotos!=null) {
-                  String stringcapa = urlFotos.get(0);
-                  if (stringcapa != null) {
-                      Glide.with(context)
-                              .load(stringcapa)
-                              .into(holder.capa);
-
-                  }else{
-                      Toast.makeText(context, "erro", Toast.LENGTH_SHORT).show();
-                  }
-              }
-
-    }
 
     @Override
     public int getItemCount() {

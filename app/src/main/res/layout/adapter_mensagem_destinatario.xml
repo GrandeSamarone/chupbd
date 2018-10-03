@@ -11,23 +11,18 @@
     <RelativeLayout
         android:layout_alignParentRight="true"
         android:id="@+id/layout"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/out_message_bg"
-        android:paddingBottom="@dimen/paddingBalaoEsqBottom"
-        android:paddingEnd="@dimen/paddingBalaoEsqRight"
-        android:paddingLeft="@dimen/paddingBalaoEsqLeft"
-        android:paddingRight="@dimen/paddingBalaoEsqRight"
-        android:paddingStart="@dimen/paddingBalaoEsqLeft"
-        android:paddingTop="@dimen/paddingBalaoEsqTop"
+
         >
 
             <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/textMensagemtexto"
                 style="@style/TextAppearance.AppCompat.Small"
-
+                android:textSize="18sp"
                 android:textColor="@color/preto"
-                android:text="Mensagem"
+                android:text="oi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"

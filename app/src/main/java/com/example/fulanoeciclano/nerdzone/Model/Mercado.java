@@ -15,6 +15,7 @@ import java.util.List;
 public class Mercado implements Serializable {
 
     private String idMercado;
+    private String idAutor;
     private int numRatings;
     private double totalrating;
     private String autor;
@@ -41,12 +42,18 @@ public class Mercado implements Serializable {
     public void salvar(){
         String idUsuario = ConfiguracaoFirebase.getIdUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("meuscomercio");
+        anuncioref.child(idUsuario)
+                .child(getIdMercado()).setValue(this);
+
+       salvarMercadoPublico();
+    }
+    public void salvarMercadoPublico(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("comercio");
         anuncioref.child(getEstado())
                 .child(getCategoria())
                 .child(getIdMercado()).setValue(this);
-
-      //  salvarAnuncioPublico();
     }
 
     public String getAutor() {
@@ -171,5 +178,13 @@ public class Mercado implements Serializable {
 
     public void setTotalrating(double totalrating) {
         this.totalrating = totalrating;
+    }
+
+    public String getIdAutor() {
+        return idAutor;
+    }
+
+    public void setIdAutor(String idAutor) {
+        this.idAutor = idAutor;
     }
 }

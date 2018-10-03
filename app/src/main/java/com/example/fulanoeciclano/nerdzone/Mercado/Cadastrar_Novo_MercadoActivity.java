@@ -39,6 +39,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -66,7 +69,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private StorageReference storageReference;
     private Spinner campoLocal, campoloja;
     private Button botaosalvar;
-    private DatabaseReference database;
+    private DatabaseReference database,databaseconta;
     private String identificadorUsuario,estadostring,lojastring,autorstring;
     private FirebaseAuth autenticacao;
     private Mercado mercado;
@@ -75,7 +78,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private AlertDialog dialog;
     private CircleImageView icone;
-    private String urlicone;
+    private String id_do_usuario;
 
 
 
@@ -87,6 +90,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private List<String> listaFotosRecuperadas = new ArrayList<>();
     private List<String> listaURLFotos = new ArrayList<>();
     private String[] pegandoUrl;
+    private FirebaseUser usuario;
+    private ChildEventListener ChildEventListenerperfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,9 +126,9 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         mercado = new Mercado();
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         database = ConfiguracaoFirebase.getDatabase().getReference().child("mercado");
+        databaseconta = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
-
         botaosalvar = findViewById(R.id.botaosalvarmercado);
         botaosalvar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +149,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
 
         TrocarFundos_status_bar();
-        IconeUsuario();
 
+        CarregarDados_do_Usuario();
     }
 
 
@@ -212,7 +217,42 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
             }
         });
     }
+    private void CarregarDados_do_Usuario(){
+        usuario = UsuarioFirebase.getUsuarioAtual();
+        String email = usuario.getEmail();
+        ChildEventListenerperfil=databaseconta.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                assert perfil != null;
 
+                id_do_usuario = perfil.getId();
+                String icone = perfil.getFoto();
+                IconeUsuario(icone);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     private Mercado configurarMercado(){
         String estado = campoLocal.getSelectedItem().toString();
         String loja = campoloja.getSelectedItem().toString();
@@ -229,6 +269,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
         mercado.setEstado(estado);
         mercado.setAutor(autor);
+        mercado.setIdAutor(id_do_usuario);
         mercado.setCategoria(loja);
         mercado.setTitulo(titulo);
         mercado.setTelefone(telefone);
@@ -402,7 +443,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         android.app.AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private void IconeUsuario() {
+    private void IconeUsuario(String url) {
         //Imagem do icone do usuario
         icone = findViewById(R.id.icone_user_toolbar);
         icone.setOnClickListener(new View.OnClickListener() {
@@ -412,11 +453,9 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
                 startActivity(it);
             }
         });
-        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
-        String mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
 
         Glide.with(Cadastrar_Novo_MercadoActivity.this)
-                .load(mPhotoUrl)
+                .load(url)
                 .into(icone);
     }
     private void TrocarFundos_status_bar(){

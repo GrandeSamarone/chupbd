@@ -42,11 +42,11 @@
             android:icon="@drawable/ic_evento"/>
 
         <item android:id="@+id/livros_menu"
-            android:title="Livro"
+            android:title="@string/drawer_historias"
             android:icon="@drawable/ic_livros"/>
 
         <item android:id="@+id/citacoes_menu"
-            android:title="Contos"
+            android:title="@string/drawer_contos"
             android:icon="@drawable/ic_citacao"/>
 
         <item android:id="@+id/desenhos_menu"

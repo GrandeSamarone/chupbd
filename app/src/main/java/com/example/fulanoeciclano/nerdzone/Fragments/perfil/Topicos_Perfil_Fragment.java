@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Fragments;
+package com.example.fulanoeciclano.nerdzone.Fragments.perfil;
 
 
 import android.os.Bundle;

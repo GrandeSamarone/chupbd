@@ -32,11 +32,11 @@
         android:layout_marginRight="32dp"
         android:layout_marginLeft="32dp"
         app:counterEnabled="true"
-        app:counterMaxLength="30">
+        app:counterMaxLength="40">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/titulo_evento"
-            android:maxLength="30"
+            android:maxLength="40"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/nome_do_evento"
@@ -53,12 +53,12 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="32dp"
         app:counterEnabled="true"
-        app:counterMaxLength="40"
+        app:counterMaxLength="30"
         android:layout_marginLeft="32dp">
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/subtitulo_evento"
-            android:maxLength="40"
+            android:maxLength="30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="#exempla"

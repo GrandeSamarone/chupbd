@@ -13,10 +13,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.Art_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Contos_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Livros_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Topicos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Art_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Livros_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topicos_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -65,11 +65,11 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener {
         final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                        .add("COMICS", Livros_Perfil_Fragment.class )
+                        .add("HISTÓRIAS", Livros_Perfil_Fragment.class )
                         // .add("Noticia",Noticia_Fragment.class)
                         .add("TOPICOS", Topicos_Perfil_Fragment.class)
-                        .add("EVENTOS",Contos_Perfil_Fragment.class)
-                        .add("ARTS",Art_Perfil_Fragment.class)
+                        .add("CONTOS",Contos_Perfil_Fragment.class)
+                        .add("FANARTS",Art_Perfil_Fragment.class)
                         // .add("Tops", RankFragment.class)
                         .create()
         );

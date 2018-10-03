@@ -83,7 +83,8 @@
         <activity
             android:name=".PerfilAmigos.Perfil"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activits.teste"></activity>
+        <activity android:name=".Activits.teste" />
+        <activity android:name=".Topico.ListaTopicos"></activity>
     </application>
 
 </manifest>

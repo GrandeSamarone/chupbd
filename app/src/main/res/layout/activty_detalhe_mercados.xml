@@ -49,14 +49,6 @@
             <!-- Back button -->
 
 
-                <ImageView
-                    android:id="@+id/mercado_button_back"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                   android:layout_marginTop="24dp"
-                    android:layout_marginLeft="16dp"
-
-                    android:src="@drawable/ic_back" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:id="@+id/mercado_detalhe_rating"
@@ -87,6 +79,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"/>
+                <LinearLayout
+                    android:id="@+id/mercado_button_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/ic_back" />
+                </LinearLayout>
             </RelativeLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -99,7 +104,8 @@
         android:layout_margin="16dp"
         app:layout_anchorGravity="bottom|end"
         app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_add_chat"
+        app:srcCompat="@drawable/ic_chat_topico"
+        android:clickable="true"
         tools:ignore="VectorDrawableCompat" />
 
     <android.support.v4.widget.NestedScrollView

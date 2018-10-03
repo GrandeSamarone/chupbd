@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NerdZone</string>
+    <string name="app_name">WeGeek</string>
     <string name="buscar_usuario">Ei %1$s, nemhum Usuario Foi encontrado.</string>
     <string name="title_activity_cadastrar_icon_nome_">Cadastrar_icon_nome_Activity</string>
 
@@ -27,18 +27,32 @@
     <string name="text_icon_camera">CÂMERA</string>
     <string name="drawer_colecoes_es">Coleções</string>
     <string name="drawer_loja">Loja</string>
-    <string name="drawer_Criar_loja">Comércio</string>
+    <string name="drawer_Criar_loja">Comércios</string>
     <string name="drawer_Promover">Promover</string>
     <string name="drawer_Suporte">Suporte</string>
     <string name="drawer_Sair">Sair</string>
-    <string name="drawer_eventos">Evento</string>
+    <string name="drawer_eventos">Eventos</string>
     <string name="drawer_mensagens">Mensagens</string>
     <string name="drawer_conta">Conta</string>
     <string name="nome_do_evento">Nome do Evento</string>
     <string name="camera_tela_op_evento">Câmera</string>
     <string name="galeria_op_evento">Galeria</string>
     <string name="mercado">Comércio</string>
-
+    <string name="title_activity_detalhe_evento">DetalheEvento</string>
+    <string name="analizando_informa_es_aguarde">Analisando informações,aguarde.</string>
+    <string name="carregando_informa_es">Carregando...</string>
+    <string name="mais_comercio">MAIS</string>
+    <string name="drawer_topico">Tópicos</string>
+    <string name="drawer_galeria">FanArts</string>
+    <string name="name_evento">Eventos</string>
+    <string name="novocomercio">Novo Comércio</string>
+    <string name="legenda_nvo_comercio">Legenda Ex: Games e muito mais..</string>
+    <string name="descricao">DESCRIÇÃO</string>
+    <string name="_0_n_perfil">0</string>
+    <string name="fans_perfil">Seguidores</string>
+    <string name="drawer_contos">Contos</string>
+    <string name="drawer_historias">Histórias</string>
+    <string name="editar_evento">EDITAR EVENTO</string>
 
     <string-array name="estados">
         <item>Estado</item>
@@ -83,6 +97,10 @@
         <item>Livros</item>
         <item>Cosplay</item>
     </string-array>
+    <string-array name="eventos">
+        <item>Acontecendo</item>
+        <item>Passado</item>
+    </string-array>
     <string-array name="artista">
         <item>Categoria Artista</item>
         <item>Automóveis</item>
@@ -94,17 +112,6 @@
         <item>Infantil</item>
         <item>Agro</item>
     </string-array>
-    <string name="title_activity_detalhe_evento">DetalheEvento</string>
-    <string name="analizando_informa_es_aguarde">Analisando informações,aguarde.</string>
-    <string name="carregando_informa_es">Carregando...</string>
-    <string name="mais_comercio">MAIS</string>
-    <string name="drawer_topico">Tópico</string>
-    <string name="drawer_galeria">Galeria</string>
-    <string name="name_evento">Eventos</string>
-    <string name="novocomercio">Novo Comércio</string>
-    <string name="legenda_nvo_comercio">Legenda Ex: Games e muito mais..</string>
-    <string name="descricao">DESCRIÇÃO</string>
-    <string name="_0_n_perfil">0</string>
-    <string name="fans_perfil">Seguidores</string>
+
 
 </resources>

@@ -10,7 +10,7 @@
 
     <android.support.constraint.ConstraintLayout xmlns:fresco="http://schemas.android.com/tools"
         android:id="@+id/teste"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/chat_img_usuario"
 
@@ -21,12 +21,13 @@
         <com.vanniktech.emoji.EmojiTextView
             android:id="@+id/textMensagemtexto"
             android:textColor="@color/preto"
+            android:text="oiii"
+            android:textSize="18sp"
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            app:emojiSize="@dimen/emoji_size_only_emojis"
-            app:layout_constraintTop_toBottomOf="@+id/textNomeExibicao" />
+            app:emojiSize="@dimen/emoji_size_only_emojis" />
 
               </android.support.constraint.ConstraintLayout>
     <TextView

@@ -188,6 +188,7 @@ public class ChatActivity extends AppCompatActivity  {
                         Intent it = new Intent(ChatActivity.this, Perfil.class);
                         it.putExtra("id",perfil.getId());
                         startActivity(it);
+                        finish();
                     }
                 });
                      textViewNome.setText(perfil.getNome());
@@ -198,6 +199,7 @@ public class ChatActivity extends AppCompatActivity  {
                              Intent it = new Intent(ChatActivity.this, Perfil.class);
                              it.putExtra("id",perfil.getId());
                              startActivity(it);
+                             finish();
                          }
                      });
             }
@@ -295,11 +297,12 @@ public class ChatActivity extends AppCompatActivity  {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("kk:mm   dd'/'MM'/'y");// MM'/'dd'/'y;
 
         String tempoMensagem = simpleDateFormat.format(calendartempo.getTime());
-
+        Usuario usuarioRemetentes= UsuarioFirebase.getDadosUsuarioLogado();
         if(!textoMensagem.isEmpty()){
             if(idusuarioDestinatario!=null){
                 Mensagem mensagem= new Mensagem();
                 mensagem.setIdUsuario(idUsuarioRemetente);
+                mensagem.setNome(usuarioRemetentes.getNome());
                 mensagem.setMensagem(textoMensagem);
                 mensagem.setTempo(tempoMensagem);
 

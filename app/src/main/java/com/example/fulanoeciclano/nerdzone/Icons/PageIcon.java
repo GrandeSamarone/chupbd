@@ -36,19 +36,19 @@ public class PageIcon extends AppCompatActivity {
         setContentView(R.layout.activity_page_icon);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Escolha um Icone");
+        toolbar.setTitle("Escolha um icone");
         setSupportActionBar(toolbar);
 
         //Configurar Abas
         final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                        .add("COMICS", HeroiFragment.class )
+                        .add("COMIC", HeroiFragment.class )
                         // .add("Noticia",Noticia_Fragment.class)
-                        .add("TOPICOS", AleatorioFragment.class)
-                        .add("EVENTOS",FilmesFragment.class)
-                        .add("ARTS",DesenhoFragment.class)
-                        .add("ARTS",PretoeBrancoFragment.class)
+                        .add("POP", AleatorioFragment.class)
+                        .add("FILME",FilmesFragment.class)
+                        .add("DESENHO",DesenhoFragment.class)
+                        .add("BLACK",PretoeBrancoFragment.class)
                         // .add("Tops", RankFragment.class)
                         .create()
         );

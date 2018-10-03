@@ -121,6 +121,8 @@
                     android:layout_height="wrap_content"
                     android:text="SEGUIR"
                     android:textColor="@color/branco"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
                     android:background="@drawable/backgroundbotaofundoazul"/>
 
                 <Button
@@ -130,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MENSAGEM"
+                    android:clickable="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:background="@drawable/backgroundbotao"
                     />

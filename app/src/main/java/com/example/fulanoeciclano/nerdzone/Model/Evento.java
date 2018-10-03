@@ -40,11 +40,18 @@ public class Evento implements Serializable {
     public void salvar(){
         String idUsuario = ConfiguracaoFirebase.getIdUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("meusevento");
+        anuncioref.child(idUsuario)
+                .child(getUid()).setValue(this);
+
+          salvarEventoPublico();
+    }
+
+    public void salvarEventoPublico(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("evento");
         anuncioref.child(getEstado())
                 .child(getUid()).setValue(this);
-
-        //  salvarAnuncioPublico();
     }
 
     /*public Evento(String uid, String author, String imgperfilusuario,String fotoevento, String titulo,

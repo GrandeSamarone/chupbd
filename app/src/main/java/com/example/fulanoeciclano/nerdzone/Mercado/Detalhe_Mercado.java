@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,9 +42,9 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
     private CarouselView fotos;
     private FloatingActionButton fabcontato;
-    private ImageView botaovoltar;
     private TextView titulo, legenda, descricao, endereco, categoria, estado, criador, num_rating;
     private Button botaoavaliar;
+    private LinearLayout botaovoltar;
     private Mercado mercadoselecionado;
     private MaterialRatingBar ratingBar;
     private Dialog dialog;
@@ -69,7 +70,6 @@ public class Detalhe_Mercado extends AppCompatActivity {
         ratingBar = findViewById(R.id.rate_star);
         fotos = findViewById(R.id.carousel_foto_mercado);
         titulo = findViewById(R.id.detalhe_mercado_titulo);
-
         legenda = findViewById(R.id.detalhe_mercado_legenda);
         criador = findViewById(R.id.detalhe_mercado_criador);
         descricao = findViewById(R.id.detalhe_mercado_descricao);
@@ -78,21 +78,13 @@ public class Detalhe_Mercado extends AppCompatActivity {
         botaovoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(Detalhe_Mercado.this, MercadoActivity.class);
-                startActivity(it);
+               Intent it = new Intent(Detalhe_Mercado.this,MercadoActivity.class);
+               startActivity(it);
                 finish();
             }
         });
 
-        fabcontato = findViewById(R.id.fab_entrar_em_contato);
-        fabcontato.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(Detalhe_Mercado.this, ChatActivity.class);
-                it.putExtra("chatcontato", "asas");
-                startActivity(it);
-            }
-        });
+
 
         //recuperar mercado selecionado
 
@@ -141,6 +133,17 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
                 }
             });
+
+            fabcontato = findViewById(R.id.fab_entrar_em_contato);
+            fabcontato.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(Detalhe_Mercado.this, ChatActivity.class);
+                    it.putExtra("id", mercadoselecionado.getIdAutor());
+                    startActivity(it);
+                }
+            });
+
         }
 
     }

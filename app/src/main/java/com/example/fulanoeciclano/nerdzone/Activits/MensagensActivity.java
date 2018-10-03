@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Activits;
 
-import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 
 import com.example.fulanoeciclano.nerdzone.Adapter.ConversasAdapter;
@@ -22,9 +24,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindowFlag;
 
 public class MensagensActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -41,7 +46,7 @@ public class MensagensActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mensagens);
-        toolbar =findViewById(R.id.toolbar_principal);
+        toolbar =findViewById(R.id.toolbarsecundario);
         toolbar.setTitle("Caixa de Mensagens");
         setSupportActionBar(toolbar);
         recyclerViewConversas= findViewById(R.id.recyclerviewConversas);
@@ -61,23 +66,9 @@ public class MensagensActivity extends AppCompatActivity {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        List<Conversa> listaconversaatualizada = adapter.getConversas();
-                        if (listaconversaatualizada.size()>0) {
-                            Conversa conversaSelecionado = listaconversaatualizada.get(position);
-
-                            if(conversaSelecionado.getIsGroup().equals("true")){
-                                Intent it = new Intent(MensagensActivity.this, ChatActivity.class);
-                                it.putExtra("chatGrupo", conversaSelecionado.getGrupo());
-                                startActivity(it);
-
-                            }else{
-
-                                Intent it = new Intent(MensagensActivity.this, ChatActivity.class);
-                                it.putExtra("chatcontato", conversaSelecionado.getUsuarioExibicao());
-                                startActivity(it);
-                            }
-
-                        }
+                        /*Intent it = new Intent(MensagensActivity.this, Perfil.class);
+                        it.putExtra("id",user.getId());
+                        startActivity(it);*/
                     }
 
                     @Override
@@ -96,6 +87,7 @@ public class MensagensActivity extends AppCompatActivity {
         conversasRef= database.child("Conversas")
                 .child(identificadoUsuario);
 
+        TrocarFundos_status_bar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -205,7 +197,35 @@ public class MensagensActivity extends AppCompatActivity {
         });
 
     }
-
+    //Nao muito uteis
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+    }
 
 
 }

@@ -39,11 +39,13 @@ import com.example.fulanoeciclano.nerdzone.Model.Gibi;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.example.fulanoeciclano.nerdzone.Topico.ListaTopicos;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -125,8 +127,6 @@ public class MainActivity extends AppCompatActivity implements Main,
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigat_id);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //carregar icone na toollbar
-        IconeUsuario();
        //esse cod desativa o padrao das cores da naevagacao
         //configuraçoes basica navigation
         navigationView.setItemIconTintList(null);
@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements Main,
                 RecuperarMercado();
                 RecuperarEvento();
                 CarregarInformacoesNoDrawer();
-                IconeUsuario();
             }
         });
 
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements Main,
         RecuperarMercado();
         RecuperarEvento();
         CarregarInformacoesNoDrawer();
-        IconeUsuario();
+
     }
     @Override
     protected void onStart() {
@@ -181,9 +180,6 @@ public class MainActivity extends AppCompatActivity implements Main,
         //carregar informacao no Drawer
         CarregarInformacoesNoDrawer();
         botoes_Mais();
-        RecuperarMercado();
-        IconeUsuario();
-        RecuperarEvento();
         CarregarDados_do_Usuario();
         //EventBus.getDefault().postSticky("MulekeDoido");
     }
@@ -227,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements Main,
     @Override
     public void onStop() {
         super.onStop();
-        GibiMercado.removeEventListener(valueEventListenerMercado);
         GibiEventos.removeEventListener(valueEventListenerEvento);
     }
 
@@ -264,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements Main,
                         .into(capadrawer );
 
                 String icone = perfil.getFoto();
+                IconeUsuario(icone);
                 Glide.with(MainActivity.this)
                         .load(icone)
                         .into(img_drawer );
@@ -333,35 +329,29 @@ public class MainActivity extends AppCompatActivity implements Main,
     public void RecuperarMercado(){
         ListaGibiMercado.clear();
         swipe.setRefreshing(true);
-        valueEventListenerMercado =GibiMercado.addChildEventListener(new ChildEventListener() {
+
+        GibiMercado.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    for(DataSnapshot categorias:dataSnapshot.getChildren()){
-                        for(DataSnapshot mercados:categorias.getChildren()){
-                                Mercado mercado = mercados.getValue(Mercado.class);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot estado : dataSnapshot.getChildren()) {
+                    for (DataSnapshot categoria : estado.getChildren()) {
+                        for (DataSnapshot mercados : categoria.getChildren()) {
+                            Mercado mercado = mercados.getValue(Mercado.class);
 
-                                ListaGibiMercado.add(mercado);
-                                adapterMercado.notifyDataSetChanged();
-                                swipe.setRefreshing(false);
+                            ListaGibiMercado.add(mercado);
+                            adapterMercado.notifyDataSetChanged();
+                            swipe.setRefreshing(false);
 
-                            }
                         }
                     }
+                }
+            }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
-        swipe.setRefreshing(false);
     }
     public void remove(Gibi gibi){
         //  GibiMarvel.child(gibi.getKey()).removeValue();
@@ -423,7 +413,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     }
 
 
-    private void IconeUsuario() {
+    private void IconeUsuario(String url) {
         //Imagem do icone do usuario
         img_toolbar = findViewById(R.id.icone_img_toolbar);
         img_toolbar.setOnClickListener(new View.OnClickListener() {
@@ -433,11 +423,9 @@ public class MainActivity extends AppCompatActivity implements Main,
                 startActivity(it);
             }
         });
-        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
-        mPhotoUrl=UsuarioAtual.getPhotoUrl().toString();
 
         Glide.with(MainActivity.this)
-                .load(mPhotoUrl)
+                .load(url)
                 .into(img_toolbar);
     }
 
@@ -571,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements Main,
             Intent it = new Intent(MainActivity.this,Meus_eventos.class);
             startActivity(it);
         } else if (id == R.id.mensagens_menu) {
-            Intent it = new Intent(MainActivity.this,MeusAmigosActivity.class);
+            Intent it = new Intent(MainActivity.this,MensagensActivity.class);
             startActivity(it);
         }else if (id == R.id.minha_conta_menu) {
             Intent it = new Intent(MainActivity.this,MinhaConta.class);
@@ -582,6 +570,9 @@ public class MainActivity extends AppCompatActivity implements Main,
             startActivity(it);
         }else if (id == R.id.evento_menu) {
             Intent it = new Intent(MainActivity.this,Evento_Lista.class);
+            startActivity(it);
+        }else if (id == R.id.topico_menu) {
+            Intent it = new Intent(MainActivity.this,ListaTopicos.class);
             startActivity(it);
         }
 

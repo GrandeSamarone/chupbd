@@ -29,10 +29,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.Art_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Contos_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Livros_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Topicos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Art_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Livros_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topicos_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
