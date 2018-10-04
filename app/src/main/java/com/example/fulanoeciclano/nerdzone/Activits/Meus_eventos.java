@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,7 +41,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Meus_eventos extends AppCompatActivity {
+public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView_meus_eventos,recyclerView_meus_comercios;
     private DatabaseReference database,databaseusuario;
@@ -57,6 +58,7 @@ public class Meus_eventos extends AppCompatActivity {
     private CircleImageView icone;
     private FirebaseUser usuario;
     private ChildEventListener ChildEventListenerperfil;
+    private SwipeRefreshLayout refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,19 @@ public class Meus_eventos extends AppCompatActivity {
         database = FirebaseDatabase.getInstance().getReference();
         databaseusuario= ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         evento = new Evento();
-
+        refresh = findViewById(R.id.atualizarmeuseventosrefresh);
+        refresh.setOnRefreshListener(this);
+        refresh.post(new Runnable() {
+            @Override
+            public void run() {
+                refresh.setRefreshing(true);
+                RecuperarMeus_Comercio();
+                RecuperarMeus_Eventos();
+            }
+        });
+        refresh.setColorSchemeResources
+                (R.color.colorPrimaryDark, R.color.amareloclaro,
+                        R.color.accent);
         identificadoUsuario= UsuarioFirebase.getIdentificadorUsuario();
         meus_eventosref=database.child("meusevento").child(ConfiguracaoFirebase.getIdUsuario());
         meus_comercioref = database.child("meuscomercio").child(ConfiguracaoFirebase.getIdUsuario());
@@ -106,6 +120,7 @@ public class Meus_eventos extends AppCompatActivity {
 
     private void RecuperarMeus_Eventos() {
         //Progress
+        refresh.setRefreshing(true);
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Carregando eventos");
         progressDialog.show();
@@ -116,6 +131,7 @@ public class Meus_eventos extends AppCompatActivity {
             Evento evento =dataSnapshot.getValue(Evento.class);
             lista_Meus_Eventos.add(evento);
             mAdapter.notifyDataSetChanged();
+                refresh.setRefreshing(false);
             progressDialog.dismiss();
             }
 
@@ -142,6 +158,7 @@ public class Meus_eventos extends AppCompatActivity {
     }
     private void RecuperarMeus_Comercio() {
         //Progress
+        refresh.setRefreshing(true);
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Carregando Comércio");
         progressDialog.show();
@@ -152,6 +169,7 @@ public class Meus_eventos extends AppCompatActivity {
                 Mercado mercado =dataSnapshot.getValue(Mercado.class);
                 lista_meus_comercio.add(mercado);
                 adapterComercio.notifyDataSetChanged();
+                refresh.setRefreshing(false);
                 progressDialog.dismiss();
             }
 
@@ -302,4 +320,9 @@ public class Meus_eventos extends AppCompatActivity {
         win.setAttributes(winParams);
     }
 
+    @Override
+    public void onRefresh() {
+        RecuperarMeus_Comercio();
+        RecuperarMeus_Eventos();
+    }
 }

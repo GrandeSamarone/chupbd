@@ -89,14 +89,14 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/likecolorido"/>
+                android:src="@drawable/likepreto"/>
 
             <TextView
 
                 android:text="45"
 
                 android:textColor="@color/preto"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:textSize="18sp"
                 android:singleLine="true"
                 android:fontFamily="sans-serif"
@@ -115,7 +115,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_comentario_colorido"/>
+                    android:src="@drawable/ic_chat"/>
 
                 <TextView
 

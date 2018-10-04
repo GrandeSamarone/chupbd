@@ -36,6 +36,9 @@ public class Evento implements Serializable {
                 .child("evento");
         setUid(eventoref.push().getKey());
     }
+    public void atualizar(){
+
+    }
 
     public void salvar(){
         String idUsuario = ConfiguracaoFirebase.getIdUsuario();

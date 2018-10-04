@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.fulanoeciclano.nerdzone.Evento.Cadastrar_Novo_Evento;
+import com.example.fulanoeciclano.nerdzone.Edit.Edit_evento_Activity;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -81,8 +81,9 @@ public void onClick(View v) {
        holder.edit.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Intent it = new Intent(context, Cadastrar_Novo_Evento.class);
+               Intent it = new Intent(context, Edit_evento_Activity.class);
                it.putExtra("id_do_evento",ev.getUid());
+               it.putExtra("UR_do_evento",ev.getEstado());
                context.startActivity(it);
            }
        });
