@@ -1,7 +1,6 @@
 package com.example.fulanoeciclano.nerdzone.Activits;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MeusComercio;
@@ -47,6 +47,7 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     private DatabaseReference database,databaseusuario;
     private Query meus_eventosref,meus_comercioref;
     private String identificadoUsuario;
+    private TextView nomeevento,nomecomercio;
     private Evento evento;
     private AlertDialog alerta;
     private Toolbar toolbar;
@@ -70,6 +71,8 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
 
         //Configurações Originais
         database = FirebaseDatabase.getInstance().getReference();
+        nomeevento = findViewById(R.id.eventotexto);
+        nomecomercio = findViewById(R.id.comerciotexto);
         databaseusuario= ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         evento = new Evento();
         refresh = findViewById(R.id.atualizarmeuseventosrefresh);
@@ -121,18 +124,20 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     private void RecuperarMeus_Eventos() {
         //Progress
         refresh.setRefreshing(true);
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Carregando eventos");
-        progressDialog.show();
+
         lista_Meus_Eventos.clear();
         childEventListenerMeus_Eventos = meus_eventosref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             Evento evento =dataSnapshot.getValue(Evento.class);
             lista_Meus_Eventos.add(evento);
+            if(lista_Meus_Eventos.size()>0){
+                nomeevento.setVisibility(View.VISIBLE);
+            }else{
+                nomeevento.setVisibility(View.GONE);
+            }
             mAdapter.notifyDataSetChanged();
                 refresh.setRefreshing(false);
-            progressDialog.dismiss();
             }
 
             @Override
@@ -159,18 +164,21 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     private void RecuperarMeus_Comercio() {
         //Progress
         refresh.setRefreshing(true);
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Carregando Comércio");
-        progressDialog.show();
+
         lista_meus_comercio.clear();
         childEventListenerMeus_Comercio = meus_comercioref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Mercado mercado =dataSnapshot.getValue(Mercado.class);
                 lista_meus_comercio.add(mercado);
+                if(lista_meus_comercio.size()>0){
+                    nomecomercio.setVisibility(View.VISIBLE);
+                }else{
+                    nomecomercio.setVisibility(View.GONE);
+                }
                 adapterComercio.notifyDataSetChanged();
                 refresh.setRefreshing(false);
-                progressDialog.dismiss();
+
             }
 
             @Override

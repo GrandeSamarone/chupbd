@@ -20,13 +20,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,18 +73,17 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
     private StorageReference storageReference;
     private Usuario usuarioLogado;
     private String identificadorUsuario;
-    private Spinner spinner;
     private CircleImageView icone;
     private Toolbar toolbar;
     // [START declare_database_ref]
-    private DatabaseReference mDatabaseEvento;
+    private DatabaseReference mDatabaseEvento,meuDatabaseEvento;
     private Button botaoiniciodata, botaofimdata;
     // [END declare_database_ref]
     private String[] estados;
     private Evento eventos;
-    private String estado,idAutor,estadocadastrado;
+    private String estado,idAutor,estadocadastrado,ids;
     private EditText titulo, subtitulo, mensagem,data_inicio;
-    private TextView data_fim;
+    private TextView data_fim,estado_edit;
     private ImageView imgevento;
     private AlertDialog alerta;
     private String urlimg;
@@ -113,6 +109,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
 
         //Configuracao Inicial
         mDatabaseEvento =  ConfiguracaoFirebase.getDatabase().getReference().child("evento");
+        meuDatabaseEvento =  ConfiguracaoFirebase.getDatabase().getReference().child("meusevento");
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
@@ -127,19 +124,18 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
         mensagem = findViewById(R.id.desc_evento_edit);
         botaoSalvar = findViewById(R.id.btn_salvar_topico_edit);
         botaoSalvar.setOnClickListener(this);
-        spinner = findViewById(R.id.spnilocalidade_edit);
+        estado_edit = findViewById(R.id.localidade_edit);
 
 
         TrocarFundos_status_bar();
         IconeUsuario();
-        CarregarDadosSpinner();
         CarregarDados_do_Evento();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void CarregarDados_do_Evento(){
 
-        String ids=getIntent().getStringExtra("id_do_evento");
+         ids=getIntent().getStringExtra("id_do_evento");
          estado= getIntent().getStringExtra("UR_do_evento");
         ChildEventListenerevento=mDatabaseEvento.child(estado).orderByChild("uid")
                 .equalTo(ids).addChildEventListener(new ChildEventListener() {
@@ -153,7 +149,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                        mensagem.setText(eventos.getMensagem());
                         data_fim.setText(eventos.getDatafim());
                         data_inicio.setText(eventos.getDatainicio());
-                       estado=eventos.getEstado();
+                        estado_edit.setText(eventos.getEstado());
                         //getSelectedItem().toString();
                         final String capaevento = urlimg;
 
@@ -327,7 +323,9 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                             // SalvarPost(url);
                             urlimg = url.toString();
 
-
+                            if(urlimg!=null){
+                                eventos.setCapaevento(urlimg);
+                            }
                             Glide.with(Edit_evento_Activity.this)
                                     .load(url)
                                     .into(imgevento);
@@ -352,10 +350,11 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
 
 
     private void validardados() {
+        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
 
-       String estadios = spinner.getSelectedItem().toString();
-        if ( (!estadios.equals("Estado"))) {
-            if (urlimg != null) {
+       String imgcapa = eventos.getCapaevento();
+
+            if (imgcapa != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setCancelable(false);
                 LayoutInflater layoutInflater = LayoutInflater.from(Edit_evento_Activity.this);
@@ -373,15 +372,24 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                 Evento evento = new Evento();
                 evento.setUid(eventos.getUid());
                 evento.setIdUsuario(eventos.getIdUsuario());
-                evento.setEstado(spinner.getSelectedItem().toString());
-
+                evento.setEstado(estado_edit.getText().toString());
                 evento.setTitulo(titulo.getText().toString());
                 evento.setSubtitulo(subtitulo.getText().toString());
                 evento.setMensagem(mensagem.getText().toString());
                 evento.setDatafim(data_fim.getText().toString());
                 evento.setDatainicio(data_inicio.getText().toString());
-                evento.setCapaevento(urlimg);
-                mDatabaseEvento.child(estado).child(evento.getUid()).setValue(evento).addOnCompleteListener(new OnCompleteListener<Void>() {
+                evento.setCapaevento(imgcapa);
+                mDatabaseEvento.child(evento.getEstado()).child(evento.getUid()).setValue(evento).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                           }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+                meuDatabaseEvento.child(idUsuario).child(evento.getUid()).setValue(evento).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         dialog.dismiss();
@@ -403,7 +411,6 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
             }else{
                 Toast.makeText(this, "Adicione uma imagem", Toast.LENGTH_SHORT).show();
             }
-        }else Toast.makeText(this, "Adicione um estado", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -455,27 +462,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                 .into(icone);
     }
 
-    //carregar spinner
-    private void CarregarDadosSpinner() {
-        //
-        String[] artista = getResources().getStringArray(R.array.estados);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, artista);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                estadocadastrado = parent.getItemAtPosition(position).toString();
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-    }
 }
 
 

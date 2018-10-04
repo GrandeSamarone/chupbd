@@ -136,7 +136,9 @@
     </LinearLayout>
         <TextView
             android:id="@+id/editarevento"
+            android:layout_marginTop="8dp"
             android:paddingTop="8dp"
+            android:textSize="14sp"
             android:text="@string/editar_evento"
             android:textStyle="bold"
             android:textAlignment="center"
@@ -144,5 +146,17 @@
             android:layout_width="match_parent"
             android:layout_height="30dp" />
 
+        <TextView
+            android:id="@+id/excluirevento"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:paddingTop="8dp"
+            android:text="EXCLUIR"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/Corrastag"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

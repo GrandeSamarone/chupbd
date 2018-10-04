@@ -87,6 +87,13 @@ public void onClick(View v) {
                context.startActivity(it);
            }
        });
+
+       holder.deletar.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+            ev.remover();
+           }
+       });
 }
 
 @Override
@@ -102,7 +109,7 @@ public int getItemCount() {
 public class MyviewHolder extends RecyclerView.ViewHolder {
 
     private SimpleDraweeView eventocapa;
-    private TextView eventonome,edit;
+    private TextView eventonome,edit,deletar;
     private LinearLayout eventolayout;
 
     private LinearLayout linerclick;
@@ -114,6 +121,7 @@ public class MyviewHolder extends RecyclerView.ViewHolder {
         linerclick = itemView.findViewById(R.id.linerclick);
         eventonome = itemView.findViewById(R.id.nomeevento);
         edit = itemView.findViewById(R.id.editarevento);
+        deletar = itemView.findViewById(R.id.excluirevento);
 
     }
 }

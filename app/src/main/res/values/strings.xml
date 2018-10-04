@@ -52,7 +52,9 @@
     <string name="fans_perfil">Seguidores</string>
     <string name="drawer_contos">Contos</string>
     <string name="drawer_historias">Histórias</string>
-    <string name="editar_evento">EDITAR EVENTO</string>
+    <string name="editar_evento">EDITAR</string>
+    <string name="comercio_nome">COMÉRCIO</string>
+    <string name="evento_nome">EVENTO</string>
 
     <string-array name="estados">
         <item>Estado</item>

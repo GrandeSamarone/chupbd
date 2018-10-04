@@ -66,14 +66,18 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatSpinner
+            <TextView
+                android:text="Estado"
+                android:textColor="@color/cinzadisabilitado"
                 android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
                 android:layout_marginRight="32dp"
                 android:layout_marginLeft="32dp"
-                android:id="@+id/spnilocalidade_edit"
+                android:id="@+id/localidade_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </android.support.v7.widget.AppCompatSpinner>
+            </TextView>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/txtlayout_desc_edit"

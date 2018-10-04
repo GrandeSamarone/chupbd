@@ -88,6 +88,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
             public void onClick(View v) {
                 Intent it = new Intent(Evento_Lista.this,Cadastrar_Novo_Evento.class);
                 startActivity(it);
+                finish();
             }
         });
 
@@ -100,7 +101,6 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         swipeatualizar.post(new Runnable() {
             @Override
             public void run() {
-                swipeatualizar.setRefreshing(true);
                 RecuperarEventos();
 
             }

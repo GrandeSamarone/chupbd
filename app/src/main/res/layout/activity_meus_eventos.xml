@@ -18,7 +18,10 @@
     <include layout="@layout/toolbarsecundario"/>
 
     <TextView
-        android:text="EVENTO"
+        android:id="@+id/eventotexto"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:text="@string/evento_nome"
         android:textColor="@color/preto"
     android:layout_marginLeft="8dp"
         android:textAlignment="center"
@@ -30,7 +33,10 @@
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
     <TextView
-        android:text="COMÉRCIO"
+        android:id="@+id/comerciotexto"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:text="@string/comercio_nome"
         android:textColor="@color/preto"
         android:layout_marginLeft="8dp"
         android:textAlignment="center"

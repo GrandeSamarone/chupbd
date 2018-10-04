@@ -2,8 +2,10 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -55,6 +57,39 @@ public class Evento implements Serializable {
                 .child("evento");
         anuncioref.child(getEstado())
                 .child(getUid()).setValue(this);
+    }
+
+    public void remover(){
+        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("meusevento")
+                .child(idUsuario)
+                .child(getUid());
+
+        anuncioref.removeValue();
+
+        removerEventoPublico();
+        deletar_img_eventos();
+    }
+
+    public void removerEventoPublico(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("evento")
+                .child(getEstado())
+                .child(getUid());
+
+        anuncioref.removeValue();
+
+    }
+    public void deletar_img_eventos(){
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        StorageReference storageReference = ConfiguracaoFirebase.getFirebaseStorage()
+                .child("imagens")
+                .child("evento")
+                .child(identificadorUsuario)
+                .child(getUid());
+
+        storageReference.delete();
     }
 
     /*public Evento(String uid, String author, String imgperfilusuario,String fotoevento, String titulo,
