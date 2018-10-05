@@ -18,8 +18,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MeusComercio;
-import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MeusEventos;
+import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Meus_Comercio;
+import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Meus_Eventos;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
@@ -47,14 +47,14 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     private DatabaseReference database,databaseusuario;
     private Query meus_eventosref,meus_comercioref;
     private String identificadoUsuario;
-    private TextView nomeevento,nomecomercio;
+    private TextView nomeevento,nomecomercio,errobusca;
     private Evento evento;
     private AlertDialog alerta;
     private Toolbar toolbar;
     private List<Evento> lista_Meus_Eventos=new ArrayList<>();
     private List<Mercado> lista_meus_comercio = new ArrayList<>();
-    private Adapter_MeusEventos mAdapter;
-    private Adapter_MeusComercio adapterComercio;
+    private Adapter_Meus_Eventos mAdapter;
+    private Adapter_Meus_Comercio adapterComercio;
     private ChildEventListener childEventListenerMeus_Eventos,childEventListenerMeus_Comercio;
     private CircleImageView icone;
     private FirebaseUser usuario;
@@ -92,8 +92,8 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
         meus_eventosref=database.child("meusevento").child(ConfiguracaoFirebase.getIdUsuario());
         meus_comercioref = database.child("meuscomercio").child(ConfiguracaoFirebase.getIdUsuario());
 
-         mAdapter = new Adapter_MeusEventos(lista_Meus_Eventos,Meus_eventos.this);
-         adapterComercio = new Adapter_MeusComercio(lista_meus_comercio,Meus_eventos.this);
+         mAdapter = new Adapter_Meus_Eventos(lista_Meus_Eventos,Meus_eventos.this);
+         adapterComercio = new Adapter_Meus_Comercio(lista_meus_comercio,Meus_eventos.this);
 
          recyclerView_meus_comercios = findViewById(R.id.recycler_minhas_lojas);
         RecyclerView.LayoutManager layoutManagercomercio = new LinearLayoutManager(Meus_eventos.this);
@@ -115,12 +115,14 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onStart() {
         super.onStart();
-        RecuperarMeus_Eventos();
         TrocarFundos_status_bar();
         CarregarDados_do_Usuario();
-        RecuperarMeus_Comercio();
     }
-
+    @Override
+    public void onRefresh() {
+        RecuperarMeus_Comercio();
+        RecuperarMeus_Eventos();
+    }
     private void RecuperarMeus_Eventos() {
         //Progress
         refresh.setRefreshing(true);
@@ -328,9 +330,5 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
         win.setAttributes(winParams);
     }
 
-    @Override
-    public void onRefresh() {
-        RecuperarMeus_Comercio();
-        RecuperarMeus_Eventos();
-    }
+
 }

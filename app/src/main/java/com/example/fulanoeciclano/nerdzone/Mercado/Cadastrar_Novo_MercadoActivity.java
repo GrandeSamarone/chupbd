@@ -64,7 +64,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private static final String padrao = "Obrigatório";
 
 
-    private AppCompatEditText campotitulo, campodesc, campotelefone, campoendereco,campofraserapida;
+    private AppCompatEditText campotitulo, campodesc, campovalor, campoendereco,campofraserapida;
     private CircleImageView imagem1,imagem2,imagem3,imagem4,imagem5,imagem6;
     private StorageReference storageReference;
     private Spinner campoLocal, campoloja;
@@ -105,7 +105,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         //Configuração Basica
         campotitulo = findViewById(R.id.nome_mercado);
         campodesc = findViewById(R.id.desc_mercado);
-        campotelefone = findViewById(R.id.desc_telefone);
+        campovalor = findViewById(R.id.desc_valor);
         campoendereco = findViewById(R.id.desc_endereco);
         campofraserapida= findViewById(R.id.fraserapida_mercado);
         campoloja = findViewById(R.id.spinnerloja);
@@ -257,7 +257,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         String estado = campoLocal.getSelectedItem().toString();
         String loja = campoloja.getSelectedItem().toString();
         String titulo = campotitulo.getText().toString();
-        String telefone = campotelefone.getText().toString();
+        String valor = campovalor.getText().toString();
         String descricao = campodesc.getText().toString();
         String fraserapida = campofraserapida.getText().toString();
         String endereco = campoendereco.getText().toString();
@@ -272,7 +272,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         mercado.setIdAutor(id_do_usuario);
         mercado.setCategoria(loja);
         mercado.setTitulo(titulo);
-        mercado.setTelefone(telefone);
+        mercado.setValor(valor);
         mercado.setDescricao(descricao);
         mercado.setFraserapida(fraserapida);
         mercado.setEndereco(endereco);
@@ -305,8 +305,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
                    campoendereco.setError(padrao);
                    return;
                }
-               if (TextUtils.isEmpty(mercado.getTelefone())) {
-                   campotelefone.setError(padrao);
+               if (TextUtils.isEmpty(mercado.getValor())) {
+                   campovalor.setError(padrao);
                    return;
                }
                SalvarMercado();

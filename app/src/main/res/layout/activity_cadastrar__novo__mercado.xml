@@ -170,7 +170,7 @@
         android:layout_height="wrap_content"
         >
         <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/desc_telefone"
+            android:id="@+id/desc_valor"
             android:padding="10dp"
 
             android:layout_width="match_parent"

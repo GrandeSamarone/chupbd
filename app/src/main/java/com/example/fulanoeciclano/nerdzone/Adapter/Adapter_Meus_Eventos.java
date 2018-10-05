@@ -1,6 +1,8 @@
 package com.example.fulanoeciclano.nerdzone.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.fulanoeciclano.nerdzone.Activits.Meus_eventos;
 import com.example.fulanoeciclano.nerdzone.Edit.Edit_evento_Activity;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
@@ -24,12 +28,12 @@ import java.util.List;
 
 ;
 
-public class Adapter_MeusEventos extends RecyclerView.Adapter<Adapter_MeusEventos.MyviewHolder> {
+public class Adapter_Meus_Eventos extends RecyclerView.Adapter<Adapter_Meus_Eventos.MyviewHolder> {
 
 private Context context;
 private List<Evento> eventos;
 
-public Adapter_MeusEventos(List<Evento> listeventos, Context c){
+public Adapter_Meus_Eventos(List<Evento> listeventos, Context c){
 
         this.context=c;
         this.eventos=listeventos;
@@ -91,7 +95,38 @@ public void onClick(View v) {
        holder.deletar.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-            ev.remover();
+
+
+
+
+               AlertDialog.Builder msgbox = new AlertDialog.Builder(context);
+               //configurando o titulo
+               msgbox.setTitle("Excluir");
+               // configurando a mensagem
+               msgbox.setMessage("Deseja Realmente excluir o evento "+ev.getTitulo()+" ?");
+               // Botao negativo
+
+               msgbox.setPositiveButton("Sim",
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int wich) {
+                               ev.remover();
+                               Intent it = new Intent(context, Meus_eventos.class);
+                               context.startActivity(it);
+                               Toast.makeText(context, "Deletado com Sucesso!", Toast.LENGTH_LONG).show();
+                           }
+
+                       });
+
+
+               msgbox.setNegativeButton("Não",
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int wich) {
+
+                           }
+                       });
+               msgbox.show();
            }
        });
 }

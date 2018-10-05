@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.fulanoeciclano.nerdzone.Edit.Edit_Loja_Activity;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -22,12 +23,12 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.util.List;
 
-public class Adapter_MeusComercio extends RecyclerView.Adapter<Adapter_MeusComercio.MyviewHolder> {
+public class Adapter_Meus_Comercio extends RecyclerView.Adapter<Adapter_Meus_Comercio.MyviewHolder> {
 
     private Context context;
     private List<Mercado> mercado;
 
-    public Adapter_MeusComercio(List<Mercado> listamercado, Context c) {
+    public Adapter_Meus_Comercio(List<Mercado> listamercado, Context c) {
 
         this.context = c;
         this.mercado = listamercado;
@@ -38,17 +39,17 @@ public class Adapter_MeusComercio extends RecyclerView.Adapter<Adapter_MeusComer
         View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_meus_mercado, parent,
                 false);
 
-        return new Adapter_MeusComercio.MyviewHolder(itemLista);
+        return new Adapter_Meus_Comercio.MyviewHolder(itemLista);
     }
 
 
     @Override
     public void onBindViewHolder(MyviewHolder holder, int position) {
 
-        final Mercado ev = mercado.get(position);
-        holder.comercionome.setText(ev.getTitulo());
+        final Mercado loja = mercado.get(position);
+        holder.comercionome.setText(loja.getTitulo());
 
-        List<String> urlFotos = ev.getFotos();
+        List<String> urlFotos = loja.getFotos();
         if (urlFotos != null) {
             String stringcapa = urlFotos.get(0);
             if (stringcapa != null) {
@@ -75,11 +76,22 @@ public class Adapter_MeusComercio extends RecyclerView.Adapter<Adapter_MeusComer
                 @Override
                 public void onClick(View v) {
                     Intent it = new Intent(context, Detalhe_Mercado.class);
-                    it.putExtra("id_do_evento", ev.getIdMercado());
-                    it.putExtra("UR_do_evento", ev.getEstado());
+                    it.putExtra("id_do_evento", loja.getIdMercado());
+                    it.putExtra("UR_do_evento", loja.getEstado());
                     context.startActivity(it);
                 }
             });
+
+        holder.editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(context, Edit_Loja_Activity.class);
+                it.putExtra("id_do_mercado", loja.getIdMercado());
+                it.putExtra("UF_do_mercado", loja.getEstado());
+                it.putExtra("CAT_do_mercado", loja.getCategoria());
+                context.startActivity(it);
+            }
+        });
         }
     }
 
@@ -90,7 +102,7 @@ public class Adapter_MeusComercio extends RecyclerView.Adapter<Adapter_MeusComer
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
             SimpleDraweeView comerciocapa;
-            TextView comercionome;
+            TextView comercionome,editar,excluir;
             LinearLayout eventolayout;
             CardView card;
 
@@ -101,6 +113,8 @@ public class Adapter_MeusComercio extends RecyclerView.Adapter<Adapter_MeusComer
                 comerciocapa = itemView.findViewById(R.id.iconemercado);
                 card = itemView.findViewById(R.id.cardevento);
                 comercionome = itemView.findViewById(R.id.nomemercado);
+                editar = itemView.findViewById(R.id.editarmercado);
+                excluir = itemView.findViewById(R.id.excluirmercado);
         }
     }
 }

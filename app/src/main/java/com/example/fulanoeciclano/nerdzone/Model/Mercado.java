@@ -23,7 +23,7 @@ public class Mercado implements Serializable {
     private String estado;
     private String titulo;
     private String endereco;
-    private String telefone;
+    private String valor;
     private String descricao;
     private String fraserapida;
     private String data;
@@ -112,12 +112,12 @@ public class Mercado implements Serializable {
         this.endereco = endereco;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getValor() {
+        return valor;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setValor(String valor) {
+        this.valor = valor;
     }
 
     public String getDescricao() {

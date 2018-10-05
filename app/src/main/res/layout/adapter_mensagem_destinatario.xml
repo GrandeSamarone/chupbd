@@ -21,7 +21,7 @@
                 android:id="@+id/textMensagemtexto"
                 style="@style/TextAppearance.AppCompat.Small"
                 android:textSize="18sp"
-                android:textColor="@color/preto"
+                android:textColor="@color/brancochat"
                 android:text="oi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

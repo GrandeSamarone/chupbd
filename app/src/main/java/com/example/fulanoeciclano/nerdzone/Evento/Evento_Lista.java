@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +22,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -53,6 +56,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
     private DatabaseReference mDatabaseevento;
     private SwipeRefreshLayout swipeatualizar;
     private CircleImageView icone;
+    private LinearLayout linear,linearerro;
     private MaterialSearchView SeachView;
     private FirebaseAuth autenticacao;
     private FirebaseAuth mFirebaseAuth;
@@ -69,6 +73,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
     private ChildEventListener ChildEventListenerperfil;
     private String filtroEstado;
     private AlertDialog alerta;
+    private TextView errobusca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +85,10 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         toolbar.setTitle(R.string.name_evento);
         setSupportActionBar(toolbar);
 
-
+              linear = findViewById(R.id.lineargeral);
+              linearerro= findViewById(R.id.linearinformacoeserro);
+            linear.setBackgroundResource(R.drawable.fundo_da_capa_add_evento);
+            errobusca = findViewById(R.id.textoerrobusca);
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         Novo_Evento = findViewById(R.id.fab_novo_evento);
         Novo_Evento.setOnClickListener(new View.OnClickListener() {
@@ -188,6 +196,10 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 for (DataSnapshot estado : dataSnapshot.getChildren()) {
                     Evento evento = estado.getValue(Evento.class);
                     ListaEvento.add(0, evento);
+                    Log.i("sdsw", String.valueOf(ListaEvento.size()));
+                    if(ListaEvento.size()>0){
+                        linear.setBackgroundColor (getResources().getColor(R.color.background));
+                    }
                     adapterevento.notifyDataSetChanged();
                     swipeatualizar.setRefreshing(false);
 
@@ -356,7 +368,10 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
 
 
     private void PesquisarEvento(String texto) {
-//  String nick_null =  getString(R.string.buscar_usuario, usuarioAtual.getDisplayName());
+        String nomeuser =usuario.getDisplayName();
+
+
+  String evento_null = getString(R.string.erro_evento_busca,nomeuser,texto);
         List<Evento> listaEventoBusca = new ArrayList<>();
         for (Evento evento : ListaEvento) {
             String nome=evento.getTitulo().toLowerCase();
@@ -364,7 +379,11 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 listaEventoBusca.add(evento);
 
             }else if(listaEventoBusca.size()==0){
-                // Toast.makeText(this, "zero seu merda", Toast.LENGTH_SHORT).show();
+                linearerro.setVisibility(View.VISIBLE);
+                errobusca.setVisibility(View.VISIBLE);
+                errobusca.setText(evento_null);
+            }else{
+                linear.setBackgroundColor (getResources().getColor(R.color.background));
             }
 
         }
@@ -374,6 +393,8 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
     }
 
     private void recarregarEvento() {
+        linearerro.setVisibility(View.GONE);
+        errobusca.setVisibility(View.GONE);
         adapterevento = new Evento_Adapter(ListaEvento, Evento_Lista.this);
         recyclerEvento.setAdapter(adapterevento);
         adapterevento.notifyDataSetChanged();

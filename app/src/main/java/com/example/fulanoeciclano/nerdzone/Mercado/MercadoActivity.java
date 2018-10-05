@@ -22,7 +22,9 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -78,6 +80,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     private  String filtroEstado = "";
     private  String filtroCategoria = "";
     private Boolean filtrandoPorEstado=false;
+    private TextView errobusca;
+    private LinearLayout linear,linearerro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         }
 
         //Configuraçoes iniciais
-
+       linearerro=findViewById(R.id.linearinformacoeserro_mercado);
+        errobusca = findViewById(R.id.textoerrobusca_mercado);
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         mercado = new Mercado();
         refresh = findViewById(R.id.refreshmercado);
@@ -247,7 +252,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
 
 
     public void PesquisarComercio(String texto) {
-    //  String nick_null =  getString(R.string.buscar_usuario, usuarioAtual.getDisplayName());
+        String nomeuser =usuario.getDisplayName();
+        String evento_null = getString(R.string.erro_evento_busca,nomeuser,texto);
     List<Mercado> listaMercadoBusca = new ArrayList<>();
         for (Mercado mercados : listamercado) {
         String nome=mercados.getTitulo().toLowerCase();
@@ -256,6 +262,12 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         if(nome.contains(texto)|| descricao.contains(texto)){
             listaMercadoBusca.add(mercados);
 
+        }else if(listaMercadoBusca.size()==0){
+            linearerro.setVisibility(View.VISIBLE);
+            errobusca.setVisibility(View.VISIBLE);
+            errobusca.setText(evento_null);
+        }else{
+            linear.setBackgroundColor (getResources().getColor(R.color.background));
         }
     }
     adapter = new MercadoAdapter(listaMercadoBusca, MercadoActivity.this);
@@ -264,7 +276,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
 }
 
     public void recarregarMercado(){
-        //textoAviso.setVisibility(View.VISIBLE);
+        linearerro.setVisibility(View.GONE);
+        errobusca.setVisibility(View.GONE);
         adapter = new MercadoAdapter(listamercado, MercadoActivity.this);
         recyclerViewMercadoPublico.setAdapter(adapter);
         adapter.notifyDataSetChanged();

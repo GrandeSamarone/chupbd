@@ -299,7 +299,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                             .child("imagens")
                             .child("evento")
                             .child(identificadorUsuario)
-                            .child("Capa_do_Evento");
+                            .child(eventos.getUid());
                     //Progress
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Aguarde..");
@@ -395,6 +395,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                         dialog.dismiss();
                         Intent it = new Intent(Edit_evento_Activity.this, Meus_eventos.class);
                         startActivity(it);
+                        finish();
                         Toast.makeText(Edit_evento_Activity.this, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -403,6 +404,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                         dialog.dismiss();
                         Intent it = new Intent(Edit_evento_Activity.this, Meus_eventos.class);
                         startActivity(it);
+                        finish();
                         Toast.makeText(Edit_evento_Activity.this, "Erro ao Atualizar, Tente Novamente.", Toast.LENGTH_SHORT).show();
 
                     }
