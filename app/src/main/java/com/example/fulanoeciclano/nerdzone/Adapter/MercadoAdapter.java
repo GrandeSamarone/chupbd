@@ -5,12 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
 
     private List<Mercado> mercados;
     private Context context;
-
+    private FirebaseDatabase databases=FirebaseDatabase.getInstance();
     public MercadoAdapter(List<Mercado> mercado, Context context){
         this.mercados=mercado;
         this.context=context;
@@ -71,6 +73,33 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
                 }
             }
 
+/*
+        final DatabaseReference ref = databases.getReference("ratingbar").child("comercio")
+                .child("")
+                .child(mercado.getIdMercado());
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    float rating = Float.parseFloat(dataSnapshot.getValue().toString());
+                    // float d= (float) ((number*5) /100);
+                    holder.rating.setRating(rating);
+                         }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
+        holder.rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (fromUser) ref.setValue(rating);
+            }
+        });
+*/
+
         }
 
 
@@ -89,6 +118,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
         TextView categoria;
         TextView estado;
         CircleImageView capa;
+        RatingBar rating;
 
 
 
@@ -100,6 +130,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
             categoria = itemView.findViewById(R.id.textcategoria);
             estado = itemView.findViewById(R.id.textestado);
            capa = itemView.findViewById(R.id.capamercado);
+           rating = itemView.findViewById(R.id.rating_mercado);
         }
     }
 }

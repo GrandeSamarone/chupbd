@@ -8,27 +8,33 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.AbrirImagem;
 import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
+import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
@@ -36,6 +42,7 @@ import com.synnapps.carouselview.ImageListener;
 import java.io.Serializable;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class Detalhe_Mercado extends AppCompatActivity {
@@ -46,14 +53,17 @@ public class Detalhe_Mercado extends AppCompatActivity {
     private Button botaoavaliar;
     private LinearLayout botaovoltar;
     private Mercado mercadoselecionado;
-    private MaterialRatingBar ratingBar;
+    private MaterialRatingBar ratingBar,ratingbarTotal;
     private Dialog dialog;
     private String identificadorUsuario;
-    private DatabaseReference database, databasemercado;
+    private DatabaseReference database, databasemercado,database_usuario;
     private com.google.firebase.database.ChildEventListener ChildEventListenermercado;
     private FirebaseDatabase databases;
     private AlertDialog alerta;
     private SharedPreferences preferences = null;
+    private CircleImageView perfil;
+    private ChildEventListener ChildEventListeneruser;
+    private String usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +72,17 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
 
         //configuracoes iniciais
+        usuarioLogado =  UsuarioFirebase.getIdentificadorUsuario();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         databasemercado = ConfiguracaoFirebase.getDatabase().getReference().child("comercio");
         database = ConfiguracaoFirebase.getDatabase().getReference().child("rating");
+        database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         databases = FirebaseDatabase.getInstance();
         num_rating = findViewById(R.id.mercado_num_ratings);
         ratingBar = findViewById(R.id.rate_star);
+        ratingbarTotal = findViewById(R.id.mercado_detalhe_rating);
         fotos = findViewById(R.id.carousel_foto_mercado);
+        perfil= findViewById(R.id.icone_author_mercado);
         titulo = findViewById(R.id.detalhe_mercado_titulo);
         legenda = findViewById(R.id.detalhe_mercado_legenda);
         criador = findViewById(R.id.detalhe_mercado_criador);
@@ -95,7 +109,8 @@ public class Detalhe_Mercado extends AppCompatActivity {
             legenda.setText(mercadoselecionado.getFraserapida());
             descricao.setText(mercadoselecionado.getDescricao());
             endereco.setText(mercadoselecionado.getEndereco());
-            criador.setText(mercadoselecionado.getAutor());
+
+            CarregarDados_do_Criador_do_Comercio(mercadoselecionado.getIdAutor());
             //   categoria.setText(mercadoselecionado.getCategoria());
 
             //carregar as imagens
@@ -145,37 +160,84 @@ public class Detalhe_Mercado extends AppCompatActivity {
             });
 
         }
-
+RatingBar();
     }
 
-    private void CarregarDados_do_Comercio() {
-        ChildEventListenermercado = database.orderByChild("tipoconta").equalTo("").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Usuario perfil = dataSnapshot.getValue(Usuario.class);
+    private void CarregarDados_do_Criador_do_Comercio(String idusuario){
 
-            }
+        ChildEventListeneruser=database_usuario.orderByChild("id")
+                .equalTo(idusuario).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Usuario user = dataSnapshot.getValue(Usuario.class);
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        assert user != null;
+                        String foto = user.getFoto();
+                        Log.i("soskdoaksd",foto);
+                        Log.i("wqq",user.getNome());
+                        Glide.with(Detalhe_Mercado.this)
+                                .load(foto)
+                                .into(perfil);
+                        criador.setText(user.getNome());
+                        if (!usuarioLogado.equals(user.getId())) {
+                            criador.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(Detalhe_Mercado.this, Perfil.class);
+                                    it.putExtra("id", user.getId());
+                                    startActivity(it);
+                                }
+                            });
 
-            }
+                            perfil.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(Detalhe_Mercado.this, Perfil.class);
+                                    it.putExtra("id", user.getId());
+                                    startActivity(it);
+                                }
+                            });
+                        } else {
+                            criador.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(Detalhe_Mercado.this, MinhaConta.class);
+                                    it.putExtra("id", user.getId());
+                                    startActivity(it);
+                                }
+                            });
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            perfil.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(Detalhe_Mercado.this, MinhaConta.class);
+                                    it.putExtra("id", user.getId());
+                                    startActivity(it);
+                                }
+                            });
+                        }
+                    }
 
-            }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
 
-            }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
 
@@ -241,10 +303,11 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
         return true;
     }
-/*
+
     private void RatingBar() {
-        final DatabaseReference ref = databases.getReference("ratingbar").child("rating")
-                .child(mercadoselecionado.getIdMercado());
+        final DatabaseReference ref = databases.getReference("ratingbar").child("comercio")
+                .child(mercadoselecionado.getIdMercado())
+                .child(usuarioLogado);
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -253,7 +316,8 @@ public class Detalhe_Mercado extends AppCompatActivity {
                     float rating = Float.parseFloat(dataSnapshot.getValue().toString());
                     // float d= (float) ((number*5) /100);
                     ratingBar.setRating(rating);
-                    mercadoselecionado.setTotalrating(rating+1);
+                    ratingbarTotal.setRating(rating);
+                    mercadoselecionado.setTotalrating(rating);
                     Toast.makeText(Detalhe_Mercado.this, "total"+mercadoselecionado.getTotalrating(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -269,7 +333,7 @@ public class Detalhe_Mercado extends AppCompatActivity {
             }
         });
    }
-  */
+
 
 
 }

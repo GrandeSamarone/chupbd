@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -85,9 +84,9 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         toolbar.setTitle(R.string.name_evento);
         setSupportActionBar(toolbar);
 
-              linear = findViewById(R.id.lineargeral);
+              linear = findViewById(R.id.linear_nada_cadastrado_evento);
               linearerro= findViewById(R.id.linearinformacoeserro);
-            linear.setBackgroundResource(R.drawable.fundo_da_capa_add_evento);
+           // linear.setBackgroundResource(R.drawable.fundo_da_capa_add_evento);
             errobusca = findViewById(R.id.textoerrobusca);
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         Novo_Evento = findViewById(R.id.fab_novo_evento);
@@ -189,15 +188,16 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
     //recupera e nao deixa duplicar
     public void RecuperarEventos(){
         ListaEvento.clear();
-        swipeatualizar.setRefreshing(true);
+        linear.setVisibility(View.VISIBLE);
+
         valueEventListenerEvento =mDatabaseevento.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot estado : dataSnapshot.getChildren()) {
                     Evento evento = estado.getValue(Evento.class);
                     ListaEvento.add(0, evento);
-                    Log.i("sdsw", String.valueOf(ListaEvento.size()));
                     if(ListaEvento.size()>0){
+                        linear.setVisibility(View.GONE);
                         linear.setBackgroundColor (getResources().getColor(R.color.background));
                     }
                     adapterevento.notifyDataSetChanged();
@@ -356,6 +356,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
 
     @Override
     public void onRefresh() {
+        ListaEvento.clear();
         RecuperarEventos();
     }
 
@@ -371,7 +372,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
         String nomeuser =usuario.getDisplayName();
 
 
-  String evento_null = getString(R.string.erro_evento_busca,nomeuser,texto);
+  String evento_null = getString(R.string.erro_evento_busca_evento,nomeuser,texto);
         List<Evento> listaEventoBusca = new ArrayList<>();
         for (Evento evento : ListaEvento) {
             String nome=evento.getTitulo().toLowerCase();

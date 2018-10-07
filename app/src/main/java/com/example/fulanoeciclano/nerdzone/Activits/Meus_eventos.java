@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -60,6 +61,7 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     private FirebaseUser usuario;
     private ChildEventListener ChildEventListenerperfil;
     private SwipeRefreshLayout refresh;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
         setSupportActionBar(toolbar);
 
         //Configurações Originais
+        linearLayout = findViewById(R.id.linear_nada_cadastrado_lojaevento);
         database = FirebaseDatabase.getInstance().getReference();
         nomeevento = findViewById(R.id.eventotexto);
         nomecomercio = findViewById(R.id.comerciotexto);
@@ -80,7 +83,6 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
         refresh.post(new Runnable() {
             @Override
             public void run() {
-                refresh.setRefreshing(true);
                 RecuperarMeus_Comercio();
                 RecuperarMeus_Eventos();
             }
@@ -125,8 +127,8 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     }
     private void RecuperarMeus_Eventos() {
         //Progress
-        refresh.setRefreshing(true);
-
+         linearLayout.setVisibility(View.VISIBLE);
+        refresh.setRefreshing(false);
         lista_Meus_Eventos.clear();
         childEventListenerMeus_Eventos = meus_eventosref.addChildEventListener(new ChildEventListener() {
             @Override
@@ -135,11 +137,14 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
             lista_Meus_Eventos.add(evento);
             if(lista_Meus_Eventos.size()>0){
                 nomeevento.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.GONE);
             }else{
                 nomeevento.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+
             }
             mAdapter.notifyDataSetChanged();
-                refresh.setRefreshing(false);
+
             }
 
             @Override
@@ -165,8 +170,8 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     }
     private void RecuperarMeus_Comercio() {
         //Progress
-        refresh.setRefreshing(true);
 
+        refresh.setRefreshing(false);
         lista_meus_comercio.clear();
         childEventListenerMeus_Comercio = meus_comercioref.addChildEventListener(new ChildEventListener() {
             @Override
@@ -175,11 +180,14 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
                 lista_meus_comercio.add(mercado);
                 if(lista_meus_comercio.size()>0){
                     nomecomercio.setVisibility(View.VISIBLE);
+                    linearLayout.setVisibility(View.GONE);
                 }else{
                     nomecomercio.setVisibility(View.GONE);
+
+
                 }
                 adapterComercio.notifyDataSetChanged();
-                refresh.setRefreshing(false);
+
 
             }
 

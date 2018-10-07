@@ -9,9 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
+import com.example.fulanoeciclano.nerdzone.Model.EventoLike;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -19,12 +24,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.List;
-
-import static com.example.fulanoeciclano.nerdzone.Helper.App.getUid;
 
 /**
  * Created by fulanoeciclano on 01/09/2018.
@@ -34,8 +37,8 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
 
     private List<Evento> listaevento;
     private Context context;
-
     private DatabaseReference mDatabase;
+    Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
 
     public Evento_Adapter(List<Evento> eventos, Context c){
         this.context =c;
@@ -82,63 +85,61 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
             }
         });
 
+      DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+              .child("evento-likes")
+              .child(evento.getUid());
+       eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+              int QtdLikes = 0;
+              if(dataSnapshot.hasChild("qtdlikes")){
+                  EventoLike eventoLike = dataSnapshot.getValue(EventoLike.class);
+                  QtdLikes = eventoLike.getQtdlikes();
+              }
+           Log.i("sdsd",usuariologado.getId());
+               //Verifica se já foi clicado
+               if( dataSnapshot.hasChild( usuariologado.getId() ) ){
+                   holder.botaocurtir.setChecked(true);
+               }else {
+                   holder.botaocurtir.setChecked(false);
+               }
 
+              //Montar objeto postagem curtida
+               EventoLike like = new EventoLike();
+               String totallike = String.valueOf(like.getQtdlikes());
+              like.setEvento(evento);
+              like.setUsuario(usuariologado);
+              like.setQtdlikes(QtdLikes);
 
+               //adicionar evento para curtir foto
+              holder.botaocurtir.setEventListener(new SparkEventListener() {
+                  @Override
+                  public void onEvent(ImageView button, boolean buttonState) {
+                     if(buttonState){
+                        like.Salvar();
+                        holder.numcurtidasEvento.setText(String.valueOf(like.getQtdlikes()));
+                     }else{
+                         like.removerlike();
+                         holder.numcurtidasEvento.setText(String.valueOf(like.getQtdlikes()));
+                     }
+                  }
+                  @Override
+                  public void onEventAnimationEnd(ImageView button, boolean buttonState) {
+                  }
+                  @Override
+                  public void onEventAnimationStart(ImageView button, boolean buttonState) {
+                  }
+              });
+               holder.numcurtidasEvento.setText(String.valueOf(like.getQtdlikes()));
+           }
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
 
-        /*holder.card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-             Intent it = new Intent(context,EventoDetailActivity.class) ;
-                it.putExtra("titulo",listaevento.get(position).getTitulo());
-                it.putExtra("subtitulo",listaevento.get(position).getSubtitulo());
-                it.putExtra("mensagem",listaevento.get(position).getMensagem());
-                it.putExtra("foto",listaevento.get(position).getFotoevento());
-                it.putExtra("autor",listaevento.get(position).getAuthor());
-                it.putExtra("datainicio",listaevento.get(position).getDatainicio());
-                it.putExtra("datafim",listaevento.get(position).getDatafim());
-                context.startActivity(it);
-            }
-        });
-*/
-    }
+           }
+       });
 
+}
 
-
-    // [START post_stars_transaction]
-    private void onStarClicked(DatabaseReference postRef) {
-        postRef.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                Evento p = mutableData.getValue(Evento.class);
-
-                if (p == null) {
-                    return Transaction.success(mutableData);
-                }
-
-                if (p.curtida.containsKey(getUid())) {
-                    // Unstar the post and remove self from stars
-                    p.curtirCount = p.curtirCount - 1;
-                    p.curtida.remove(getUid());
-                } else {
-                    // Star the post and add self to stars
-                    p.curtirCount = p.curtirCount + 1;
-                    p.curtida.put(getUid(), true);
-                }
-
-                // Set value and report transaction success
-                mutableData.setValue(p);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-
-                // Transaction completed
-               // Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            }
-        });
-    }
     @Override
     public int getItemCount() {
         return listaevento.size();

@@ -80,11 +80,13 @@ public class AleatorioFragment extends Fragment  implements SwipeRefreshLayout.O
                         intent.putExtra("caminho_foto", ListAleatorio.get(position).getUrl());
                         intent.putExtra("selecaoicone", SELECAO_ICONE);
                         startActivity(intent);
+                        getActivity().finish();
 
                     } else {
                         Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
                         intent.putExtra("caminho_foto", ListAleatorio.get(position).getUrl());
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 }
             }

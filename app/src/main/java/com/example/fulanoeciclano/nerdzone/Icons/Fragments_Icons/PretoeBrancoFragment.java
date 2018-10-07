@@ -82,11 +82,13 @@ public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout
                         intent.putExtra("caminho_foto", ListrecyclerViewPreto_e_branco.get(position).getUrl());
                         intent.putExtra("selecaoicone", SELECAO_ICONE);
                         startActivity(intent);
+                        getActivity().finish();
 
                     } else {
                         Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
                         intent.putExtra("caminho_foto", ListrecyclerViewPreto_e_branco.get(position).getUrl());
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 }
             }

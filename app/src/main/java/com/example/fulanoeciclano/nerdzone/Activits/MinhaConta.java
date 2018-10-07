@@ -185,8 +185,6 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 Escolher_Foto_Perfil();
                 break;
             case R.id.perfil_button_back_perfil:
-                Intent it = new Intent(MinhaConta.this,MainActivity.class);
-                startActivity(it);
                 finish();
                 break;
         }
@@ -413,6 +411,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Aguarde");
                     progressDialog.show();
+                    progressDialog.setCancelable(false);
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
                     uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -460,7 +459,9 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                     //Progress
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Aguarde");
+                    progressDialog.setCancelable(false);
                     progressDialog.show();
+
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
                     uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -570,6 +571,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                         .getIntent(MinhaConta.this);
                 startActivityForResult(intent,SELECAO_CAMERA ); //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
+                finish();
 
             }
         });
@@ -582,6 +584,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                         .getIntent(MinhaConta.this);
                 startActivityForResult(intent,SELECAO_GALERIA );
                 alerta.dismiss();
+                finish();
 
             }
         });
@@ -595,7 +598,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 startActivityForResult(it, SELECAO_ICONE);
                 //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
-
+                finish();
             }
         });
 

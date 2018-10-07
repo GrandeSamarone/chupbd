@@ -56,8 +56,8 @@
     <string name="comercio_nome">COMÉRCIO</string>
     <string name="evento_nome">EVENTO</string>
     <string name="editar_comercio">Editar comércio</string>
-    <string name="erro_evento_busca_nome"> %1$s</string>
-    <string name="erro_evento_busca"> %1$s, Nemhum resultado encontrado para a  palavra %2$s.</string>
+    <string name="erro_evento_busca_evento"> %1$s, Nemhum evento foi encontrado com a   palavra %2$s.</string>
+    <string name="erro_evento_busca_comercio"> %1$s, Nemhum comércio foi encontrado com a palavra %2$s.</string>
 
     <string-array name="estados">
         <item>Estado</item>

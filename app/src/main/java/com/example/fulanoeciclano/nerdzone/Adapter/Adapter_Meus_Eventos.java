@@ -14,15 +14,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Activits.Meus_eventos;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Edit.Edit_evento_Activity;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
+import com.example.fulanoeciclano.nerdzone.Model.EventoLike;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -129,6 +135,37 @@ public void onClick(View v) {
                msgbox.show();
            }
        });
+
+
+
+    DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+            .child("evento-likes")
+            .child(ev.getUid());
+    eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            int QtdLikes = 0;
+            if(dataSnapshot.hasChild("qtdlikes")){
+                EventoLike eventoLike = dataSnapshot.getValue(EventoLike.class);
+                QtdLikes = eventoLike.getQtdlikes();
+            }
+
+            //Montar objeto postagem curtida
+            EventoLike like = new EventoLike();
+            like.setEvento(ev);
+            like.setQtdlikes(QtdLikes);
+
+
+            holder.qtdlike.setText(String.valueOf(like.getQtdlikes()));
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    });
+
+
+
 }
 
 @Override
@@ -144,7 +181,7 @@ public int getItemCount() {
 public class MyviewHolder extends RecyclerView.ViewHolder {
 
     private SimpleDraweeView eventocapa;
-    private TextView eventonome,edit,deletar;
+    private TextView eventonome,edit,deletar,qtdlike;
     private LinearLayout eventolayout;
 
     private LinearLayout linerclick;
@@ -155,6 +192,7 @@ public class MyviewHolder extends RecyclerView.ViewHolder {
         eventocapa = itemView.findViewById(R.id.iconeevento);
         linerclick = itemView.findViewById(R.id.linerclick);
         eventonome = itemView.findViewById(R.id.nomeevento);
+        qtdlike = itemView.findViewById(R.id.qtdlike);
         edit = itemView.findViewById(R.id.editarevento);
         deletar = itemView.findViewById(R.id.excluirevento);
 

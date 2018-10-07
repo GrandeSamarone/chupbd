@@ -99,12 +99,13 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener {
                          nome.setText(usuario.getNome());
 
                         Uri  capa = Uri.parse(usuario.getCapa());
-                        DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                                .setUri(capa)
-                                .setAutoPlayAnimations(true)
-                                .build();
 
-                        capausuario.setController(controllerOne);
+                            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                                    .setUri(capa)
+                                    .setAutoPlayAnimations(true)
+                                    .build();
+
+                            capausuario.setController(controllerOne);
 
 
                         String fotoperfil = usuario.getFoto();

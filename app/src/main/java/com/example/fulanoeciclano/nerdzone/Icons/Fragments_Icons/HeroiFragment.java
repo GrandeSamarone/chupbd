@@ -82,11 +82,13 @@ public class HeroiFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         intent.putExtra("caminho_foto", Listheroi.get(position).getUrl());
                         intent.putExtra("selecaoicone", SELECAO_ICONE);
                         startActivity(intent);
+                        getActivity().finish();
 
                     } else {
                         Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
                         intent.putExtra("caminho_foto", Listheroi.get(position).getUrl());
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 }
             }

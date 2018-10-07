@@ -146,6 +146,7 @@
                     android:id="@+id/icone_author"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:background="@drawable/fundo_user"
                   />
                 <TextView
                     android:textColor="@color/primary_dark"

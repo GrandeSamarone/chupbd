@@ -206,6 +206,7 @@ public class Cadastrar_icon_nome_Activity extends AppCompatActivity {
                          .child("perfil.jpg");
          //Progress
          AlertDialog.Builder builder = new AlertDialog.Builder(this);
+         builder.setCancelable(false);
          LayoutInflater layoutInflater = LayoutInflater.from(Cadastrar_icon_nome_Activity.this);
          final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_analisando,null);
          final TextView texto;
@@ -328,6 +329,7 @@ private void InserirUsuario(Uri url) {
                     //Progress
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Aguarde");
+                    progressDialog.setCancelable(false);
                     progressDialog.show();
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
 

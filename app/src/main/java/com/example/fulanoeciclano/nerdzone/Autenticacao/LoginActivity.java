@@ -48,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         user =auth.getCurrentUser();
+        // Check if user is signed in (non-null) and update UI accordingly.
+
         botaologin = findViewById(R.id.sign_in_button);
 
         botaologin.setOnClickListener(new View.OnClickListener() {
@@ -60,30 +62,34 @@ public class LoginActivity extends AppCompatActivity {
         // SharedPreferences
         sPreferences = getSharedPreferences("firstRun", MODE_PRIVATE);
 
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if(currentUser==null){
+            // Configure Google Sign In
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+
+            mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
+
+        }else{
+            Verificar();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if(currentUser!=null){
-            Verificar();
-        }
+
     }
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
         LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
         ImageView imageViewgif = view.findViewById(R.id.gifimage);
@@ -93,8 +99,8 @@ public class LoginActivity extends AppCompatActivity {
                 .load(R.drawable.gif_briguinha)
                 .into(imageViewgif);
         builder.setView(view);
-
         dialog = builder.create();
+
         dialog.show();
     }
     @Override
@@ -149,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
       //  Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
         LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
         ImageView imageViewgif = view.findViewById(R.id.gifimage);
@@ -160,6 +167,7 @@ public class LoginActivity extends AppCompatActivity {
         builder.setView(view);
 
         dialog = builder.create();
+
         dialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         auth.signInWithCredential(credential)

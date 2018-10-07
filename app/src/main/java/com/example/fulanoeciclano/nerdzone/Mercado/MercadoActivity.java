@@ -81,7 +81,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     private  String filtroCategoria = "";
     private Boolean filtrandoPorEstado=false;
     private TextView errobusca;
-    private LinearLayout linear,linearerro;
+    private LinearLayout linear_nada_cadastrado,linearerro,linear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +104,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         //Configuraçoes iniciais
        linearerro=findViewById(R.id.linearinformacoeserro_mercado);
+        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         mercado = new Mercado();
@@ -112,7 +113,6 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         refresh.post(new Runnable() {
             @Override
             public void run() {
-                refresh.setRefreshing(true);
                 RecuperarMercadoPublicos();
             }
         });
@@ -214,8 +214,9 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     public void RecuperarMercadoPublicos() {
+        linear_nada_cadastrado.setVisibility(View.VISIBLE);
         listamercado.clear();
-        refresh.setRefreshing(true);
+
       valueMercadoListener = mercadopublico.addChildEventListener(new ChildEventListener() {
           @Override
           public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -223,6 +224,9 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
                   for(DataSnapshot mercados:categorias.getChildren()){
                               Mercado mercado = mercados.getValue(Mercado.class);
                               listamercado.add(0,mercado);
+                              if(listamercado.size()>0){
+                                  linear_nada_cadastrado.setVisibility(View.GONE);
+                              }
 
                           }
                       }
@@ -253,7 +257,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     public void PesquisarComercio(String texto) {
         String nomeuser =usuario.getDisplayName();
-        String evento_null = getString(R.string.erro_evento_busca,nomeuser,texto);
+        String evento_null = getString(R.string.erro_evento_busca_comercio,nomeuser,texto);
     List<Mercado> listaMercadoBusca = new ArrayList<>();
         for (Mercado mercados : listamercado) {
         String nome=mercados.getTitulo().toLowerCase();

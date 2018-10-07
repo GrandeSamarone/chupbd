@@ -101,10 +101,12 @@ public class MainActivity extends AppCompatActivity implements Main,
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
 
@@ -177,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     @Override
     protected void onStart() {
         super.onStart();
+
         //carregar informacao no Drawer
         CarregarInformacoesNoDrawer();
         botoes_Mais();
@@ -295,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     //recupera e nao deixa duplicar
     public void RecuperarEvento(){
         ListaEvento.clear();
-        swipe.setRefreshing(true);
+
         valueEventListenerEvento =GibiEventos.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -328,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     //recupera e nao deixa duplicar
     public void RecuperarMercado(){
         ListaGibiMercado.clear();
-        swipe.setRefreshing(true);
+
 
         GibiMercado.addValueEventListener(new ValueEventListener() {
             @Override
@@ -475,7 +478,6 @@ public class MainActivity extends AppCompatActivity implements Main,
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            swipe.setRefreshing(true);
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();

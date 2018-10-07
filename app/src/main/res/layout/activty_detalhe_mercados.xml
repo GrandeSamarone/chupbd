@@ -56,8 +56,8 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_alignParentBottom="true"
-                app:mrb_progressTint="@android:color/white"
-                app:mrb_secondaryProgressTint="@android:color/white" />
+                app:mrb_progressTint="@color/amareloclaro"
+                app:mrb_secondaryProgressTint="@color/amareloclaro" />
 
             <TextView
                 android:id="@+id/mercado_num_ratings"
@@ -204,30 +204,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
           >
-            <TextView
-                android:id="@+id/criadortcxt"
-                style="@style/AppTheme.Body2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/icone_author_mercado"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/cinzasecunradrio"
-                android:hint="Criado por: "
-                android:textStyle="italic"
-                android:layout_alignParentLeft="true"
+                android:background="@drawable/fundo_user"
                 />
 
             <TextView
-              android:layout_toRightOf="@id/criadortcxt"
+              android:layout_toRightOf="@id/icone_author_mercado"
                 android:id="@+id/detalhe_mercado_criador"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
                 android:paddingBottom="10dp"
-                android:textColor="@color/cinzasecunradrio"
+                android:textColor="@color/primary_dark"
                 android:hint="asasas "
-                android:textStyle="italic"
                 />
 
         </RelativeLayout>
@@ -237,14 +232,7 @@
      android:layout_height="wrap_content"
      layout="@layout/dialog_avaliar_rating"/>
 
-        <Button
-            android:id="@+id/botao_avaliar_mercado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="AVALIAR"
-            android:textColor="@color/primary_dark"
-            android:background="@drawable/gradiente_transparente"
-            />
+
     </LinearLayout>
 
 </LinearLayout>

@@ -70,13 +70,12 @@
 
             <TextView
 
-                android:text="85"
-                android:id="@+id/quantlike"
-                android:textColor="@color/preto"
+                android:text="0"
+                android:id="@+id/quantvisu"
+                android:textColor="@color/cinzasecunradrio"
                 android:layout_width="match_parent"
                 android:textSize="18sp"
-                android:singleLine="true"
-                android:fontFamily="sans-serif"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
                 />
 
@@ -89,17 +88,15 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/likepreto"/>
+                android:src="@drawable/ic_like"/>
 
             <TextView
-
-                android:text="45"
-
-                android:textColor="@color/preto"
+               android:id="@+id/qtdlike"
+                android:text="0"
+                android:textStyle="bold"
+                android:textColor="@color/cinzasecunradrio"
                 android:layout_width="wrap_content"
                 android:textSize="18sp"
-                android:singleLine="true"
-                android:fontFamily="sans-serif"
                 android:layout_height="wrap_content"
             />
 
@@ -119,13 +116,11 @@
 
                 <TextView
 
-                    android:text="3"
-
-                    android:textColor="@color/preto"
+                    android:text="0"
+                    android:textColor="@color/cinzasecunradrio"
                     android:layout_width="match_parent"
                     android:textSize="18sp"
-                    android:singleLine="true"
-                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
                     android:layout_height="wrap_content"
                     />
 
