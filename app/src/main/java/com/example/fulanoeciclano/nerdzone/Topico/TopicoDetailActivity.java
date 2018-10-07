@@ -473,7 +473,7 @@ public class TopicoDetailActivity extends AppCompatActivity {
                 // Get Topico object and use the values to update the UI
                 Topico topico = dataSnapshot.getValue(Topico.class);
                 // [START_EXCLUDE]
-                mAuthorView.setText(topico.author);
+                mAuthorView.setText("");
                 mTitleView.setText(topico.titulo);
                 nomeTopico.setText(topico.titulo);
                 mBodyView.setText(topico.mensagem);

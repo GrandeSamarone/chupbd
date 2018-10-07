@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons;
+package com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons;
 
 
 import android.content.Intent;
@@ -29,16 +29,17 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AleatorioFragment extends Fragment  implements SwipeRefreshLayout.OnRefreshListener {
+public class DesenhoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private RecyclerView recyclerViewdesenho;
     public static final int SELECAO_ICONE = 34;
-    private RecyclerView recyclerViewaleatorio;
-    private SwipeRefreshLayout swipeicone;
-    private DatabaseReference Icons_aleatorio;
-    private ArrayList<Icones> ListAleatorio = new ArrayList<>();
-    private IconeAdapter adapterAleatorio;
-    private ValueEventListener valueEventListenerAleatorio;
-    public AleatorioFragment() {
+    private SwipeRefreshLayout swipeiconedesenho;
+    private DatabaseReference Icons_desenho;
+    private ArrayList<Icones> ListDesenho = new ArrayList<>();
+    private IconeAdapter adapterDesenho;
+    private ValueEventListener valueEventListenerDesenho;
+
+    public DesenhoFragment() {
         // Required empty public constructor
     }
 
@@ -47,44 +48,44 @@ public class AleatorioFragment extends Fragment  implements SwipeRefreshLayout.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-      View view = inflater.inflate(R.layout.fragment_aleatorio, container, false);
+        View view = inflater.inflate(R.layout.fragment_desenho, container, false);
 
 //ATUALIZA
-        swipeicone = view.findViewById(R.id.swipe_fragment_aleatorio);
-        swipeicone.setRefreshing(true);
-        swipeicone.setOnRefreshListener(AleatorioFragment.this);
-        swipeicone.post(new Runnable() {
+        swipeiconedesenho = view.findViewById(R.id.swipe_fragment_desenho);
+        swipeiconedesenho.setRefreshing(true);
+        swipeiconedesenho.setOnRefreshListener(DesenhoFragment.this);
+        swipeiconedesenho.post(new Runnable() {
             @Override
             public void run() {
-               RecuperarAleatorio();
+                RecuperarAleatorio();
             }
         });
 
-    recyclerViewaleatorio = view.findViewById(R.id.mRecylceraleatorio);
-    Icons_aleatorio =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconesaleatorio");
+        recyclerViewdesenho = view.findViewById(R.id.mRecylcerdesenho);
+        Icons_desenho =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconesdesenho");
 
 //Configurar Adapter
-        adapterAleatorio = new IconeAdapter(getContext(),ListAleatorio);
+        adapterDesenho = new IconeAdapter(getContext(),ListDesenho);
 
         //Configuracao RecycleView
-        recyclerViewaleatorio.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerViewaleatorio.setAdapter(adapterAleatorio);
+        recyclerViewdesenho.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerViewdesenho.setAdapter(adapterDesenho);
 
-        recyclerViewaleatorio.addOnItemTouchListener(new RecyclerItemClickListener(
-                getActivity(), recyclerViewaleatorio, new RecyclerItemClickListener.OnItemClickListener() {
+        recyclerViewdesenho.addOnItemTouchListener(new RecyclerItemClickListener(
+                getActivity(), recyclerViewdesenho, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (position >= 0) {
                     if (getActivity().getIntent().hasExtra("minhaconta")) {
                         Intent intent = new Intent( getActivity(), MinhaConta.class);
-                        intent.putExtra("caminho_foto", ListAleatorio.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListDesenho.get(position).getUrl());
                         intent.putExtra("selecaoicone", SELECAO_ICONE);
                         startActivity(intent);
                         getActivity().finish();
 
                     } else {
                         Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
-                        intent.putExtra("caminho_foto", ListAleatorio.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListDesenho.get(position).getUrl());
                         startActivity(intent);
                         getActivity().finish();
                     }
@@ -102,32 +103,32 @@ public class AleatorioFragment extends Fragment  implements SwipeRefreshLayout.O
             }
         }));
 
-      return view;
+        return view;
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-        Icons_aleatorio.removeEventListener(valueEventListenerAleatorio);
+        Icons_desenho.removeEventListener(valueEventListenerDesenho);
     }
     @Override
     public void onRefresh() {
-     RecuperarAleatorio();
+        RecuperarAleatorio();
     }
 
     public void RecuperarAleatorio(){
-        ListAleatorio.clear();
-       swipeicone.setRefreshing(true);
-        valueEventListenerAleatorio = Icons_aleatorio.addValueEventListener(new ValueEventListener() {
+        ListDesenho.clear();
+        swipeiconedesenho.setRefreshing(true);
+        valueEventListenerDesenho = Icons_desenho.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot dados:  dataSnapshot.getChildren()){
                     Icones icone = dados.getValue(Icones.class);
-                    ListAleatorio.add(icone);
+                    ListDesenho.add(icone);
                 }
-                adapterAleatorio.notifyDataSetChanged();
-                swipeicone.setRefreshing(false);
+                adapterDesenho.notifyDataSetChanged();
+                swipeiconedesenho.setRefreshing(false);
 
             }
 
@@ -140,3 +141,4 @@ public class AleatorioFragment extends Fragment  implements SwipeRefreshLayout.O
 
 
 }
+

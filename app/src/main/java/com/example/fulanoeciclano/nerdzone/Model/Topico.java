@@ -6,18 +6,20 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 // [START post_class]
 @IgnoreExtraProperties
-public class Topico {
+public class Topico  implements Serializable {
 
     public String uid;
-    public String author;
+    public String idauthor;
     public String titulo;
     public String foto;
     public String mensagem;
+    public String data;
     public int starCount = 0;
     public  int quantcomentario=0;
     public Map<String, Boolean> stars = new HashMap<>();
@@ -27,31 +29,21 @@ public class Topico {
                 .child("topico");
         setUid(eventoref.push().getKey());  }
 
-   /* public Topico(String uid, String author, String foto, String titulo, String mensagem) {
-        this.uid = uid;
-        this.author = author;
-        this.titulo = titulo;
-        this.mensagem = mensagem;
-       this.foto= foto;
-    }
+  public  void SalvarTopico(){
+      String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+      DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+              .child("meustopicos");
+      anuncioref.child(idUsuario)
+              .child(getUid()).setValue(this);
 
-    // [START post_to_map]
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", uid);
-        result.put("author", author);
-        result.put("foto", foto);
-        result.put("titulo", titulo);
-        result.put("mensagem", mensagem);
-        result.put("starCount", starCount);
-        result.put("totalcomentario",quantcomentario);
-        result.put("stars", stars);
+      salvarEventoPublico();
+  }
 
-        return result;
+    public void salvarEventoPublico(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("topico");
+        anuncioref.child(getUid()).setValue(this);
     }
-    */
-    // [END post_to_map]
 
     public String getUid() {
         return uid;
@@ -61,12 +53,12 @@ public class Topico {
         this.uid = uid;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getIdauthor() {
+        return idauthor;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setIdauthor(String idauthor) {
+        this.idauthor = idauthor;
     }
 
     public String getTitulo() {
@@ -115,6 +107,14 @@ public class Topico {
 
     public void setStars(Map<String, Boolean> stars) {
         this.stars = stars;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 }
 // [END post_class]

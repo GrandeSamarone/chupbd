@@ -188,24 +188,17 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
                 }
                 adapterComercio.notifyDataSetChanged();
 
-
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -261,22 +254,15 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }

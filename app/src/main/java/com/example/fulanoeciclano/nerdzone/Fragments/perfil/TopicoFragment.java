@@ -13,7 +13,7 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.example.fulanoeciclano.nerdzone.Topico.Adapter_Topico;
+import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Topico;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;

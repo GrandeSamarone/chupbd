@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons;
+package com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons;
 
 
 import android.content.Intent;

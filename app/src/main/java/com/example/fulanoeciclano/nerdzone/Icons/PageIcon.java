@@ -12,11 +12,11 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
-import com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons.AleatorioFragment;
-import com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons.DesenhoFragment;
-import com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons.FilmesFragment;
-import com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons.HeroiFragment;
-import com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons.PretoeBrancoFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons.AleatorioFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons.DesenhoFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons.FilmesFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons.HeroiFragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons.PretoeBrancoFragment;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;

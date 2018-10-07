@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
+import com.example.fulanoeciclano.nerdzone.Adapter.Evento_Adapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;

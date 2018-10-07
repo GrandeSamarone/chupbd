@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons;
+package com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons;
 
 
 import android.content.Intent;
@@ -29,17 +29,17 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DesenhoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private RecyclerView recyclerViewdesenho;
     public static final int SELECAO_ICONE = 34;
-    private SwipeRefreshLayout swipeiconedesenho;
-    private DatabaseReference Icons_desenho;
-    private ArrayList<Icones> ListDesenho = new ArrayList<>();
-    private IconeAdapter adapterDesenho;
-    private ValueEventListener valueEventListenerDesenho;
+    private RecyclerView recyclerViewPreto_e_branco;
+    private SwipeRefreshLayout swipeiconerecyclerViewPreto_e_branco;
+    private DatabaseReference Icons_recyclerViewPreto_e_branco;
+    private ArrayList<Icones> ListrecyclerViewPreto_e_branco = new ArrayList<>();
+    private IconeAdapter adapterrecyclerViewPreto_e_branco;
+    private ValueEventListener valueEventListenerrecyclerViewPreto_e_branco;
 
-    public DesenhoFragment() {
+    public PretoeBrancoFragment() {
         // Required empty public constructor
     }
 
@@ -48,44 +48,45 @@ public class DesenhoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_desenho, container, false);
+        View view = inflater.inflate(R.layout.fragment_pretoe_branco, container, false);
 
 //ATUALIZA
-        swipeiconedesenho = view.findViewById(R.id.swipe_fragment_desenho);
-        swipeiconedesenho.setRefreshing(true);
-        swipeiconedesenho.setOnRefreshListener(DesenhoFragment.this);
-        swipeiconedesenho.post(new Runnable() {
+        swipeiconerecyclerViewPreto_e_branco = view.findViewById(R.id.swipe_fragment_pretoebranco);
+        swipeiconerecyclerViewPreto_e_branco.setRefreshing(true);
+        swipeiconerecyclerViewPreto_e_branco.setOnRefreshListener(PretoeBrancoFragment.this);
+        swipeiconerecyclerViewPreto_e_branco.post(new Runnable() {
             @Override
             public void run() {
                 RecuperarAleatorio();
             }
         });
 
-        recyclerViewdesenho = view.findViewById(R.id.mRecylcerdesenho);
-        Icons_desenho =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconesdesenho");
+        recyclerViewPreto_e_branco = view.findViewById(R.id.mRecylcerpretoebranco);
+        Icons_recyclerViewPreto_e_branco =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconespretoebranco");
 
-//Configurar Adapter
-        adapterDesenho = new IconeAdapter(getContext(),ListDesenho);
+        //Configurar Adapter
+        adapterrecyclerViewPreto_e_branco = new IconeAdapter(getContext(),ListrecyclerViewPreto_e_branco);
 
         //Configuracao RecycleView
-        recyclerViewdesenho.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerViewdesenho.setAdapter(adapterDesenho);
+        recyclerViewPreto_e_branco.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerViewPreto_e_branco.setAdapter(adapterrecyclerViewPreto_e_branco);
 
-        recyclerViewdesenho.addOnItemTouchListener(new RecyclerItemClickListener(
-                getActivity(), recyclerViewdesenho, new RecyclerItemClickListener.OnItemClickListener() {
+
+        recyclerViewPreto_e_branco.addOnItemTouchListener(new RecyclerItemClickListener(
+                getActivity(), recyclerViewPreto_e_branco, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (position >= 0) {
                     if (getActivity().getIntent().hasExtra("minhaconta")) {
                         Intent intent = new Intent( getActivity(), MinhaConta.class);
-                        intent.putExtra("caminho_foto", ListDesenho.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListrecyclerViewPreto_e_branco.get(position).getUrl());
                         intent.putExtra("selecaoicone", SELECAO_ICONE);
                         startActivity(intent);
                         getActivity().finish();
 
                     } else {
                         Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
-                        intent.putExtra("caminho_foto", ListDesenho.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListrecyclerViewPreto_e_branco.get(position).getUrl());
                         startActivity(intent);
                         getActivity().finish();
                     }
@@ -102,7 +103,6 @@ public class DesenhoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             }
         }));
-
         return view;
     }
 
@@ -110,7 +110,7 @@ public class DesenhoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onStop() {
         super.onStop();
-        Icons_desenho.removeEventListener(valueEventListenerDesenho);
+        Icons_recyclerViewPreto_e_branco.removeEventListener(valueEventListenerrecyclerViewPreto_e_branco);
     }
     @Override
     public void onRefresh() {
@@ -118,17 +118,17 @@ public class DesenhoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     public void RecuperarAleatorio(){
-        ListDesenho.clear();
-        swipeiconedesenho.setRefreshing(true);
-        valueEventListenerDesenho = Icons_desenho.addValueEventListener(new ValueEventListener() {
+        ListrecyclerViewPreto_e_branco.clear();
+        swipeiconerecyclerViewPreto_e_branco.setRefreshing(true);
+        valueEventListenerrecyclerViewPreto_e_branco = Icons_recyclerViewPreto_e_branco.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot dados:  dataSnapshot.getChildren()){
                     Icones icone = dados.getValue(Icones.class);
-                    ListDesenho.add(icone);
+                    ListrecyclerViewPreto_e_branco.add(icone);
                 }
-                adapterDesenho.notifyDataSetChanged();
-                swipeiconedesenho.setRefreshing(false);
+                adapterrecyclerViewPreto_e_branco.notifyDataSetChanged();
+                swipeiconerecyclerViewPreto_e_branco.setRefreshing(false);
 
             }
 

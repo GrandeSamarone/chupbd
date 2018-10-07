@@ -1,22 +1,26 @@
-package com.example.fulanoeciclano.nerdzone.Topico;
+package com.example.fulanoeciclano.nerdzone.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHolder> {
 
@@ -27,7 +31,9 @@ public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHo
         this.context=c;
         this.listatopicos = topico;
     }
-
+    public List<Topico> getTopicos(){
+        return this.listatopicos;
+    }
 
     @NonNull
     @Override
@@ -45,20 +51,28 @@ public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHo
 
         holder.titulo.setText(topico.getTitulo());
         holder.mensagem.setText(topico.getMensagem());
-        holder.autor.setText(topico.getAuthor());
-        holder.num_estrela.setText(topico.getStarCount());
 
-        if(topico.getFoto()!=null) {
-            Uri uri = Uri.parse(topico.getFoto());
-            Log.i("url", String.valueOf(uri));
-            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
 
-            holder.foto_autor.setController(controllerOne);
-        }
+        DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("usuarios")
+                .child(topico.getIdauthor());
+        eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    Usuario  user = dataSnapshot.getValue(Usuario.class);
+                    holder.autor.setText(user.getNome());
 
+                    Glide.with(context)
+                            .load(user.getFoto())
+                            .into(holder.foto_autor );
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -71,14 +85,13 @@ public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView titulo,mensagem,autor,num_estrela;
-        private SimpleDraweeView foto_autor;
+        private CircleImageView foto_autor;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-        titulo = itemView.findViewById(R.id.titulo_topico);
-        mensagem = itemView.findViewById(R.id.mensagem_topico);
+        titulo = itemView.findViewById(R.id.topico_titulo);
+        mensagem = itemView.findViewById(R.id.topico_mensagem);
         autor  = itemView.findViewById(R.id.topico_autor);
-        num_estrela = itemView.findViewById(R.id.topico_num_stars);
         foto_autor = itemView.findViewById(R.id.topico_foto_autor);
 
 

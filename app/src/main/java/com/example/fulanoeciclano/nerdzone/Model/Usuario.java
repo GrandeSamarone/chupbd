@@ -24,6 +24,7 @@ public class Usuario implements Serializable {
     private String Capa;
     private String tiposuario;
     private int seguidores = 0;
+    private int seguindo = 0;
     private int topicos=0;
     private int contons=0;
     private int livros=0;
@@ -165,5 +166,13 @@ public class Usuario implements Serializable {
 
     public void setArts(int arts) {
         this.arts = arts;
+    }
+
+    public int getSeguindo() {
+        return seguindo;
+    }
+
+    public void setSeguindo(int seguindo) {
+        this.seguindo = seguindo;
     }
 }

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context=".Topico.Detalhe_topico">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbartopico"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/gradiente_toolbar"
+            android:theme="@style/Theme.AppCompat">
+            <TextView
+                android:id="@+id/toolbartitulotopico"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:text="topicoTitulo"/>
+        </android.support.v7.widget.Toolbar>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/icone_user_toolbar"
+                android:background="@drawable/fundo_user"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+        <FrameLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbarsecundario">
+            <View android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/toolbar_sombra"/>
+        </FrameLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/detalhe_topico_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_margin="8dp"
+        android:textColor="@color/pretoescrita"
+        android:textSize="18sp"
+        tools:text="Titulo" />
+
+    <TextView
+        android:layout_marginLeft="8dp"
+        android:id="@+id/detalhe_topico_mensagem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textAllCaps="false"
+        android:textColor="@color/pretoescrita"
+        android:textSize="16sp"
+        app:fontFamily="sans-serif-condensed"
+        tools:text="topico" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="8dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/icon_topico_detalhe_author"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/fundo_user"/>
+        <TextView
+            android:id="@+id/nome_topico__detalhe_autor"
+
+            android:layout_marginLeft="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="nome"
+            android:textColor="@color/cinzaescuro"/>
+    </LinearLayout>
+</LinearLayout>

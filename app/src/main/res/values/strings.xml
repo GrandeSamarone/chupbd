@@ -61,6 +61,7 @@
     <string name="text_opcional">(Opcional)</string>
     <string name="botao_txt_seguir">Seguir</string>
     <string name="botao_txt_seguindo">Seguindo</string>
+    <string name="txt_titulo">Titúlo</string>
 
     <string-array name="estados">
         <item>Estado</item>

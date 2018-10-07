@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons;
+package com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons;
 
 
 import android.content.Intent;
@@ -29,18 +29,16 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FilmesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-
+public class AleatorioFragment extends Fragment  implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final int SELECAO_ICONE = 34;
-    private RecyclerView recyclerViewFilmes;
-    private SwipeRefreshLayout swipeiconeFilmes;
-    private DatabaseReference Icons_Filmes;
-    private ArrayList<Icones> ListFilmes = new ArrayList<>();
-    private IconeAdapter adapterFilmes;
-    private ValueEventListener valueEventListenerFilmes;
-
-    public FilmesFragment() {
+    private RecyclerView recyclerViewaleatorio;
+    private SwipeRefreshLayout swipeicone;
+    private DatabaseReference Icons_aleatorio;
+    private ArrayList<Icones> ListAleatorio = new ArrayList<>();
+    private IconeAdapter adapterAleatorio;
+    private ValueEventListener valueEventListenerAleatorio;
+    public AleatorioFragment() {
         // Required empty public constructor
     }
 
@@ -49,44 +47,44 @@ public class FilmesFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_filmes, container, false);
+      View view = inflater.inflate(R.layout.fragment_aleatorio, container, false);
 
 //ATUALIZA
-        swipeiconeFilmes = view.findViewById(R.id.swipe_fragment_filmes);
-        swipeiconeFilmes.setRefreshing(true);
-        swipeiconeFilmes.setOnRefreshListener(FilmesFragment.this);
-        swipeiconeFilmes.post(new Runnable() {
+        swipeicone = view.findViewById(R.id.swipe_fragment_aleatorio);
+        swipeicone.setRefreshing(true);
+        swipeicone.setOnRefreshListener(AleatorioFragment.this);
+        swipeicone.post(new Runnable() {
             @Override
             public void run() {
-                RecuperarAleatorio();
+               RecuperarAleatorio();
             }
         });
 
-        recyclerViewFilmes = view.findViewById(R.id.mRecylcerfilmes);
-        Icons_Filmes =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconesfilmes");
+    recyclerViewaleatorio = view.findViewById(R.id.mRecylceraleatorio);
+    Icons_aleatorio =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconesaleatorio");
 
-      //Configurar Adapter
-        adapterFilmes = new IconeAdapter(getContext(),ListFilmes);
+//Configurar Adapter
+        adapterAleatorio = new IconeAdapter(getContext(),ListAleatorio);
 
         //Configuracao RecycleView
-        recyclerViewFilmes.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerViewFilmes.setAdapter(adapterFilmes);
+        recyclerViewaleatorio.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerViewaleatorio.setAdapter(adapterAleatorio);
 
-        recyclerViewFilmes.addOnItemTouchListener(new RecyclerItemClickListener(
-                getActivity(), recyclerViewFilmes, new RecyclerItemClickListener.OnItemClickListener() {
+        recyclerViewaleatorio.addOnItemTouchListener(new RecyclerItemClickListener(
+                getActivity(), recyclerViewaleatorio, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (position >= 0) {
                     if (getActivity().getIntent().hasExtra("minhaconta")) {
                         Intent intent = new Intent( getActivity(), MinhaConta.class);
-                        intent.putExtra("caminho_foto", ListFilmes.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListAleatorio.get(position).getUrl());
                         intent.putExtra("selecaoicone", SELECAO_ICONE);
                         startActivity(intent);
                         getActivity().finish();
 
                     } else {
                         Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
-                        intent.putExtra("caminho_foto", ListFilmes.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListAleatorio.get(position).getUrl());
                         startActivity(intent);
                         getActivity().finish();
                     }
@@ -104,32 +102,32 @@ public class FilmesFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         }));
 
-        return view;
+      return view;
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-        Icons_Filmes.removeEventListener(valueEventListenerFilmes);
+        Icons_aleatorio.removeEventListener(valueEventListenerAleatorio);
     }
     @Override
     public void onRefresh() {
-        RecuperarAleatorio();
+     RecuperarAleatorio();
     }
 
     public void RecuperarAleatorio(){
-        ListFilmes.clear();
-        swipeiconeFilmes.setRefreshing(true);
-        valueEventListenerFilmes = Icons_Filmes.addValueEventListener(new ValueEventListener() {
+        ListAleatorio.clear();
+       swipeicone.setRefreshing(true);
+        valueEventListenerAleatorio = Icons_aleatorio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot dados:  dataSnapshot.getChildren()){
                     Icones icone = dados.getValue(Icones.class);
-                    ListFilmes.add(icone);
+                    ListAleatorio.add(icone);
                 }
-                adapterFilmes.notifyDataSetChanged();
-                swipeiconeFilmes.setRefreshing(false);
+                adapterAleatorio.notifyDataSetChanged();
+                swipeicone.setRefreshing(false);
 
             }
 

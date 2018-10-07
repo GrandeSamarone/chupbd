@@ -231,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements Main,
     public void onStop() {
         super.onStop();
         GibiEventos.removeEventListener(valueEventListenerEvento);
-        GibiMercado.removeEventListener(valueEventListenerMercado);
     }
 
     public  void CarregarInformacoesNoDrawer(){

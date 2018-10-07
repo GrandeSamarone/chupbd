@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Icons.Fragments_Icons;
+package com.example.fulanoeciclano.nerdzone.Fragments.Fragments_Icons;
 
 
 import android.content.Intent;
@@ -29,17 +29,18 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class FilmesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+
 
     public static final int SELECAO_ICONE = 34;
-    private RecyclerView recyclerViewPreto_e_branco;
-    private SwipeRefreshLayout swipeiconerecyclerViewPreto_e_branco;
-    private DatabaseReference Icons_recyclerViewPreto_e_branco;
-    private ArrayList<Icones> ListrecyclerViewPreto_e_branco = new ArrayList<>();
-    private IconeAdapter adapterrecyclerViewPreto_e_branco;
-    private ValueEventListener valueEventListenerrecyclerViewPreto_e_branco;
+    private RecyclerView recyclerViewFilmes;
+    private SwipeRefreshLayout swipeiconeFilmes;
+    private DatabaseReference Icons_Filmes;
+    private ArrayList<Icones> ListFilmes = new ArrayList<>();
+    private IconeAdapter adapterFilmes;
+    private ValueEventListener valueEventListenerFilmes;
 
-    public PretoeBrancoFragment() {
+    public FilmesFragment() {
         // Required empty public constructor
     }
 
@@ -48,45 +49,44 @@ public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_pretoe_branco, container, false);
+        View view = inflater.inflate(R.layout.fragment_filmes, container, false);
 
 //ATUALIZA
-        swipeiconerecyclerViewPreto_e_branco = view.findViewById(R.id.swipe_fragment_pretoebranco);
-        swipeiconerecyclerViewPreto_e_branco.setRefreshing(true);
-        swipeiconerecyclerViewPreto_e_branco.setOnRefreshListener(PretoeBrancoFragment.this);
-        swipeiconerecyclerViewPreto_e_branco.post(new Runnable() {
+        swipeiconeFilmes = view.findViewById(R.id.swipe_fragment_filmes);
+        swipeiconeFilmes.setRefreshing(true);
+        swipeiconeFilmes.setOnRefreshListener(FilmesFragment.this);
+        swipeiconeFilmes.post(new Runnable() {
             @Override
             public void run() {
                 RecuperarAleatorio();
             }
         });
 
-        recyclerViewPreto_e_branco = view.findViewById(R.id.mRecylcerpretoebranco);
-        Icons_recyclerViewPreto_e_branco =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconespretoebranco");
+        recyclerViewFilmes = view.findViewById(R.id.mRecylcerfilmes);
+        Icons_Filmes =  ConfiguracaoFirebase.getFirebaseDatabase().child("icones").child("iconesfilmes");
 
-        //Configurar Adapter
-        adapterrecyclerViewPreto_e_branco = new IconeAdapter(getContext(),ListrecyclerViewPreto_e_branco);
+      //Configurar Adapter
+        adapterFilmes = new IconeAdapter(getContext(),ListFilmes);
 
         //Configuracao RecycleView
-        recyclerViewPreto_e_branco.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerViewPreto_e_branco.setAdapter(adapterrecyclerViewPreto_e_branco);
+        recyclerViewFilmes.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerViewFilmes.setAdapter(adapterFilmes);
 
-
-        recyclerViewPreto_e_branco.addOnItemTouchListener(new RecyclerItemClickListener(
-                getActivity(), recyclerViewPreto_e_branco, new RecyclerItemClickListener.OnItemClickListener() {
+        recyclerViewFilmes.addOnItemTouchListener(new RecyclerItemClickListener(
+                getActivity(), recyclerViewFilmes, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (position >= 0) {
                     if (getActivity().getIntent().hasExtra("minhaconta")) {
                         Intent intent = new Intent( getActivity(), MinhaConta.class);
-                        intent.putExtra("caminho_foto", ListrecyclerViewPreto_e_branco.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListFilmes.get(position).getUrl());
                         intent.putExtra("selecaoicone", SELECAO_ICONE);
                         startActivity(intent);
                         getActivity().finish();
 
                     } else {
                         Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
-                        intent.putExtra("caminho_foto", ListrecyclerViewPreto_e_branco.get(position).getUrl());
+                        intent.putExtra("caminho_foto", ListFilmes.get(position).getUrl());
                         startActivity(intent);
                         getActivity().finish();
                     }
@@ -103,6 +103,7 @@ public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout
 
             }
         }));
+
         return view;
     }
 
@@ -110,7 +111,7 @@ public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout
     @Override
     public void onStop() {
         super.onStop();
-        Icons_recyclerViewPreto_e_branco.removeEventListener(valueEventListenerrecyclerViewPreto_e_branco);
+        Icons_Filmes.removeEventListener(valueEventListenerFilmes);
     }
     @Override
     public void onRefresh() {
@@ -118,17 +119,17 @@ public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout
     }
 
     public void RecuperarAleatorio(){
-        ListrecyclerViewPreto_e_branco.clear();
-        swipeiconerecyclerViewPreto_e_branco.setRefreshing(true);
-        valueEventListenerrecyclerViewPreto_e_branco = Icons_recyclerViewPreto_e_branco.addValueEventListener(new ValueEventListener() {
+        ListFilmes.clear();
+        swipeiconeFilmes.setRefreshing(true);
+        valueEventListenerFilmes = Icons_Filmes.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot dados:  dataSnapshot.getChildren()){
                     Icones icone = dados.getValue(Icones.class);
-                    ListrecyclerViewPreto_e_branco.add(icone);
+                    ListFilmes.add(icone);
                 }
-                adapterrecyclerViewPreto_e_branco.notifyDataSetChanged();
-                swipeiconerecyclerViewPreto_e_branco.setRefreshing(false);
+                adapterFilmes.notifyDataSetChanged();
+                swipeiconeFilmes.setRefreshing(false);
 
             }
 
@@ -141,4 +142,3 @@ public class PretoeBrancoFragment extends Fragment implements SwipeRefreshLayout
 
 
 }
-

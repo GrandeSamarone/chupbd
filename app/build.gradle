@@ -90,6 +90,8 @@ dependencies {
     //estrela  nota
     implementation 'me.zhanghai.android.materialratingbar:library:1.0.2'
 
+    //carregando
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
