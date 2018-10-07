@@ -79,9 +79,13 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:layout_marginBottom="8dp"
-                android:textColor="@color/preto"
+                android:textColor="@color/pretoescrita"
                 android:textSize="18sp"
                 tools:text="Titulo" />
+
+
+
+
 
 
             <TextView
@@ -90,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textAllCaps="false"
-                android:textColor="@color/cinzaescuro"
+                android:textColor="@color/pretoescrita"
                 android:textSize="16sp"
                 app:fontFamily="sans-serif-condensed"
                 tools:text="topico" />
@@ -104,39 +108,8 @@
                 android:orientation="horizontal">
 
 
-                <TextView
-                    android:layout_marginLeft="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/cinzaescuro"
-                    android:textSize="14sp"
-                    android:text="Inicia:"
-                   />
-                <TextView
-                    android:textColor="@color/cinzaescuro"
-                    android:textSize="14sp"
-                    android:id="@+id/datainicialevento"
-                    android:layout_marginLeft="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00/00/000"/>
-                <TextView
-                    android:textColor="@color/cinzaescuro"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Termina:"/>
-                <TextView
-                    android:textColor="@color/cinzaescuro"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="8dp"
-                    android:id="@+id/datafinalevento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00/00/0000"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -147,8 +120,10 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:background="@drawable/fundo_user"
+                android:layout_alignParentLeft="true"
                   />
                 <TextView
+                    android:layout_toRightOf="@+id/icone_author"
                     android:textColor="@color/primary_dark"
                     android:textSize="14sp"
                     android:id="@+id/author_evento"
@@ -158,7 +133,30 @@
                     android:layout_gravity="left"
                     tools:text="someauthor@email.com" />
 
-            </LinearLayout>
+                <TextView
+                    android:layout_toLeftOf="@+id/txtvisualizacao"
+                    android:text="0"
+                    android:id="@+id/quantvisualizacao_detalhe"
+                    android:textColor="@color/pretoescrita"
+                    android:layout_width="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:id="@+id/txtvisualizacao"
+                    android:layout_alignParentRight="true"
+                    android:text="Visualizações"
+                    android:textColor="@color/pretoescrita"
+                    android:layout_width="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="2dp"
+                     android:layout_marginRight="8dp"
+                    android:layout_height="wrap_content"
+                    />
+
+
+            </RelativeLayout>
 
 
             <android.support.v7.widget.RecyclerView

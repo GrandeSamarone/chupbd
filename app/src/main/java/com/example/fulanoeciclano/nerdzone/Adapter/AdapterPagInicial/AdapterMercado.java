@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -26,12 +26,12 @@ import java.util.List;
 
 public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHolder> {
     private Context context;
-    private List<Mercado> mercados;
+    private List<Comercio> comercios;
 
 
-    public AdapterMercado(List<Mercado> merc, Context cx){
+    public AdapterMercado(List<Comercio> merc, Context cx){
         this.context = cx;
-        this.mercados = merc;
+        this.comercios = merc;
     }
     @Override
     public MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,13 +43,13 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
     @Override
     public void onBindViewHolder(MyviewHolder holder, int position) {
 
-        Mercado mercado = mercados.get(position);
-        if(mercado.getTitulo()!=null){
-            holder.mercadonome.setText(mercado.getTitulo());
+        Comercio comercio = comercios.get(position);
+        if(comercio.getTitulo()!=null){
+            holder.mercadonome.setText(comercio.getTitulo());
         }
 
 
-        List<String> urlFotos = mercado.getFotos();
+        List<String> urlFotos = comercio.getFotos();
         String stringcapa = urlFotos.get(0);
 
         if (stringcapa != null) {
@@ -79,7 +79,7 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
 
     @Override
     public int getItemCount() {
-        return mercados.size();
+        return comercios.size();
     }
 
     public class MyviewHolder extends RecyclerView.ViewHolder {

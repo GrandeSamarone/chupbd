@@ -354,6 +354,14 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 .into(icone);
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ListaEvento.clear();
+        RecuperarEventos();
+    }
+
     @Override
     public void onRefresh() {
         ListaEvento.clear();

@@ -17,6 +17,7 @@ import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Art_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Livros_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topicos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -26,6 +27,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -38,19 +40,24 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener {
     private CircleImageView imgperfil;
     private SimpleDraweeView capausuario;
     private ChildEventListener ChildEventListenerperfil;
-    private DatabaseReference database_perfil;
+    private DatabaseReference database_perfil,seguidores_ref,usuarioLogadoRef;
     private ViewPager mViewPager;
     private LinearLayout botao_voltar;
     private Button botao_seguir,botao_msg;
     private String id_do_usuario;
+    private String id_usuariologado;
+    private Usuario usuarioLogado,usuarioselecionado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
+
         id_do_usuario=getIntent().getStringExtra("id");
 
      //Configuraçoes Originais
+        id_usuariologado =  UsuarioFirebase.getIdentificadorUsuario();
     database_perfil = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
+    seguidores_ref = ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
      nome = findViewById(R.id.nomeusuario_perfil);
      fraserapida= findViewById(R.id.fraserapida_perfil);
      capausuario = findViewById(R.id.capaperfilusuario);
@@ -82,60 +89,20 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener {
 
 
 
-        CarregarDados_do_Usuario();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        CarregarDados_do_Usuario();
+        recuperarDadosUsuarioLogado();
 
-    private void CarregarDados_do_Usuario(){
+    }
 
-        ChildEventListenerperfil=database_perfil.orderByChild("id")
-                .equalTo(id_do_usuario).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Usuario usuario = dataSnapshot.getValue(Usuario.class );
-                        assert usuario != null;
-
-
-                         nome.setText(usuario.getNome());
-
-                        Uri  capa = Uri.parse(usuario.getCapa());
-
-                            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                                    .setUri(capa)
-                                    .setAutoPlayAnimations(true)
-                                    .build();
-
-                            capausuario.setController(controllerOne);
-
-
-                        String fotoperfil = usuario.getFoto();
-                        Glide.with(Perfil.this)
-                                .load(fotoperfil)
-                                .into(imgperfil);
-
-
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+    @Override
+    protected void onStop() {
+        super.onStop();
+        database_perfil.removeEventListener(ChildEventListenerperfil);
     }
 
     @Override
@@ -151,4 +118,110 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
     }
+    private void CarregarDados_do_Usuario(){
+        ChildEventListenerperfil=database_perfil.orderByChild("id")
+                .equalTo(id_do_usuario).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        usuarioselecionado = dataSnapshot.getValue(Usuario.class );
+                        assert usuarioselecionado != null;
+
+
+                         nome.setText(usuarioselecionado.getNome());
+
+                        Uri  capa = Uri.parse(usuarioselecionado.getCapa());
+
+                            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                                    .setUri(capa)
+                                    .setAutoPlayAnimations(true)
+                                    .build();
+
+                            capausuario.setController(controllerOne);
+
+
+                        String fotoperfil = usuarioselecionado.getFoto();
+                        Glide.with(Perfil.this)
+                                .load(fotoperfil)
+                                .into(imgperfil);
+                    }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    private void recuperarDadosUsuarioLogado(){
+        usuarioLogadoRef= database_perfil.child(id_usuariologado);
+        usuarioLogadoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                usuarioLogado = dataSnapshot.getValue(Usuario.class);
+
+             /*verifica se o  usuario esta seguindo*/
+                VerificaSegueUsuarioAmigo();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void VerificaSegueUsuarioAmigo(){
+        DatabaseReference seguidor_ref=seguidores_ref
+                .child(id_usuariologado)
+                .child(usuarioselecionado.getId());
+               seguidor_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(DataSnapshot dataSnapshot) {
+                       if(dataSnapshot.exists()){
+                       HabilitarBotaoSeguir(true);
+                       }else{
+                        HabilitarBotaoSeguir(false);
+                       }
+                   }
+
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
+
+                   }
+               });
+    }
+
+    private void HabilitarBotaoSeguir(Boolean segueUsuario){
+        if(segueUsuario){
+            botao_seguir.setText(R.string.botao_txt_seguindo);
+        }else{
+            botao_seguir.setText(R.string.botao_txt_seguir);
+
+            //Adiciona Evento para seguir Usuario
+            botao_seguir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Salvar Seguidor
+                    SalvarSeguidor(usuarioLogado,usuarioselecionado);
+                }
+            });
+        }
+    }
+
+private void SalvarSeguidor(Usuario ulogado,Usuario uamigo){
+
+        DatabaseReference seguidorRef = seguidores_ref
+                .child(ulogado.getId())
+                .child(uamigo.getId());
+
+}
+
 }

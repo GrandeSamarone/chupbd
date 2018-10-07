@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.fulanoeciclano.nerdzone.Edit.Edit_Loja_Activity;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -26,12 +26,12 @@ import java.util.List;
 public class Adapter_Meus_Comercio extends RecyclerView.Adapter<Adapter_Meus_Comercio.MyviewHolder> {
 
     private Context context;
-    private List<Mercado> mercado;
+    private List<Comercio> comercio;
 
-    public Adapter_Meus_Comercio(List<Mercado> listamercado, Context c) {
+    public Adapter_Meus_Comercio(List<Comercio> listamercado, Context c) {
 
         this.context = c;
-        this.mercado = listamercado;
+        this.comercio = listamercado;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class Adapter_Meus_Comercio extends RecyclerView.Adapter<Adapter_Meus_Com
     @Override
     public void onBindViewHolder(MyviewHolder holder, int position) {
 
-        final Mercado loja = mercado.get(position);
+        final Comercio loja = comercio.get(position);
         holder.comercionome.setText(loja.getTitulo());
 
         List<String> urlFotos = loja.getFotos();
@@ -97,7 +97,7 @@ public class Adapter_Meus_Comercio extends RecyclerView.Adapter<Adapter_Meus_Com
 
     @Override
     public int getItemCount() {
-        return mercado.size();
+        return comercio.size();
     }
 
     public class MyviewHolder extends RecyclerView.ViewHolder {

@@ -7,9 +7,9 @@ import java.util.HashMap;
 
 public class EventoLike {
 
-    public Evento evento;
-    public Usuario usuario;
-    public int qtdlikes = 0;
+    private Evento evento;
+    private Usuario usuario;
+    private int qtdlikes = 0;
 
     public EventoLike() {
 
@@ -30,9 +30,10 @@ public class EventoLike {
 
         //Atualizar quantidade de like
         atualizarQtd(1);
+
     }
 
-      public void atualizarQtd(int valor){
+    private void atualizarQtd(int valor){
           DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
           DatabaseReference pLikeRef=firebaseRef
                   .child("evento-likes")
@@ -41,10 +42,12 @@ public class EventoLike {
 
           setQtdlikes(getQtdlikes()+valor);
           pLikeRef.setValue(getQtdlikes());
-    }
-    public  void removerlike(){
-        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        atualizarQtd_Evento();
+        atualizarQtd_MeusEvento();
 
+    }
+    public   void removerlike(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeRef=firebaseRef
                 .child("evento-likes")
                 .child(evento.getUid())
@@ -52,7 +55,33 @@ public class EventoLike {
         pLikeRef.removeValue();
         //Atualizar quantidade de like
         atualizarQtd(-1);
+        atualizarQtd_Evento();
+        atualizarQtd_MeusEvento();
 
+
+    }
+
+
+    private void atualizarQtd_Evento(){
+        DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference pLikeQuantRef=firebaseRefs
+                .child("evento")
+                .child(evento.getEstado())
+                .child(evento.getUid())
+                .child("curtirCount");
+
+        pLikeQuantRef.setValue(getQtdlikes());
+    }
+    private void atualizarQtd_MeusEvento(){
+        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference pLikeQuantRef=firebaseRefs
+                .child("meusevento")
+                .child(idUsuario)
+                .child(evento.getUid())
+                .child("curtirCount");
+
+        pLikeQuantRef.setValue(getQtdlikes());
     }
 
     public int getQtdlikes() {

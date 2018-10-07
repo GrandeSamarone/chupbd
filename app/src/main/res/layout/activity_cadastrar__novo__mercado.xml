@@ -164,23 +164,21 @@
             />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/txtlayout_telefone"
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/text_opcional"
+    android:textColor="@color/cinzasecunradrio"/>
+    <com.blackcat.currencyedittext.CurrencyEditText
+        android:id="@+id/desc_valor"
+        android:layout_marginBottom="16dp"
+        android:padding="10dp"
+        android:background="@drawable/bg_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-        <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/desc_valor"
-            android:padding="10dp"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Preço (OPCIONAL)"
-            android:background="@drawable/bg_edit_text"
-            android:textAlignment="center"
-            android:inputType="textMultiLine"
-            />
-    </android.support.design.widget.TextInputLayout>
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="R$ 20,50"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/txtlayout_endereco"

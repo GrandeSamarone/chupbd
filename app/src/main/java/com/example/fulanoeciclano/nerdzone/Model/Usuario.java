@@ -23,6 +23,11 @@ public class Usuario implements Serializable {
     private String foto;
     private String Capa;
     private String tiposuario;
+    private int seguidores = 0;
+    private int topicos=0;
+    private int contons=0;
+    private int livros=0;
+    private int arts = 0;
 
     public Usuario() {
     }
@@ -120,5 +125,45 @@ public class Usuario implements Serializable {
 
     public void setTipoconta(String tipoconta) {
         this.tipoconta = tipoconta;
+    }
+
+    public int getSeguidores() {
+        return seguidores;
+    }
+
+    public void setSeguidores(int seguidores) {
+        this.seguidores = seguidores;
+    }
+
+    public int getTopicos() {
+        return topicos;
+    }
+
+    public void setTopicos(int topicos) {
+        this.topicos = topicos;
+    }
+
+    public int getContons() {
+        return contons;
+    }
+
+    public void setContons(int contons) {
+        this.contons = contons;
+    }
+
+    public int getLivros() {
+        return livros;
+    }
+
+    public void setLivros(int livros) {
+        this.livros = livros;
+    }
+
+    public int getArts() {
+        return arts;
+    }
+
+    public void setArts(int arts) {
+        this.arts = arts;
     }
 }

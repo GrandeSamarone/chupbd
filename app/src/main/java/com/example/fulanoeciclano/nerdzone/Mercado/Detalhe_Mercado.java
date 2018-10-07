@@ -25,7 +25,8 @@ import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio_Visualizacao;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -49,15 +50,16 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
     private CarouselView fotos;
     private FloatingActionButton fabcontato;
-    private TextView titulo, legenda, descricao, endereco, categoria, estado, criador, num_rating;
+    private TextView titulo, legenda, descricao, endereco, categoria, estado, criador, num_rating,
+            visualizacoes,valor;
     private Button botaoavaliar;
     private LinearLayout botaovoltar;
-    private Mercado mercadoselecionado;
-    private MaterialRatingBar ratingBar,ratingbarTotal;
+    private Comercio mercadoselecionado;
+    private MaterialRatingBar ratingBar, ratingbarTotal;
     private Dialog dialog;
     private String identificadorUsuario;
-    private DatabaseReference database, databasemercado,database_usuario;
-    private com.google.firebase.database.ChildEventListener ChildEventListenermercado;
+    private DatabaseReference database, databasemercado, database_usuario;
+    private ChildEventListener ChildEventListenermercado;
     private FirebaseDatabase databases;
     private AlertDialog alerta;
     private SharedPreferences preferences = null;
@@ -72,7 +74,8 @@ public class Detalhe_Mercado extends AppCompatActivity {
 
 
         //configuracoes iniciais
-        usuarioLogado =  UsuarioFirebase.getIdentificadorUsuario();
+        usuarioLogado = UsuarioFirebase.getIdentificadorUsuario();
+        visualizacoes = findViewById(R.id.quantvisualizacao_comercio);
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         databasemercado = ConfiguracaoFirebase.getDatabase().getReference().child("comercio");
         database = ConfiguracaoFirebase.getDatabase().getReference().child("rating");
@@ -80,9 +83,10 @@ public class Detalhe_Mercado extends AppCompatActivity {
         databases = FirebaseDatabase.getInstance();
         num_rating = findViewById(R.id.mercado_num_ratings);
         ratingBar = findViewById(R.id.rate_star);
+        valor = findViewById(R.id.detalhe_mercado_valor);
         ratingbarTotal = findViewById(R.id.mercado_detalhe_rating);
         fotos = findViewById(R.id.carousel_foto_mercado);
-        perfil= findViewById(R.id.icone_author_mercado);
+        perfil = findViewById(R.id.icone_author_mercado);
         titulo = findViewById(R.id.detalhe_mercado_titulo);
         legenda = findViewById(R.id.detalhe_mercado_legenda);
         criador = findViewById(R.id.detalhe_mercado_criador);
@@ -92,46 +96,56 @@ public class Detalhe_Mercado extends AppCompatActivity {
         botaovoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent it = new Intent(Detalhe_Mercado.this,MercadoActivity.class);
-               startActivity(it);
+                Intent it = new Intent(Detalhe_Mercado.this, MercadoActivity.class);
+                startActivity(it);
                 finish();
             }
         });
 
 
-
         //recuperar mercado selecionado
 
-        mercadoselecionado = (Mercado) getIntent().getSerializableExtra("mercadoelecionado");
+        mercadoselecionado = (Comercio) getIntent().getSerializableExtra("mercadoelecionado");
 
         if (mercadoselecionado != null) {
-            titulo.setText(mercadoselecionado.getTitulo());
+            ContaQuatAcesso(mercadoselecionado);
+        }
+        titulo.setText(mercadoselecionado.getTitulo());
+        descricao.setText(mercadoselecionado.getDescricao());
+        endereco.setText(mercadoselecionado.getEndereco());
+        if (!mercadoselecionado.getValor().equals("R$0,00")) {
+            valor.setVisibility(View.VISIBLE);
+            valor.setText(mercadoselecionado.getValor());
+        }else{
+            valor.setVisibility(View.GONE);
+            legenda.setVisibility(View.VISIBLE);
             legenda.setText(mercadoselecionado.getFraserapida());
-            descricao.setText(mercadoselecionado.getDescricao());
-            endereco.setText(mercadoselecionado.getEndereco());
+        }
 
-            CarregarDados_do_Criador_do_Comercio(mercadoselecionado.getIdAutor());
-            //   categoria.setText(mercadoselecionado.getCategoria());
+        visualizacoes.setText(String.valueOf(mercadoselecionado.getQuantVisualizacao()));
 
-            //carregar as imagens
+        CarregarDados_do_Criador_do_Comercio(mercadoselecionado.getIdAutor());
+        //   categoria.setText(mercadoselecionado.getCategoria());
 
-            ImageListener imageListener = new ImageListener() {
-                @Override
-                public void setImageForPosition(int position, ImageView imageView) {
-                    String urlstring = mercadoselecionado.getFotos().get(position);
+        //carregar as imagens
 
-                    Glide.with(getApplicationContext())
-                            .load(urlstring)
-                            .into(imageView);
-                }
-            };
+        ImageListener imageListener = new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+                String urlstring = mercadoselecionado.getFotos().get(position);
 
-            fotos.setPageCount(mercadoselecionado.getFotos().size());
-            fotos.setImageListener(imageListener);
+                Glide.with(getApplicationContext())
+                        .load(urlstring)
+                        .into(imageView);
+            }
+        };
 
-            fotos.setImageClickListener(new ImageClickListener() {
-                @Override
-                public void onClick(int position) {
+        fotos.setPageCount(mercadoselecionado.getFotos().size());
+        fotos.setImageListener(imageListener);
+
+        fotos.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
                     /*Bundle bundle = new Bundle();
                     bundle.putString("id", mercadoselecionado.getIdMercado());
                     Intent it = new Intent(Detalhe_Mercado.this, AbrirImagem.class);
@@ -140,41 +154,41 @@ public class Detalhe_Mercado extends AppCompatActivity {
                     */
 
 
-                    List<String> ff = mercadoselecionado.getFotos();
-                    Intent it = new Intent(Detalhe_Mercado.this, AbrirImagem.class);
-                    it.putExtra("fotoselecionada", (Serializable) ff);
-                    it.putExtra("nome", mercadoselecionado.getTitulo());
-                    startActivity(it);
+                List<String> ff = mercadoselecionado.getFotos();
+                Intent it = new Intent(Detalhe_Mercado.this, AbrirImagem.class);
+                it.putExtra("fotoselecionada", (Serializable) ff);
+                it.putExtra("nome", mercadoselecionado.getTitulo());
+                startActivity(it);
 
-                }
-            });
+            }
+        });
 
-            fabcontato = findViewById(R.id.fab_entrar_em_contato);
-            fabcontato.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(Detalhe_Mercado.this, ChatActivity.class);
-                    it.putExtra("id", mercadoselecionado.getIdAutor());
-                    startActivity(it);
-                }
-            });
+        fabcontato = findViewById(R.id.fab_entrar_em_contato);
+        fabcontato.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Detalhe_Mercado.this, ChatActivity.class);
+                it.putExtra("id", mercadoselecionado.getIdAutor());
+                startActivity(it);
+            }
+        });
 
-        }
-RatingBar();
     }
 
-    private void CarregarDados_do_Criador_do_Comercio(String idusuario){
 
-        ChildEventListeneruser=database_usuario.orderByChild("id")
+    private void CarregarDados_do_Criador_do_Comercio(String idusuario) {
+
+        ChildEventListeneruser = database_usuario.orderByChild("id")
                 .equalTo(idusuario).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Usuario user = dataSnapshot.getValue(Usuario.class);
 
                         assert user != null;
+                        RatingBar(user);
                         String foto = user.getFoto();
-                        Log.i("soskdoaksd",foto);
-                        Log.i("wqq",user.getNome());
+                        Log.i("soskdoaksd", foto);
+                        Log.i("wqq", user.getNome());
                         Glide.with(Detalhe_Mercado.this)
                                 .load(foto)
                                 .into(perfil);
@@ -244,7 +258,7 @@ RatingBar();
     @Override
     protected void onStart() {
         super.onStart();
-        //RatingBar();
+        //RatingBar_Comercio();
         preferences = getSharedPreferences("primeiravezdetalhe", MODE_PRIVATE);
         if (preferences.getBoolean("primeiravezdetalhe", true)) {
             preferences.edit().putBoolean("primeiravezdetalhe", false).apply();
@@ -304,36 +318,72 @@ RatingBar();
         return true;
     }
 
-    private void RatingBar() {
-        final DatabaseReference ref = databases.getReference("ratingbar").child("comercio")
+    private void RatingBar(Usuario user) {
+        DatabaseReference ratingcomercio = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("ratingbar-comercio")
                 .child(mercadoselecionado.getIdMercado())
                 .child(usuarioLogado);
 
-        ref.addValueEventListener(new ValueEventListener() {
+        ratingcomercio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int QtdLikes = 0;
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     float rating = Float.parseFloat(dataSnapshot.getValue().toString());
-                    // float d= (float) ((number*5) /100);
+                    //   float d= (float) ((rating*5) /100);
                     ratingBar.setRating(rating);
                     ratingbarTotal.setRating(rating);
                     mercadoselecionado.setTotalrating(rating);
-                    Toast.makeText(Detalhe_Mercado.this, "total"+mercadoselecionado.getTotalrating(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Detalhe_Mercado.this, "total" + mercadoselecionado.getTotalrating(), Toast.LENGTH_SHORT).show();
+                    //Montar objeto postagem curtida
+
                 }
+
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (fromUser) ref.setValue(rating);
+                if (fromUser) ratingcomercio.setValue(rating);
             }
         });
-   }
 
+    }
 
+    public void ContaQuatAcesso(Comercio comercio) {
 
+        //Contando as Visualizacoes
+        DatabaseReference eventoscurtidas = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("comercio-visualizacao")
+                .child(comercio.getIdMercado());
+        eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int QtdVisu = 0;
+                if (dataSnapshot.hasChild("qtdvisualizacao")) {
+                    Comercio_Visualizacao comercioVisu = dataSnapshot.getValue(Comercio_Visualizacao.class);
+                    QtdVisu = comercioVisu.getQtdvisualizacao();
+                }
+
+                //Montar objeto postagem curtida
+                Comercio_Visualizacao visualizacao = new Comercio_Visualizacao();
+                visualizacao.setComercio(comercio);
+                visualizacao.setQtdvisualizacao(QtdVisu);
+
+                visualizacao.Salvar();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 }

@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_ampliar_imagem;
 import com.example.fulanoeciclano.nerdzone.Adapter.MyViewPagerAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.database.DatabaseReference;
 
@@ -31,7 +31,7 @@ public class AbrirImagem extends AppCompatActivity {
     private ViewPager viewPager;
     private AlertDialog alerta;
     private MyViewPagerAdapter adapter;
-    private Mercado mercado;
+    private Comercio comercio;
     private DatabaseReference fotos_mercado;
     private TextView tantasfotos,nome;
     private ImageView botaovoltar;
@@ -48,7 +48,7 @@ public class AbrirImagem extends AppCompatActivity {
         setContentView(R.layout.activity_abrir_imagem);
         viewPager = findViewById(R.id.viewpager_imagem);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-      //Recebendo o link da pagina detalhe do mercado e armazenando
+      //Recebendo o link da pagina detalhe do comercio e armazenando
         imageUrls= getIntent().getStringArrayListExtra("fotoselecionada").toArray(new String[0]);
         nomedomercado=getIntent().getStringExtra("nome");
         myAdapter = new Adapter_ampliar_imagem( AbrirImagem.this,imageUrls);
@@ -56,7 +56,7 @@ public class AbrirImagem extends AppCompatActivity {
 
 
           //Configuracoes Basicas
-        fotos_mercado = ConfiguracaoFirebase.getFirebaseDatabase().child("mercado");
+        fotos_mercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
         tantasfotos = findViewById(R.id.tantasfotos);
         nome = findViewById(R.id.nome_do_mercado_fotos);
         nome.setText(nomedomercado);

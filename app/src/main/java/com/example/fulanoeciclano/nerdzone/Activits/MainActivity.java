@@ -34,9 +34,9 @@ import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
 import com.example.fulanoeciclano.nerdzone.Mercado.MercadoActivity;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Gibi;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Topico.ListaTopicos;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     private RecyclerView recyclerVieweventos;
     private AdapterMercado adapterMercado;
     private EventoAdapterPagInicial adapterEvento;
-    private List<Mercado> ListaGibiMercado = new ArrayList<>();
+    private List<Comercio> listaGibiComercio = new ArrayList<>();
     private ArrayList<Gibi> ListaGibiDC = new ArrayList<>();
     private ArrayList<Gibi> ListaGibiOutros = new ArrayList<>();
     private ArrayList<Evento> ListaEvento = new ArrayList<>();
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements Main,
           //Configuracoes Originais
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+
         usuarioLogado = new Usuario();
 
 
@@ -150,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements Main,
         swipe.post(new Runnable() {
             @Override
             public void run() {
+
                 RecuperarMercado();
                 RecuperarEvento();
                 CarregarInformacoesNoDrawer();
@@ -171,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements Main,
 
     @Override
     public void onRefresh() {
+
         RecuperarMercado();
         RecuperarEvento();
         CarregarInformacoesNoDrawer();
@@ -179,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     @Override
     protected void onStart() {
         super.onStart();
+        ;
 
         //carregar informacao no Drawer
         CarregarInformacoesNoDrawer();
@@ -227,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     public void onStop() {
         super.onStop();
         GibiEventos.removeEventListener(valueEventListenerEvento);
+        GibiMercado.removeEventListener(valueEventListenerMercado);
     }
 
     public  void CarregarInformacoesNoDrawer(){
@@ -330,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements Main,
 
     //recupera e nao deixa duplicar
     public void RecuperarMercado(){
-        ListaGibiMercado.clear();
+        listaGibiComercio.clear();
 
 
         GibiMercado.addValueEventListener(new ValueEventListener() {
@@ -339,9 +344,9 @@ public class MainActivity extends AppCompatActivity implements Main,
                 for (DataSnapshot estado : dataSnapshot.getChildren()) {
                     for (DataSnapshot categoria : estado.getChildren()) {
                         for (DataSnapshot mercados : categoria.getChildren()) {
-                            Mercado mercado = mercados.getValue(Mercado.class);
+                            Comercio comercio = mercados.getValue(Comercio.class);
 
-                            ListaGibiMercado.add(mercado);
+                            listaGibiComercio.add(comercio);
                             adapterMercado.notifyDataSetChanged();
                             swipe.setRefreshing(false);
 
@@ -372,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements Main,
         GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
 
         //Configurar Adapter
-        adapterMercado=new AdapterMercado(ListaGibiMercado,MainActivity.this);
+        adapterMercado=new AdapterMercado(listaGibiComercio,MainActivity.this);
         adapterEvento = new EventoAdapterPagInicial(ListaEvento,MainActivity.this);
 
         //Configurar recycleView Evento
@@ -397,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements Main,
                 recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Mercado mercadoselecionado = ListaGibiMercado.get(position);
+                Comercio mercadoselecionado = listaGibiComercio.get(position);
                 Intent it = new Intent(MainActivity.this,Detalhe_Mercado.class);
                 it.putExtra("mercadoelecionado",mercadoselecionado);
                 startActivity(it);

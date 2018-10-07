@@ -48,11 +48,11 @@ public class EventoAdapterPagInicial extends RecyclerView.Adapter<EventoAdapterP
     public void onBindViewHolder(MyviewHolder holder, int position) {
 
         final Evento ev = eventos.get(position);
-        holder.eventonome.setText(ev.titulo);
+        holder.eventonome.setText(ev.getTitulo());
 
-        if(ev.capaevento!=null){
+        if(ev.getCapaevento()!=null){
 
-            Uri uri = Uri.parse(ev.capaevento);
+            Uri uri = Uri.parse(ev.getCapaevento());
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                     .setProgressiveRenderingEnabled(true)
                     .build();

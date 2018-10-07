@@ -34,7 +34,7 @@ import com.example.fulanoeciclano.nerdzone.Adapter.MercadoAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -67,8 +67,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     private MercadoAdapter adapter;
     private DatabaseReference mercadopublico;
     private ChildEventListener valueMercadoListener;
-    private Mercado mercado;
-    private ArrayList<Mercado> listamercado = new ArrayList<>();
+    private Comercio comercio;
+    private ArrayList<Comercio> listamercado = new ArrayList<>();
     private ImageView botaoPesquisar;
     private SharedPreferences preferences = null;
     private Dialog dialog;
@@ -90,7 +90,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         setContentView(R.layout.activity_mercado);
 
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle(R.string.mercado);
+        toolbar.setTitle(R.string.comercio);
         setSupportActionBar(toolbar);
 
 
@@ -107,7 +107,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
-        mercado = new Mercado();
+        comercio = new Comercio();
         refresh = findViewById(R.id.refreshmercado);
         refresh.setOnRefreshListener(this);
         refresh.post(new Runnable() {
@@ -148,10 +148,10 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
                 recyclerViewMercadoPublico, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                List<Mercado> listMercadoAtualizado = adapter.getmercados();
+                List<Comercio> listComercioAtualizado = adapter.getmercados();
 
-                if (listMercadoAtualizado.size() > 0) {
-                    Mercado mercadoselecionado = listMercadoAtualizado.get(position);
+                if (listComercioAtualizado.size() > 0) {
+                    Comercio mercadoselecionado = listComercioAtualizado.get(position);
                     Intent it = new Intent(MercadoActivity.this, Detalhe_Mercado.class);
                     it.putExtra("mercadoelecionado", mercadoselecionado);
                     startActivity(it);
@@ -202,6 +202,13 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        listamercado.clear();
+        RecuperarMercadoPublicos();
+    }
+
+    @Override
     public void onRefresh() {
         refresh.setRefreshing(true);
         RecuperarMercadoPublicos();
@@ -222,8 +229,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
           public void onChildAdded(DataSnapshot dataSnapshot, String s) {
               for(DataSnapshot categorias:dataSnapshot.getChildren()){
                   for(DataSnapshot mercados:categorias.getChildren()){
-                              Mercado mercado = mercados.getValue(Mercado.class);
-                              listamercado.add(0,mercado);
+                              Comercio comercio = mercados.getValue(Comercio.class);
+                              listamercado.add(0, comercio);
                               if(listamercado.size()>0){
                                   linear_nada_cadastrado.setVisibility(View.GONE);
                               }
@@ -258,15 +265,15 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
     public void PesquisarComercio(String texto) {
         String nomeuser =usuario.getDisplayName();
         String evento_null = getString(R.string.erro_evento_busca_comercio,nomeuser,texto);
-    List<Mercado> listaMercadoBusca = new ArrayList<>();
-        for (Mercado mercados : listamercado) {
+    List<Comercio> listaComercioBusca = new ArrayList<>();
+        for (Comercio mercados : listamercado) {
         String nome=mercados.getTitulo().toLowerCase();
         String descricao = mercados.getDescricao().toLowerCase();
        // String author = mercados.getAutor().toLowerCase();
         if(nome.contains(texto)|| descricao.contains(texto)){
-            listaMercadoBusca.add(mercados);
+            listaComercioBusca.add(mercados);
 
-        }else if(listaMercadoBusca.size()==0){
+        }else if(listaComercioBusca.size()==0){
             linearerro.setVisibility(View.VISIBLE);
             errobusca.setVisibility(View.VISIBLE);
             errobusca.setText(evento_null);
@@ -274,7 +281,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
             linear.setBackgroundColor (getResources().getColor(R.color.background));
         }
     }
-    adapter = new MercadoAdapter(listaMercadoBusca, MercadoActivity.this);
+    adapter = new MercadoAdapter(listaComercioBusca, MercadoActivity.this);
         recyclerViewMercadoPublico.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 }
@@ -393,8 +400,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
                     listamercado.clear();
                     for (DataSnapshot mercados : dataSnapshot.getChildren()) {
 
-                        Mercado mercado = mercados.getValue(Mercado.class);
-                        listamercado.add(mercado);
+                        Comercio comercio = mercados.getValue(Comercio.class);
+                        listamercado.add(comercio);
 
 
                     }

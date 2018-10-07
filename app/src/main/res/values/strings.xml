@@ -37,7 +37,7 @@
     <string name="nome_do_evento">Nome do Evento</string>
     <string name="camera_tela_op_evento">Câmera</string>
     <string name="galeria_op_evento">Galeria</string>
-    <string name="mercado">Comércio</string>
+    <string name="comercio">Comércio</string>
     <string name="title_activity_detalhe_evento">DetalheEvento</string>
     <string name="analizando_informa_es_aguarde">Analisando informações,aguarde.</string>
     <string name="carregando_informa_es">Carregando...</string>
@@ -58,6 +58,9 @@
     <string name="editar_comercio">Editar comércio</string>
     <string name="erro_evento_busca_evento"> %1$s, Nemhum evento foi encontrado com a   palavra %2$s.</string>
     <string name="erro_evento_busca_comercio"> %1$s, Nemhum comércio foi encontrado com a palavra %2$s.</string>
+    <string name="text_opcional">(Opcional)</string>
+    <string name="botao_txt_seguir">Seguir</string>
+    <string name="botao_txt_seguindo">Seguindo</string>
 
     <string-array name="estados">
         <item>Estado</item>

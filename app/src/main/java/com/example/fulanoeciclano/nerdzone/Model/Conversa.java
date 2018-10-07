@@ -26,13 +26,36 @@ public class Conversa {
     }
     public void salvar(){
         DatabaseReference databaseReference= ConfiguracaoFirebase.getFirebaseDatabase();
-        DatabaseReference conversaRef= databaseReference.child("Conversas");
+        DatabaseReference conversaRef= databaseReference.child("conversas");
         conversaRef.child(this.getIdRemetente())
                 .child(this.getIdDestinatario())
                 .setValue(this);
 
     }
 
+
+    public void removerConversa(){
+
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("conversas")
+                .child(getIdRemetente())
+                .child(getIdDestinatario());
+
+        anuncioref.removeValue();
+
+        removerMensagens();
+
+    }
+
+    public void removerMensagens(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("mensagens")
+                .child(getIdRemetente())
+                .child(getIdDestinatario());
+
+        anuncioref.removeValue();
+
+    }
     public String getIdRemetente() {
         return idRemetente;
     }

@@ -261,6 +261,8 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
 
 
         eventos.setTitulo(tituloDoEvento);
+        eventos.setCurtirCount(0);
+        eventos.setQuantVisualizacao(0);
         eventos.setIdUsuario(id);
         eventos.setSubtitulo(subtituloDoEvento);
         eventos.setMensagem(mensagemDoEvento);

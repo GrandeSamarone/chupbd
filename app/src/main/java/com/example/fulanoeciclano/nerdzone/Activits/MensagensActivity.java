@@ -1,5 +1,6 @@
 package com.example.fulanoeciclano.nerdzone.Activits;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,6 +53,10 @@ public class MensagensActivity extends AppCompatActivity {
         recyclerViewConversas= findViewById(R.id.recyclerviewConversas);
         adapter = new ConversasAdapter(listaConversas,MensagensActivity.this);
 
+        String identificadoUsuario= UsuarioFirebase.getIdentificadorUsuario();
+        database = ConfiguracaoFirebase.getFirebaseDatabase();
+        conversasRef= database.child("conversas")
+                .child(identificadoUsuario);
         //Configurar RecycleView
         RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(MensagensActivity.this);
         recyclerViewConversas.setLayoutManager(layoutManager);
@@ -66,14 +71,22 @@ public class MensagensActivity extends AppCompatActivity {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        /*Intent it = new Intent(MensagensActivity.this, Perfil.class);
-                        it.putExtra("id",user.getId());
-                        startActivity(it);*/
+                        List<Conversa> listConversaAtualizada = adapter.getConversas();
+
+                        if (listConversaAtualizada.size() > 0) {
+                            Conversa conversaselecionada = listConversaAtualizada.get(position);
+                            Intent it = new Intent(MensagensActivity.this, ChatActivity.class);
+                            it.putExtra("id", conversaselecionada.getIdDestinatario());
+                            startActivity(it);
+
+                        }
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-
+                        List<Conversa> listConversaAtualizada = adapter.getConversas();
+                        Conversa conversaRemover = listConversaAtualizada.get(position);
+                        conversaRemover.removerConversa();
                     }
 
                     @Override
@@ -82,10 +95,7 @@ public class MensagensActivity extends AppCompatActivity {
                     }
                 }
         ));
-        String identificadoUsuario= UsuarioFirebase.getIdentificadorUsuario();
-        database = ConfiguracaoFirebase.getFirebaseDatabase();
-        conversasRef= database.child("Conversas")
-                .child(identificadoUsuario);
+
 
         TrocarFundos_status_bar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

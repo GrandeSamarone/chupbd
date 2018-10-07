@@ -30,7 +30,7 @@ import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,7 +70,7 @@ private Button botaosalvar;
 private DatabaseReference database,databaseconta;
 private String identificadorUsuario,estadostring,lojastring,autorstring;
 private FirebaseAuth autenticacao;
-private Mercado comercios,comercio;
+private Comercio comercios,comercio;
 private Usuario usuarioLogado;
 private FirebaseUser UsuarioAtual;
 private Toolbar toolbar;
@@ -163,7 +163,7 @@ private String id_do_usuario;
                 .equalTo(ids).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        comercios = dataSnapshot.getValue(Mercado.class );
+                        comercios = dataSnapshot.getValue(Comercio.class );
                         assert comercios != null;
 
                            campotitulo.setText(comercios.getTitulo());
@@ -347,7 +347,7 @@ private String id_do_usuario;
                     builder.setView(view);
                     dialog = builder.create();
                     dialog.show();
-                    Mercado c = new Mercado();
+                    Comercio c = new Comercio();
             c.setEstado(comercios.getEstado());
             c.setAutor(comercios.getAutor());
             c.setIdAutor(comercios.getIdAutor());

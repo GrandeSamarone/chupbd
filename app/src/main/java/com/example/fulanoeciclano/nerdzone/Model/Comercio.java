@@ -12,12 +12,13 @@ import java.util.List;
  * Created by fulanoeciclano on 14/08/2018.
  */
 
-public class Mercado implements Serializable {
+public class Comercio implements Serializable {
 
     private String idMercado;
     private String idAutor;
     private int numRatings;
     private double totalrating;
+    private int quantVisualizacao=0;
     private String autor;
     private String categoria;
     private String estado;
@@ -31,7 +32,7 @@ public class Mercado implements Serializable {
     private String icone;
     @JsonIgnore
     private String key;
-    public Mercado() {
+    public Comercio() {
         DatabaseReference mercadoref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("comercio");
         setIdMercado(mercadoref.push().getKey());
@@ -160,8 +161,8 @@ public class Mercado implements Serializable {
         this.key = key;
     }
 
-    public void setValues(Mercado mercado) {
-        titulo=mercado.titulo;
+    public void setValues(Comercio comercio) {
+        titulo= comercio.titulo;
     }
 
     public int getNumRatings() {
@@ -186,5 +187,13 @@ public class Mercado implements Serializable {
 
     public void setIdAutor(String idAutor) {
         this.idAutor = idAutor;
+    }
+
+    public int getQuantVisualizacao() {
+        return quantVisualizacao;
+    }
+
+    public void setQuantVisualizacao(int quantVisualizacao) {
+        this.quantVisualizacao = quantVisualizacao;
     }
 }

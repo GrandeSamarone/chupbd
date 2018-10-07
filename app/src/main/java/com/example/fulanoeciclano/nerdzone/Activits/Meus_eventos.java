@@ -23,8 +23,8 @@ import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Meus_Comercio;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Meus_Eventos;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,7 +53,7 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
     private AlertDialog alerta;
     private Toolbar toolbar;
     private List<Evento> lista_Meus_Eventos=new ArrayList<>();
-    private List<Mercado> lista_meus_comercio = new ArrayList<>();
+    private List<Comercio> lista_meus_comercio = new ArrayList<>();
     private Adapter_Meus_Eventos mAdapter;
     private Adapter_Meus_Comercio adapterComercio;
     private ChildEventListener childEventListenerMeus_Eventos,childEventListenerMeus_Comercio;
@@ -176,8 +176,8 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
         childEventListenerMeus_Comercio = meus_comercioref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Mercado mercado =dataSnapshot.getValue(Mercado.class);
-                lista_meus_comercio.add(mercado);
+                Comercio comercio =dataSnapshot.getValue(Comercio.class);
+                lista_meus_comercio.add(comercio);
                 if(lista_meus_comercio.size()>0){
                     nomecomercio.setVisibility(View.VISIBLE);
                     linearLayout.setVisibility(View.GONE);

@@ -120,7 +120,7 @@
                     android:id="@+id/botaoseguirperfil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SEGUIR"
+                    android:text="@string/botao_txt_seguir"
                     android:textColor="@color/branco"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:clickable="true"

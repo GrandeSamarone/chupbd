@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,15 +24,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHolder> {
 
-    private List<Mercado> mercados;
+    private List<Comercio> comercios;
     private Context context;
     private FirebaseDatabase databases=FirebaseDatabase.getInstance();
-    public MercadoAdapter(List<Mercado> mercado, Context context){
-        this.mercados=mercado;
+    public MercadoAdapter(List<Comercio> comercio, Context context){
+        this.comercios = comercio;
         this.context=context;
     }
-    public List<Mercado> getmercados(){
-        return this.mercados;
+    public List<Comercio> getmercados(){
+        return this.comercios;
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,23 +44,23 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        Mercado mercado = mercados.get(position);
+        Comercio comercio = comercios.get(position);
 
-            if (mercado.getTitulo() != null) {
-                holder.titulo.setText(mercado.getTitulo());
+            if (comercio.getTitulo() != null) {
+                holder.titulo.setText(comercio.getTitulo());
             }
-            if (mercado.getDescricao() != null) {
-                holder.legenda.setText(mercado.getFraserapida());
-            }
-
-            if (mercado.getCategoria() != null) {
-                holder.categoria.setText(mercado.getCategoria());
-            }
-            if (mercado.getEstado() != null) {
-                holder.estado.setText(mercado.getEstado());
+            if (comercio.getDescricao() != null) {
+                holder.legenda.setText(comercio.getFraserapida());
             }
 
-            List<String> urlFotos = mercado.getFotos();
+            if (comercio.getCategoria() != null) {
+                holder.categoria.setText(comercio.getCategoria());
+            }
+            if (comercio.getEstado() != null) {
+                holder.estado.setText(comercio.getEstado());
+            }
+
+            List<String> urlFotos = comercio.getFotos();
             if (urlFotos != null) {
                 String stringcapa = urlFotos.get(0);
                 if (stringcapa != null) {
@@ -76,7 +76,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
 /*
         final DatabaseReference ref = databases.getReference("ratingbar").child("comercio")
                 .child("")
-                .child(mercado.getIdMercado());
+                .child(comercio.getIdMercado());
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -92,9 +92,9 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
             public void onCancelled(DatabaseError databaseError) { }
         });
 
-        holder.rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        holder.rating.setOnRatingBarChangeListener(new RatingBar_Comercio.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+            public void onRatingChanged(RatingBar_Comercio ratingBar, float rating, boolean fromUser) {
                 if (fromUser) ref.setValue(rating);
             }
         });
@@ -106,7 +106,7 @@ public class MercadoAdapter extends RecyclerView.Adapter<MercadoAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return mercados.size();
+        return comercios.size();
     }
 
 

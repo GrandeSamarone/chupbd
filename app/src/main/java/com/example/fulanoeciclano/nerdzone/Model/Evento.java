@@ -8,28 +8,27 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // [START post_class]
 @IgnoreExtraProperties
 public class Evento implements Serializable {
 
-    public String uid;
-    public String author;
-    public String titulo;
-    public String subtitulo;
-    public String imgperfilusuario;
-    public String idUsuario;
-    public String capaevento;
+    private String uid;
+    private String author;
+    private String titulo;
+    private String subtitulo;
+    private String imgperfilusuario;
+    private String idUsuario;
+    private String capaevento;
     private List<String> fotoseventos;
-    public String mensagem;
-    public String datainicio;
-    public String datafim;
-    public String estado;
-    public int curtirCount = 0;
-    public Map<String, Boolean> curtida = new HashMap<>();
+    private String mensagem;
+    private String datainicio;
+    private String datafim;
+    private String estado;
+    private int curtirCount = 0;
+    private int quantVisualizacao=0;
+
 
 
 
@@ -38,9 +37,7 @@ public class Evento implements Serializable {
                 .child("evento");
         setUid(eventoref.push().getKey());
     }
-    public void atualizar(){
 
-    }
 
     public void salvar(){
         String idUsuario = ConfiguracaoFirebase.getIdUsuario();
@@ -234,12 +231,12 @@ public class Evento implements Serializable {
         this.curtirCount = curtirCount;
     }
 
-    public Map<String, Boolean> getCurtida() {
-        return curtida;
+    public int getQuantVisualizacao() {
+        return quantVisualizacao;
     }
 
-    public void setCurtida(Map<String, Boolean> curtida) {
-        this.curtida = curtida;
+    public void setQuantVisualizacao(int quantVisualizacao) {
+        this.quantVisualizacao = quantVisualizacao;
     }
 }
 

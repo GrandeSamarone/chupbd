@@ -59,12 +59,13 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         final Evento evento = listaevento.get(position);
+        holder.numcurtidasEvento.setText(String.valueOf(evento.getCurtirCount()));
         holder.titulo.setText(evento.getTitulo());
-        holder.numcurtidasEvento.setText(String.valueOf(evento.curtirCount));
+        holder.numcurtidasEvento.setText(String.valueOf(evento.getCurtirCount()));
         holder.subpostagem.setText(evento.getSubtitulo());
 
-        if(evento.capaevento!=null) {
-            Uri uri = Uri.parse(evento.capaevento);
+        if(evento.getCapaevento()!=null) {
+            Uri uri = Uri.parse(evento.getCapaevento());
             Log.i("url", String.valueOf(uri));
             DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
@@ -106,7 +107,6 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
 
               //Montar objeto postagem curtida
                EventoLike like = new EventoLike();
-               String totallike = String.valueOf(like.getQtdlikes());
               like.setEvento(evento);
               like.setUsuario(usuariologado);
               like.setQtdlikes(QtdLikes);
@@ -130,7 +130,7 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
                   public void onEventAnimationStart(ImageView button, boolean buttonState) {
                   }
               });
-               holder.numcurtidasEvento.setText(String.valueOf(like.getQtdlikes()));
+
            }
            @Override
            public void onCancelled(DatabaseError databaseError) {

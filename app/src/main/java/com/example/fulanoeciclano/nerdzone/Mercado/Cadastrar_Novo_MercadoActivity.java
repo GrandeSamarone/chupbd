@@ -27,12 +27,13 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.blackcat.currencyedittext.CurrencyEditText;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Mercado;
+import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -64,7 +66,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private static final String padrao = "Obrigatório";
 
 
-    private AppCompatEditText campotitulo, campodesc, campovalor, campoendereco,campofraserapida;
+    private AppCompatEditText campotitulo, campodesc, campoendereco,campofraserapida;
+    private CurrencyEditText campovalor;
     private CircleImageView imagem1,imagem2,imagem3,imagem4,imagem5,imagem6;
     private StorageReference storageReference;
     private Spinner campoLocal, campoloja;
@@ -72,7 +75,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private DatabaseReference database,databaseconta;
     private String identificadorUsuario,estadostring,lojastring,autorstring;
     private FirebaseAuth autenticacao;
-    private Mercado mercado;
+    private Comercio comercio;
     private Usuario usuarioLogado;
     private FirebaseUser UsuarioAtual;
     private Toolbar toolbar;
@@ -106,6 +109,9 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         campotitulo = findViewById(R.id.nome_mercado);
         campodesc = findViewById(R.id.desc_mercado);
         campovalor = findViewById(R.id.desc_valor);
+        //configurar  localidade para pt
+        Locale locale = new Locale("pt","BR");
+        campovalor.setLocale(locale);
         campoendereco = findViewById(R.id.desc_endereco);
         campofraserapida= findViewById(R.id.fraserapida_mercado);
         campoloja = findViewById(R.id.spinnerloja);
@@ -123,9 +129,9 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         imagem6 = findViewById(R.id.imageLojaCadastro6);
         imagem6.setOnClickListener(this);
 
-        mercado = new Mercado();
+        comercio = new Comercio();
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
-        database = ConfiguracaoFirebase.getDatabase().getReference().child("mercado");
+        database = ConfiguracaoFirebase.getDatabase().getReference().child("comercio");
         databaseconta = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
@@ -182,8 +188,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         //criar nó no storage
         StorageReference imagemMercado = storageReference
                 .child("imagens")
-                .child("mercado")
-                .child(mercado.getIdMercado())
+                .child("comercio")
+                .child(comercio.getIdMercado())
                 .child("imagem"+contador);
 
         //fazer upload arquivo
@@ -197,8 +203,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
                 listaURLFotos.add(urlConvertida);
 
                 if(totalfotos==listaURLFotos.size()){
-                    mercado.setFotos(listaURLFotos);
-                    mercado.salvar();
+                    comercio.setFotos(listaURLFotos);
+                    comercio.salvar();
                     dialog.dismiss();
                     finish();
                 }
@@ -253,7 +259,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
             }
         });
     }
-    private Mercado configurarMercado(){
+    private Comercio configurarMercado(){
         String estado = campoLocal.getSelectedItem().toString();
         String loja = campoloja.getSelectedItem().toString();
         String titulo = campotitulo.getText().toString();
@@ -267,45 +273,45 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         String data = simpleDateFormat.format(calendartempo.getTime());
 
 
-        mercado.setEstado(estado);
-        mercado.setAutor(autor);
-        mercado.setIdAutor(id_do_usuario);
-        mercado.setCategoria(loja);
-        mercado.setTitulo(titulo);
-        mercado.setValor(valor);
-        mercado.setDescricao(descricao);
-        mercado.setFraserapida(fraserapida);
-        mercado.setEndereco(endereco);
-        mercado.setData(data);
+        comercio.setEstado(estado);
+        comercio.setAutor(autor);
+        comercio.setIdAutor(id_do_usuario);
+        comercio.setCategoria(loja);
+        comercio.setTitulo(titulo);
+        comercio.setValor(valor);
+        comercio.setDescricao(descricao);
+        comercio.setFraserapida(fraserapida);
+        comercio.setEndereco(endereco);
+        comercio.setData(data);
 
-        return  mercado;
+        return comercio;
     }
 
     public void validarDados() {
-        mercado = configurarMercado();
+        comercio = configurarMercado();
         if (listaFotosRecuperadas.size() != 0) {
             if ( (!lojastring.equals("Categoria"))) {
 
            if ( (!estadostring.equals("Estado"))) {
                // verificando se  está vazio
-               if (TextUtils.isEmpty(mercado.getTitulo())) {
+               if (TextUtils.isEmpty(comercio.getTitulo())) {
                    campotitulo.setError(padrao);
                    return;
                }
-               if (TextUtils.isEmpty(mercado.getFraserapida())) {
+               if (TextUtils.isEmpty(comercio.getFraserapida())) {
                    campofraserapida.setError(padrao);
                    return;
                }
-               if (TextUtils.isEmpty(mercado.getDescricao())) {
+               if (TextUtils.isEmpty(comercio.getDescricao())) {
                    campodesc.setError(padrao);
                    return;
                }
 
-               if (TextUtils.isEmpty(mercado.getEndereco())) {
+               if (TextUtils.isEmpty(comercio.getEndereco())) {
                    campoendereco.setError(padrao);
                    return;
                }
-               if (TextUtils.isEmpty(mercado.getValor())) {
+               if (TextUtils.isEmpty(comercio.getValor())) {
                    campovalor.setError(padrao);
                    return;
                }
@@ -326,7 +332,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
 
 
-    //click na imagem para cadastra mercado
+    //click na imagem para cadastra comercio
     @Override
     public void onClick(View v) {
 

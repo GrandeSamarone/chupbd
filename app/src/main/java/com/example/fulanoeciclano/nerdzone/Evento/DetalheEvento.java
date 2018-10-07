@@ -21,6 +21,7 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Comentario;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
+import com.example.fulanoeciclano.nerdzone.Model.Evento_Visualizacao;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -32,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
@@ -62,7 +64,7 @@ public class DetalheEvento extends AppCompatActivity {
     private SimpleDraweeView eventobanner;
     private CircleImageView AuthorFoto_evento_View;
     private TextView titutoevento,datainicial,datafinal;
-    private TextView mensagem_evento;
+    private TextView mensagem_evento,quant_visu_evento;
     private EmojiEditText edit_chat_emoji;
     private ImageView botao_icone;
     private  android.support.v7.widget.AppCompatButton botao_env_msg;
@@ -78,6 +80,8 @@ public class DetalheEvento extends AppCompatActivity {
     private View root_view;
     private EmojiPopup emojiPopup;
     private ChildEventListener ChildEventListeneruser;
+    private  int count=0;
+    private String ids;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +99,6 @@ public class DetalheEvento extends AppCompatActivity {
         EmojiManager.install(new GoogleEmojiProvider());
         mDatabase = FirebaseDatabase.getInstance().getReference();
         usuarioLogado =  UsuarioFirebase.getIdentificadorUsuario();
-        Log.i("sadsds",usuarioLogado);
-
 
         // Initialize Views
        // datafinal = findViewById(R.id.datafinal);
@@ -111,6 +113,7 @@ public class DetalheEvento extends AppCompatActivity {
             }
         });
         Author_evento_View = findViewById(R.id.author_evento);
+        quant_visu_evento = findViewById(R.id.quantvisualizacao_detalhe);
         mensagem_evento = findViewById(R.id.detalhe_evento_mensagem);
         AuthorFoto_evento_View=findViewById(R.id.icone_author);
         eventobanner = findViewById(R.id.bannereventocapa);
@@ -149,19 +152,22 @@ public class DetalheEvento extends AppCompatActivity {
         CarregarDados_do_Evento();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+
+
     private void CarregarDados_do_Evento(){
 
-        String ids=getIntent().getStringExtra("id_do_evento");
+         ids=getIntent().getStringExtra("id_do_evento");
         String estado= getIntent().getStringExtra("UR_do_evento");
         ChildEventListenerevento=database_evento    .child(estado).orderByChild("uid")
                 .equalTo(ids).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Evento evento = dataSnapshot.getValue(Evento.class );
-                assert evento != null;
+                eventoselecionado = dataSnapshot.getValue(Evento.class );
+                assert eventoselecionado != null;
 
 
-                Uri uri = Uri.parse(evento.getCapaevento());
+                Uri uri = Uri.parse(eventoselecionado.getCapaevento());
                 DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
                         .setUri(uri)
                         .setAutoPlayAnimations(true)
@@ -169,28 +175,26 @@ public class DetalheEvento extends AppCompatActivity {
 
                 eventobanner.setController(controllerOne);
 
-                mensagem_evento.setText(evento.getMensagem());
-                Author_evento_View.setText(evento.getAuthor());
-               titutoevento.setText(evento.getTitulo());
-                collapsingToolbarLayout.setTitle(evento.getTitulo());
-                CarregarDados_do_Criador_do_Evento(evento.getIdUsuario());
-            }
+                mensagem_evento.setText(eventoselecionado.getMensagem());
+                quant_visu_evento.setText(String.valueOf(eventoselecionado.getQuantVisualizacao()));
+                Author_evento_View.setText(eventoselecionado.getAuthor());
+               titutoevento.setText(eventoselecionado.getTitulo());
+                collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
+                CarregarDados_do_Criador_do_Evento(eventoselecionado.getIdUsuario());
 
+                ContaQuatAcesso(eventoselecionado);
+
+
+            }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -255,22 +259,15 @@ public class DetalheEvento extends AppCompatActivity {
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
                     }
-
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
                     }
-
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
     }
@@ -293,30 +290,55 @@ public class DetalheEvento extends AppCompatActivity {
 
                         Author_evento_View.setText(user.getNome());
                     }
-
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
                     }
-
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
                     }
-
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
     }
 
 
+    public void ContaQuatAcesso(Evento evento){
+
+         //Contando as Visualizacoes
+        DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("evento-visualizacao")
+                .child(evento.getUid());
+        eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int QtdVisu = 0;
+                if(dataSnapshot.hasChild("qtdvisualizacao")){
+                    Evento_Visualizacao eventoVisu = dataSnapshot.getValue(Evento_Visualizacao.class);
+                    QtdVisu =eventoVisu.getQtdvisualizacao();
+                }
+
+                //Montar objeto postagem curtida
+                Evento_Visualizacao visualizacao = new Evento_Visualizacao();
+                visualizacao.setEvento(evento);
+                visualizacao.setQtdvisualizacao(QtdVisu);
+
+                visualizacao.Salvar();
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+    }
 
     private void setUpEmojiPopup() {
         emojiPopup = EmojiPopup.Builder.fromRootView(root_view)
