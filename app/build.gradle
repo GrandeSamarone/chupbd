@@ -90,6 +90,9 @@ dependencies {
     //estrela  nota
     implementation 'me.zhanghai.android.materialratingbar:library:1.0.2'
 
+    // Editor de texto
+    implementation 'com.github.irshulx:laser-native-editor:2.3.1'
+
     //carregando
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     testImplementation 'junit:junit:4.12'

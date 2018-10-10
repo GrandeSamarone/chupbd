@@ -267,7 +267,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
     //botao Pesquisar
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main,menu);
+        inflater.inflate(R.menu.menu_sem_filtro,menu);
 
         //Botao Pesquisa
 

@@ -88,7 +88,9 @@
         <activity android:name=".Edit.Edit_evento_Activity" />
         <activity android:name=".Edit.Edit_Loja_Activity" />
         <activity android:name=".Topico.Novo_Topico" />
-        <activity android:name=".Topico.Detalhe_topico"></activity>
+        <activity android:name=".Topico.Detalhe_topico" />
+        <activity android:name=".Conto.ListaConto" />
+        <activity android:name=".Conto.Novo_Conto"></activity>
     </application>
 
 </manifest>

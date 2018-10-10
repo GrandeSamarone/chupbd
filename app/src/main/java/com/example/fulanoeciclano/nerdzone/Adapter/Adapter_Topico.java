@@ -1,22 +1,30 @@
 package com.example.fulanoeciclano.nerdzone.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
+import com.example.fulanoeciclano.nerdzone.Model.TopicoLike;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.example.fulanoeciclano.nerdzone.Topico.Detalhe_topico;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.varunest.sparkbutton.SparkButton;
+import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.List;
 
@@ -26,7 +34,7 @@ public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHo
 
    private List<Topico> listatopicos;
     private Context context;
-
+    Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
     public Adapter_Topico(List<Topico> topico, Context c){
         this.context=c;
         this.listatopicos = topico;
@@ -73,6 +81,73 @@ public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHo
 
             }
         });
+holder.click.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        List<Topico> listTopicoAtualizado = getTopicos();
+
+        if (listTopicoAtualizado.size() > 0) {
+            Topico topicoselecionado = listTopicoAtualizado.get(position);
+            Intent it = new Intent(context, Detalhe_topico.class);
+            it.putExtra("topicoselecionado", topicoselecionado);
+            context.startActivity(it);
+
+        }
+    }
+});
+
+        DatabaseReference topicoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("topico-likes")
+                .child(topico.getUid());
+        topicoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int QtdLikes = 0;
+                if(dataSnapshot.hasChild("qtdlikes")){
+                    TopicoLike topicoLike = dataSnapshot.getValue(TopicoLike.class);
+                    QtdLikes = topicoLike.getQtdlikes();
+                }
+                //Verifica se já foi clicado
+                if( dataSnapshot.hasChild( usuariologado.getId() ) ){
+                    holder.botaocurtir.setChecked(true);
+                }else {
+                    holder.botaocurtir.setChecked(false);
+                }
+
+                //Montar objeto postagem curtida
+                TopicoLike like = new TopicoLike();
+               like.setTopico(topico);
+                like.setUsuario(usuariologado);
+                like.setQtdlikes(QtdLikes);
+
+                //adicionar evento para curtir foto
+                holder.botaocurtir.setEventListener(new SparkEventListener() {
+                    @Override
+                    public void onEvent(ImageView button, boolean buttonState) {
+                        if(buttonState){
+                            like.Salvar();
+                            holder.num_curtida.setText(String.valueOf(like.getQtdlikes()));
+                        }else{
+                            like.removerlike();
+                            holder.num_curtida.setText(String.valueOf(like.getQtdlikes()));
+                        }
+                    }
+                    @Override
+                    public void onEventAnimationEnd(ImageView button, boolean buttonState) {
+                    }
+                    @Override
+                    public void onEventAnimationStart(ImageView button, boolean buttonState) {
+                    }
+                });
+                holder.num_curtida.setText(String.valueOf(like.getQtdlikes()));
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     @Override
@@ -84,8 +159,10 @@ public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView titulo,mensagem,autor,num_estrela;
+        private TextView titulo,mensagem,autor,num_curtida;
         private CircleImageView foto_autor;
+        private LinearLayout click;
+        private SparkButton botaocurtir;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -93,7 +170,9 @@ public class Adapter_Topico extends RecyclerView.Adapter<Adapter_Topico.MyViewHo
         mensagem = itemView.findViewById(R.id.topico_mensagem);
         autor  = itemView.findViewById(R.id.topico_autor);
         foto_autor = itemView.findViewById(R.id.topico_foto_autor);
-
+         click = itemView.findViewById(R.id.tituloline);
+         botaocurtir = itemView.findViewById(R.id.botaocurtirtopico);
+         num_curtida = itemView.findViewById(R.id.topico_num_curit);
 
         }
     }

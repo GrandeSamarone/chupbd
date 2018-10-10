@@ -9,6 +9,7 @@
     android:elevation="4dp"
     cardview:cardCornerRadius="4dp"
     android:clickable="true"
+    android:backgroundTint="@color/background"
     android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout

@@ -23,6 +23,8 @@
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:counterEnabled="true"
+        app:counterMaxLength="40"
         >
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/nome_topico"
@@ -30,6 +32,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/txt_titulo"
             android:padding="10dp"
+            android:maxLength="40"
             android:background="@drawable/bg_edit_text"
             android:textAlignment="center"
             android:inputType="textMultiLine"
@@ -68,13 +71,7 @@
         android:layout_height="100dp"
         android:background="@drawable/fundoloja"
         />
-    <TextView
 
-        android:text="(Opcional)"
-        android:textColor="@color/cinzadisabilitado"
-        android:textSize="18sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 </LinearLayout>
     <Button
         android:layout_marginTop="16dp"

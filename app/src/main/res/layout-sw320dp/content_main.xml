@@ -4,6 +4,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     tools:context="com.example.fulanoeciclano.nerdzone.Activits.MainActivity"
     >
     <FrameLayout
@@ -121,6 +122,58 @@
                     android:clipToPadding="false"
                     tools:listitem="@layout/adapterevento" />
             </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/preto"
+                    android:textSize="18sp"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="16dp"
+                    android:text="Tópicos"
+                    android:layout_weight="0"
+
+                    />
+                <TextView
+                    android:id="@+id/maistopicos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:text="MAIS"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp"
+                    />
+            </LinearLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginRight="-5dp"
+                android:elevation="6dp"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/fundotopico"/>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:clipToPadding="false"
+                    android:id="@+id/RecycleViewTopicos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/adapterevento"/>
+            </android.support.v7.widget.CardView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,6 +194,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
                     android:text="MAIS"
+                    android:id="@+id/maisconto"
                     android:gravity="right"
                     android:paddingRight="16dp"
                     android:paddingTop="8dp"
@@ -164,11 +218,12 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:clipToPadding="false"
-                    android:id="@+id/RecycleViewGibiDC"
+                    android:id="@+id/RecycleViewConto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     />
             </android.support.v7.widget.CardView>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -180,24 +235,27 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/preto"
                     android:textSize="18sp"
+                    android:paddingTop="8dp"
                     android:paddingLeft="16dp"
-                    android:text="HQ"
+                    android:text="FanArts"
+                    android:layout_weight="0"
 
                     />
                 <TextView
+                    android:id="@+id/maisfanart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
                     android:text="MAIS"
                     android:gravity="right"
+                    android:layout_weight="1"
                     android:paddingRight="16dp"
                     android:paddingTop="8dp"
                     />
             </LinearLayout>
-
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
+                android:layout_height="155dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="-5dp"
@@ -206,22 +264,17 @@
                 >
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:background="@drawable/fundohistorias"/>
-
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/fundofanarts"/>
                 <android.support.v7.widget.RecyclerView
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:clipToPadding="false"
-                    android:id="@+id/RecycleViewGibiOutros"
-
+                    android:id="@+id/RecycleViewFanArts"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/adapterevento"/>
             </android.support.v7.widget.CardView>
-
-
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     </FrameLayout>

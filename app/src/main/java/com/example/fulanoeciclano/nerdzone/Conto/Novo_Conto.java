@@ -1,23 +1,25 @@
-package com.example.fulanoeciclano.nerdzone.Topico;
+package com.example.fulanoeciclano.nerdzone.Conto;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Topico;
+import com.example.fulanoeciclano.nerdzone.Model.Conto;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,66 +27,79 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Detalhe_topico extends AppCompatActivity {
-
+public class Novo_Conto extends AppCompatActivity {
+    private static final String padrao = "Obrigatório";
     private Toolbar toolbar;
-    private CircleImageView icone;
-    private TextView nome_autor,titulo,mensagem,titulotoolbar;
-    private DatabaseReference database,database_topico;
+    private CircleImageView icone,img_topico;
+    private Button botaosalvar;
+    private DatabaseReference databaseusuario,databasetopico;
     private FirebaseUser usuario;
-    private Topico topicoselecionado;
-    private ChildEventListener ChildEventListenerdetalhe;
+    private ChildEventListener ChildEventListenerperfil;
+    private EditText titulo_conto,mensagem_conto;
+    private Conto conto = new Conto();
+    private Usuario perfil;
+    private Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalhetopico);
-        toolbar = findViewById(R.id.toolbartopico);
-        toolbar.setTitle("Detalhe do Tópico");
+        setContentView(R.layout.activity_criar_conto);
+        toolbar = findViewById(R.id.toolbarsecundario);
+        toolbar.setTitle("Novo Conto");
         setSupportActionBar(toolbar);
 
-        //Configuracoes Iniciais
 
-        icone = findViewById(R.id.icon_topico_detalhe_author);
-        nome_autor = findViewById(R.id.nome_topico__detalhe_autor);
-        titulo = findViewById(R.id.detalhe_topico_titulo);
-        mensagem = findViewById(R.id.detalhe_topico_mensagem);
+        //Configuraçoes Originais
+        databaseusuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
+        databasetopico = ConfiguracaoFirebase.getDatabase().getReference().child("conto");
+        titulo_conto = findViewById(R.id.titulo_conto);
+        mensagem_conto = findViewById(R.id.desc_conto);
+        botaosalvar = findViewById(R.id.botaosalvarconto);
+        botaosalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validarDadosConto();
+            }
+        });
 
-        database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
-        topicoselecionado = (Topico)  getIntent().getSerializableExtra("topicoselecionado");
-        if(topicoselecionado!=null){
 
-            titulo.setText(topicoselecionado.getTitulo());
-            mensagem.setText(topicoselecionado.getMensagem());
-            RecuperarIcone_e_nome_author(topicoselecionado.getIdauthor());
-        }
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void RecuperarIcone_e_nome_author(String id ) {
-        database.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Usuario  user = dataSnapshot.getValue(Usuario.class);
-               nome_autor.setText(user.getNome());
 
-                Glide.with(Detalhe_topico.this)
-                        .load(user.getFoto())
-                        .into(icone);
+    private Conto configurarConto(){
+        String titulo = titulo_conto.getText().toString();
+        String mensagem = mensagem_conto.getText().toString();
+        final Calendar calendartempo = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y");// MM'/'dd'/'y;
+        String data = simpleDateFormat.format(calendartempo.getTime());
 
-            }
+        conto.setIdauthor(perfil.getId());
+        conto.setTitulo(titulo);
+        conto.setMensagem(mensagem);
+        conto.setData(data);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        return  conto;
 
-            }
-        });
     }
+    public void validarDadosConto() {
+        conto = configurarConto();
 
+
+        if (TextUtils.isEmpty(conto.getMensagem())) {
+            mensagem_conto.setError(padrao);
+            return;
+        }
+        conto.SalvarConto();
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -92,27 +107,14 @@ public class Detalhe_topico extends AppCompatActivity {
         TrocarFundos_status_bar();
     }
 
-
-    public boolean  onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
-
-                    finish();
-
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     private void CarregarDados_do_Usuario(){
         usuario = UsuarioFirebase.getUsuarioAtual();
         String email = usuario.getEmail();
-        ChildEventListenerdetalhe=database.orderByChild("tipoconta")
+        ChildEventListenerperfil=databaseusuario.orderByChild("tipoconta")
                 .equalTo(email).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                        perfil = dataSnapshot.getValue(Usuario.class );
                         assert perfil != null;
                         String icone = perfil.getFoto();
                         IconeUsuario(icone);
@@ -137,16 +139,15 @@ public class Detalhe_topico extends AppCompatActivity {
         icone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(Detalhe_topico.this, MinhaConta.class);
+                Intent it = new Intent(Novo_Conto.this, MinhaConta.class);
                 startActivity(it);
 
             }
         });
-        Glide.with(Detalhe_topico.this)
+        Glide.with(Novo_Conto.this)
                 .load(url)
                 .into(icone);
     }
-
 
     private void TrocarFundos_status_bar(){
         //mudando a cor do statusbar
@@ -187,4 +188,5 @@ public class Detalhe_topico extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
+
 }

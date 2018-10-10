@@ -20,7 +20,7 @@ public class Topico  implements Serializable {
     public String foto;
     public String mensagem;
     public String data;
-    public int starCount = 0;
+    public int likecount = 0;
     public  int quantcomentario=0;
     public Map<String, Boolean> stars = new HashMap<>();
 
@@ -36,10 +36,10 @@ public class Topico  implements Serializable {
       anuncioref.child(idUsuario)
               .child(getUid()).setValue(this);
 
-      salvarEventoPublico();
+      salvarTopicoPublico();
   }
 
-    public void salvarEventoPublico(){
+    public void salvarTopicoPublico(){
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("topico");
         anuncioref.child(getUid()).setValue(this);
@@ -85,12 +85,13 @@ public class Topico  implements Serializable {
         this.mensagem = mensagem;
     }
 
-    public int getStarCount() {
-        return starCount;
+
+    public int getLikecount() {
+        return likecount;
     }
 
-    public void setStarCount(int starCount) {
-        this.starCount = starCount;
+    public void setLikecount(int likecount) {
+        this.likecount = likecount;
     }
 
     public int getQuantcomentario() {

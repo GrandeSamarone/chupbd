@@ -26,7 +26,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.EventoAdapterPagInicial;
+import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.TopicoAdapterPagInicial;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
@@ -36,9 +38,10 @@ import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
 import com.example.fulanoeciclano.nerdzone.Mercado.MercadoActivity;
 import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
-import com.example.fulanoeciclano.nerdzone.Model.Gibi;
+import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.example.fulanoeciclano.nerdzone.Topico.Detalhe_topico;
 import com.example.fulanoeciclano.nerdzone.Topico.ListaTopicos;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -62,25 +65,26 @@ public class MainActivity extends AppCompatActivity implements Main,
 
 
     private RecyclerView recyclerViewListaGibiMercado;
-    private RecyclerView recyclerViewListaGibiDC;
+    private RecyclerView recyclerViewListaTopico;
+    private RecyclerView recyclerViewListaConto;
     private RecyclerView recyclerViewListaGibiOutros;
     private RecyclerView recyclerVieweventos;
     private AdapterMercado adapterMercado;
     private EventoAdapterPagInicial adapterEvento;
+    private TopicoAdapterPagInicial adapterTopico;
     private List<Comercio> listaGibiComercio = new ArrayList<>();
-    private ArrayList<Gibi> ListaGibiDC = new ArrayList<>();
-    private ArrayList<Gibi> ListaGibiOutros = new ArrayList<>();
+    private ArrayList<Topico> ListaTopico = new ArrayList<>();
     private ArrayList<Evento> ListaEvento = new ArrayList<>();
     private ArrayList<String> mKeys = new ArrayList<>();
     private DatabaseReference GibiMercado;
-    private DatabaseReference GibiDC;
-    private DatabaseReference GibiOutros;
+    private DatabaseReference Database_Topico;
+    private DatabaseReference Database_Conto;
     private DatabaseReference GibiEventos;
     private ChildEventListener valueEventListenerMercado;
     private ChildEventListener valueEventListenerEvento;
-    private ChildEventListener valueEventListenerDC;
+    private ChildEventListener valueEventListenerTopico;
     private ChildEventListener valueEventListenerOutros,ChildEventListenerperfil;
-    private TextView maiseventoTxt,maiscomercioTxt;
+    private TextView maiseventoTxt,maiscomercioTxt,maistopicoTxt;
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
@@ -183,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     protected void onStart() {
         super.onStart();
         ;
-
+        RecuperarTopico();
         //carregar informacao no Drawer
         CarregarInformacoesNoDrawer();
         botoes_Mais();
@@ -277,19 +281,13 @@ public class MainActivity extends AppCompatActivity implements Main,
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -360,24 +358,54 @@ public class MainActivity extends AppCompatActivity implements Main,
             }
         });
     }
-    public void remove(Gibi gibi){
-        //  GibiMarvel.child(gibi.getKey()).removeValue();
+
+    //recupera e nao deixa duplicar
+    public void RecuperarTopico(){
+        ListaTopico.clear();
+
+        valueEventListenerTopico =Database_Topico.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Topico topicos = dataSnapshot.getValue(Topico.class);
+                    ListaTopico.add(0, topicos);
+
+                    adapterTopico.notifyDataSetChanged();
+                    swipe.setRefreshing(false);
+                }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
     }
 
     private void Recycleview(){
         //Recycle
-        recyclerViewListaGibiDC = findViewById(R.id.RecycleViewGibiDC);
+        recyclerViewListaConto = findViewById(R.id.RecycleViewConto);
         recyclerViewListaGibiOutros = findViewById(R.id.RecycleViewGibiOutros);
         recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
         recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
+        recyclerViewListaTopico = findViewById(R.id.RecycleViewTopicos);
 
         GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
-
+        Database_Conto = ConfiguracaoFirebase.getFirebaseDatabase().child("conto");
+        Database_Topico = ConfiguracaoFirebase.getDatabase().getReference().child("topico");
         GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
 
         //Configurar Adapter
         adapterMercado=new AdapterMercado(listaGibiComercio,MainActivity.this);
         adapterEvento = new EventoAdapterPagInicial(ListaEvento,MainActivity.this);
+        adapterTopico = new TopicoAdapterPagInicial(ListaTopico,MainActivity.this);
 
         //Configurar recycleView Evento
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
@@ -388,7 +416,7 @@ public class MainActivity extends AppCompatActivity implements Main,
         recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
                 recyclerVieweventos,  R.layout.header_evento));
 
-        //Configurar recycleView Marvel
+        //Configurar recycleView Mercado
         RecyclerView.LayoutManager layoutManagerMarvel = new LinearLayoutManager
                 (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
@@ -396,6 +424,41 @@ public class MainActivity extends AppCompatActivity implements Main,
         recyclerViewListaGibiMercado.setAdapter(adapterMercado);
         recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
                 recyclerViewListaGibiMercado,  R.layout.header_evento));
+
+        //Configurar recycleView TOpico
+        RecyclerView.LayoutManager layoutManagertopico = new LinearLayoutManager(
+                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerViewListaTopico.setLayoutManager(layoutManagertopico);
+        recyclerViewListaTopico.setHasFixedSize(true);
+        recyclerViewListaTopico.setAdapter(adapterTopico);
+        recyclerViewListaTopico.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerViewListaTopico,  R.layout.header_evento));
+        recyclerViewListaTopico.addOnItemTouchListener(new RecyclerItemClickListener(this,
+
+                recyclerViewListaTopico, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                List<Topico> listTopicoAtualizado = adapterTopico.getTopicos();
+
+                if (listTopicoAtualizado.size() > 0) {
+                    Topico topicoselecionado = listTopicoAtualizado.get(position);
+                    Intent it = new Intent(MainActivity.this, Detalhe_topico.class);
+                    it.putExtra("topicoselecionado", topicoselecionado);
+                    startActivity(it);
+
+                }
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
 
         recyclerViewListaGibiMercado.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
                 recyclerViewListaGibiMercado, new RecyclerItemClickListener.OnItemClickListener() {
@@ -551,6 +614,14 @@ public class MainActivity extends AppCompatActivity implements Main,
                 startActivity(it);
             }
         });
+        maistopicoTxt = findViewById(R.id.maistopicos);
+        maistopicoTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this,ListaTopicos.class);
+                startActivity(it);
+            }
+        });
 
     }
 
@@ -579,6 +650,9 @@ public class MainActivity extends AppCompatActivity implements Main,
             startActivity(it);
         }else if (id == R.id.topico_menu) {
             Intent it = new Intent(MainActivity.this,ListaTopicos.class);
+            startActivity(it);
+        } else if (id == R.id.conto_menu) {
+            Intent it = new Intent(MainActivity.this,ListaConto.class);
             startActivity(it);
         }
 
