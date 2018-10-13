@@ -13,6 +13,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,11 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Adapter.TabsAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Art_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Livros_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topicos_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -53,9 +52,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -94,7 +90,9 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     private RelativeLayout relative;
     private AlertDialog alerta;
     private ViewPager mViewPager;
+    private Usuario perfil;
     private DatabaseReference database;
+    private  TabLayout tabLayout;
     private com.google.firebase.database.ChildEventListener ChildEventListener;
 
     @Override
@@ -130,31 +128,71 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
 
 
-        //Configurar Abas
-        final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
-                getSupportFragmentManager(),
-                FragmentPagerItems.with(this)
 
-                        .add("TÓPICOS", Livros_Perfil_Fragment.class )
-                        // .add("Noticia",Noticia_Fragment.class)
-                        .add("CONTOS", Topicos_Perfil_Fragment.class)
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPagerperfil);
+        setupViewPager(viewPager);
 
-                        .add("FANARTS",Contos_Perfil_Fragment.class)
-                        .add("COMÉRCIOS",Art_Perfil_Fragment.class)
-                        .add("EVENTOS",Art_Perfil_Fragment.class)
-                        // .add("Tops", RankFragment.class)
-                        .create()
-
-        );
-        SmartTabLayout ViewPageTab = findViewById(R.id.SmartTabLayoutperfil);
-        mViewPager = findViewById(R.id.viewPagerperfil);
-        mViewPager.setAdapter(adapter);
-        ViewPageTab.setViewPager(mViewPager);
+         tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+            public void onPageSelected(int position) {
+
+                switch (position){
+                    case 0:{
+                        tabLayout.getTabAt(0).setText("TÓPICOS");
+                        tabLayout.getTabAt(1).setText("oii");
+                        tabLayout.getTabAt(2).setText("oii");
+                        break;
+                    }
+                    case 1 :{
+                        tabLayout.getTabAt(0).setText("TÓPICOS");
+
+                        tabLayout.getTabAt(1).setText("oii");
+                        tabLayout.getTabAt(2).setText("oii");
+                        break;
+                    }
+                    case 2 :{
+                        tabLayout.getTabAt(0).setText("TÓPICOS");
+                        tabLayout.getTabAt(1).setText("oii");
+                        tabLayout.getTabAt(2).setText("oii");
+                        break;
+                    }
+                }
+            }
+
+
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setText("TÓPICOS");
+        tabLayout.getTabAt(1).setText("oii");
+        tabLayout.getTabAt(2).setText("oii");
+
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        TabsAdapter adapter = new TabsAdapter(getSupportFragmentManager());
+        String topico = String.valueOf(perfil.getTopicos());
+        if(topico!=null){
+        adapter.addFrag(new Art_Perfil_Fragment(), "ONE");
+        }
+        adapter.addFrag(new Art_Perfil_Fragment(), "TWO");
+        adapter.addFrag(new Art_Perfil_Fragment(), "THREE");
+        viewPager.setAdapter(adapter);
+
+
+    }
         //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
         //Botão adicional na ToolBar voltar
@@ -254,7 +292,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
         ChildEventListener=database.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                 perfil = dataSnapshot.getValue(Usuario.class );
                 assert perfil != null;
 
                 String capa = perfil.getCapa();
