@@ -67,6 +67,7 @@ public class ListaConto extends AppCompatActivity implements SwipeRefreshLayout.
         refresh.post(new Runnable() {
             @Override
             public void run() {
+                Listaconto.clear();
                 RecuperarContos();
             }
         });
@@ -113,14 +114,9 @@ public class ListaConto extends AppCompatActivity implements SwipeRefreshLayout.
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Listaconto.clear();
-        RecuperarContos();
-    }
-    @Override
     public void onRefresh() {
         refresh.setRefreshing(true);
+        Listaconto.clear();
         RecuperarContos();
     }
 
@@ -137,15 +133,10 @@ public class ListaConto extends AppCompatActivity implements SwipeRefreshLayout.
                 adapter_conto.notifyDataSetChanged();
                 refresh.setRefreshing(false);
 
-
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Conto conto = dataSnapshot.getValue(Conto.class);
-                Listaconto.add(0, conto);
 
-                adapter_conto.notifyDataSetChanged();
-                refresh.setRefreshing(false);
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {

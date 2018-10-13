@@ -1,6 +1,8 @@
 package com.example.fulanoeciclano.nerdzone.Activits;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -27,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.EventoAdapterPagInicial;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.TopicoAdapterPagInicial;
+import com.example.fulanoeciclano.nerdzone.Autenticacao.LoginActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
@@ -43,6 +46,7 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Topico.Detalhe_topico;
 import com.example.fulanoeciclano.nerdzone.Topico.ListaTopicos;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -101,9 +105,7 @@ public class MainActivity extends AppCompatActivity implements Main,
     private DatabaseReference database;
     private SwipeRefreshLayout swipe;
     SharedPreferences sPreferences = null;
-
-
-
+    private FirebaseAuth AuthUI;
 
 
     @Override
@@ -192,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements Main,
         CarregarInformacoesNoDrawer();
         botoes_Mais();
         CarregarDados_do_Usuario();
-        //EventBus.getDefault().postSticky("MulekeDoido");
+        EventBus.getDefault().postSticky("MulekeDoido");
     }
 
     @Override
@@ -300,6 +302,9 @@ public class MainActivity extends AppCompatActivity implements Main,
     //recupera e nao deixa duplicar
     public void RecuperarEvento(){
         ListaEvento.clear();
+
+
+
 
         valueEventListenerEvento =GibiEventos.addChildEventListener(new ChildEventListener() {
             @Override
@@ -632,6 +637,8 @@ public class MainActivity extends AppCompatActivity implements Main,
 
         int id = item.getItemId();
         if (id == R.id.minhascolecoes_menu) {
+            Intent it = new Intent(MainActivity.this,teste.class);
+            startActivity(it);
         } else if (id == R.id.minhaloja_menu) {
             Intent it = new Intent(MainActivity.this,Meus_eventos.class);
             startActivity(it);
@@ -641,8 +648,7 @@ public class MainActivity extends AppCompatActivity implements Main,
         }else if (id == R.id.minha_conta_menu) {
             Intent it = new Intent(MainActivity.this,MinhaConta.class);
             startActivity(it);
-        }
-        else if (id == R.id.comercio_menu) {
+        } else if (id == R.id.comercio_menu) {
             Intent it = new Intent(MainActivity.this,MercadoActivity.class);
             startActivity(it);
         }else if (id == R.id.evento_menu) {
@@ -654,6 +660,32 @@ public class MainActivity extends AppCompatActivity implements Main,
         } else if (id == R.id.conto_menu) {
             Intent it = new Intent(MainActivity.this,ListaConto.class);
             startActivity(it);
+        } else if (id == R.id.menu_sair) {
+            AlertDialog.Builder msgbox = new AlertDialog.Builder(MainActivity.this);
+            //configurando o titulo
+            msgbox.setTitle("Deseja Sair?");
+            msgbox.setPositiveButton("Sim",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int wich) {
+                            FirebaseAuth.getInstance().signOut();
+                            Intent it = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(it);
+                            finish();
+                        }
+
+                    });
+
+
+            msgbox.setNegativeButton("Não",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int wich) {
+                            dialog.dismiss();
+                        }
+                    });
+            msgbox.show();
+
         }
 
 
@@ -661,21 +693,6 @@ public class MainActivity extends AppCompatActivity implements Main,
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void DeslogarUsuario(){
 
-           /* AuthUI.getInstance()
-                    .signOut(this)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // user is now signed out
-                            startActivity(new Intent(MainActivity.this,Autenticacao.class));
-
-                            finish();
-
-        }
-        });
-        */
-
-    }
 
 }

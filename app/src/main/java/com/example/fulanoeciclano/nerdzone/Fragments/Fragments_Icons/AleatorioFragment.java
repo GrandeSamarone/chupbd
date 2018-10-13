@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.example.fulanoeciclano.nerdzone.Activits.Cadastrar_icon_nome_Activity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Adapter.IconeAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
@@ -82,11 +81,6 @@ public class AleatorioFragment extends Fragment  implements SwipeRefreshLayout.O
                         startActivity(intent);
                         getActivity().finish();
 
-                    } else {
-                        Intent intent = new Intent(getActivity(), Cadastrar_icon_nome_Activity.class);
-                        intent.putExtra("caminho_foto", ListAleatorio.get(position).getUrl());
-                        startActivity(intent);
-                        getActivity().finish();
                     }
                 }
             }

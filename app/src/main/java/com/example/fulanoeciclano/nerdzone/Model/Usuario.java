@@ -26,9 +26,11 @@ public class Usuario implements Serializable {
     private int seguidores = 0;
     private int seguindo = 0;
     private int topicos=0;
-    private int contons=0;
+    private int contos=0;
     private int livros=0;
     private int arts = 0;
+    private int comercio = 0;
+    private int evento = 0;
 
     public Usuario() {
     }
@@ -40,10 +42,8 @@ public class Usuario implements Serializable {
     public void atualizar(){
         String identificadorUSuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
-
         DatabaseReference usuariosref = database.child("usuarios")
                 .child(identificadorUSuario);
-
         Map<String,Object> valoresUsuario = ConverterparaMap();
         usuariosref.updateChildren(valoresUsuario);
     }
@@ -72,6 +72,45 @@ public class Usuario implements Serializable {
 
         return usuarioMap;
     }
+    public void atualizarQtdTopicos(){
+        String identificadorUSuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuariosref = database.child("usuarios")
+                .child(identificadorUSuario);
+        HashMap<String,Object> dados = new HashMap<>();
+        dados.put("topicos",getTopicos());
+        usuariosref.updateChildren(dados);
+    }
+    public void atualizarQtdContos(){
+        String identificadorUSuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuariosref = database.child("usuarios")
+                .child(identificadorUSuario);
+        HashMap<String,Object> dados = new HashMap<>();
+        dados.put("contos",getContos());
+        usuariosref.updateChildren(dados);
+    }
+
+    public void atualizarQtdFanArts(){
+        String identificadorUSuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuariosref = database.child("usuarios")
+                .child(identificadorUSuario);
+        HashMap<String,Object> dados = new HashMap<>();
+        dados.put("arts",getArts());
+        usuariosref.updateChildren(dados);
+    }
+
+    public void atualizarQtdComercio(){
+        String identificadorUSuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuariosref = database.child("usuarios")
+                .child(identificadorUSuario);
+        HashMap<String,Object> dados = new HashMap<>();
+        dados.put("arts",getArts());
+        usuariosref.updateChildren(dados);
+    }
+
     public String getId() {
         return id;
     }
@@ -144,12 +183,12 @@ public class Usuario implements Serializable {
         this.topicos = topicos;
     }
 
-    public int getContons() {
-        return contons;
+    public int getContos() {
+        return contos;
     }
 
-    public void setContons(int contons) {
-        this.contons = contons;
+    public void setContos(int contos) {
+        this.contos = contos;
     }
 
     public int getLivros() {
@@ -174,5 +213,22 @@ public class Usuario implements Serializable {
 
     public void setSeguindo(int seguindo) {
         this.seguindo = seguindo;
+    }
+
+
+    public int getComercio() {
+        return comercio;
+    }
+
+    public void setComercio(int comercio) {
+        this.comercio = comercio;
+    }
+
+    public int getEvento() {
+        return evento;
+    }
+
+    public void setEvento(int evento) {
+        this.evento = evento;
     }
 }

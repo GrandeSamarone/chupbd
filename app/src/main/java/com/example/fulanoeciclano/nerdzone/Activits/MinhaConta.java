@@ -64,7 +64,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -74,8 +73,6 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
     };
-    File file;
-    Uri uri;
     private ImageButton imageButtonCamera,imageButtonGaleria;
     private static final int SELECAO_CAMERA=100;
     private static final int SELECAO_CORTADA=300;
@@ -86,10 +83,10 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     private static final int MINHA_CONTA=12;
     private CircleImageView circleImageViewperfil;
     private ImageView capa_perfil;
-    private LinearLayout btn_voltar;
+    private LinearLayout btn_voltar,prim,seg,ter,quart;
     private StorageReference storageReference;
     private String identificadorUsuario;
-    private TextView nome,fraserapida;
+    private TextView nome,fraserapida,n_topicos;
     private FloatingActionButton botaotrocarfoto;
     private Usuario usuarioLogado;
     private Usuario user;
@@ -111,8 +108,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
-        relative = findViewById(R.id.coordimg);
-
+        n_topicos=findViewById(R.id.num_topicos);
         circleImageViewperfil=findViewById(R.id.circleImageViewFotoPerfil);
         nome= findViewById(R.id.nomeusuario_perfil);
         fraserapida = findViewById(R.id.fraserapida_perfil);
@@ -122,7 +118,8 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
         capa_perfil.setOnClickListener(this);
         btn_voltar=findViewById(R.id.perfil_button_back_perfil);
        btn_voltar.setOnClickListener(this);
-
+       prim=findViewById(R.id.primeiro);
+       prim.setOnClickListener(this);
         usuarioLogado=UsuarioFirebase.getDadosUsuarioLogado();
         user = new Usuario();
 
@@ -137,13 +134,17 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
         final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                        .add("COMICS", Livros_Perfil_Fragment.class )
+
+                        .add("TÓPICOS", Livros_Perfil_Fragment.class )
                         // .add("Noticia",Noticia_Fragment.class)
-                        .add("TOPICOS", Topicos_Perfil_Fragment.class)
-                        .add("EVENTOS",Contos_Perfil_Fragment.class)
-                        .add("ARTS",Art_Perfil_Fragment.class)
+                        .add("CONTOS", Topicos_Perfil_Fragment.class)
+
+                        .add("FANARTS",Contos_Perfil_Fragment.class)
+                        .add("COMÉRCIOS",Art_Perfil_Fragment.class)
+                        .add("EVENTOS",Art_Perfil_Fragment.class)
                         // .add("Tops", RankFragment.class)
                         .create()
+
         );
         SmartTabLayout ViewPageTab = findViewById(R.id.SmartTabLayoutperfil);
         mViewPager = findViewById(R.id.viewPagerperfil);
@@ -187,6 +188,8 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
             case R.id.perfil_button_back_perfil:
                 finish();
                 break;
+            case R.id.primeiro:
+                mViewPager.setCurrentItem(1);
         }
     }
     @Override
@@ -265,6 +268,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                         .into(circleImageViewperfil );
 
                 nome.setText(perfil.getNome());
+                n_topicos.setText(String.valueOf(perfil.getTopicos()));
             }
 
             @Override
@@ -571,7 +575,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                         .getIntent(MinhaConta.this);
                 startActivityForResult(intent,SELECAO_CAMERA ); //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
-                finish();
+
 
             }
         });
@@ -584,7 +588,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                         .getIntent(MinhaConta.this);
                 startActivityForResult(intent,SELECAO_GALERIA );
                 alerta.dismiss();
-                finish();
+
 
             }
         });
@@ -598,7 +602,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 startActivityForResult(it, SELECAO_ICONE);
                 //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
-                finish();
+
             }
         });
 

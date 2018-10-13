@@ -135,6 +135,7 @@
 
 
 <LinearLayout
+    android:id="@+id/seguidores"
     android:layout_weight="1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -153,11 +154,13 @@
 
 </LinearLayout>
         <LinearLayout
+            android:id="@+id/primeiro"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/num_topicos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_0_n_perfil"
@@ -171,6 +174,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/segundo"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -188,6 +192,7 @@
                 android:text="Contos" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/terceiro"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -205,6 +210,7 @@
                 android:textAlignment="center"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/quarto"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

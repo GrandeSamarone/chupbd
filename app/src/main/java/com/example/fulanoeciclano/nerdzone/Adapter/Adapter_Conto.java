@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Add_colecao;
+import com.example.fulanoeciclano.nerdzone.Model.Conto_colecao;
 import com.example.fulanoeciclano.nerdzone.Model.Conto;
 import com.example.fulanoeciclano.nerdzone.Model.ContoLike;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
@@ -105,6 +105,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                     public void onEvent(ImageView button, boolean buttonState) {
                         if(buttonState){
                             like.Salvar();
+
                             holder.n_curtida.setText(String.valueOf(like.getQtdlikes()));
                         }else{
                             like.removerlike();
@@ -135,20 +136,20 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int QtdAdd = 0;
                 if (dataSnapshot.hasChild("qtdadd")) {
-                    Add_colecao add_colecao = dataSnapshot.getValue(Add_colecao.class);
-                    QtdAdd = add_colecao.getQtdadd();
+                    Conto_colecao conto_colecao = dataSnapshot.getValue(Conto_colecao.class);
+                    QtdAdd = conto_colecao.getQtdadd();
                 }
                 //Verifica se já foi clicado
                 if (dataSnapshot.hasChild(usuariologado.getId())) {
                     holder.botao_add_colecao.setChecked(true);
-                    holder.txt_add_colecao.setText(R.string.adicionado_colecao);
+                 //   holder.txt_add_colecao.setText(R.string.adicionado_colecao);
                 } else {
                     holder.botao_add_colecao.setChecked(false);
-                    holder.txt_add_colecao.setText(R.string.adicionar_colecao);
+                  //  holder.txt_add_colecao.setText(R.string.adicionar_colecao);
                 }
 
                 //Montar objeto postagem curtida
-                Add_colecao colecao = new Add_colecao();
+                Conto_colecao colecao = new Conto_colecao();
                 colecao.setConto(conto);
                 colecao.setUsuario(usuariologado);
                 colecao.setQtdadd(QtdAdd);
@@ -160,9 +161,10 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                         if (buttonState) {
                             colecao.Salvar();
 
+                            holder.txt_add_colecao.setText(R.string.adicionado_colecao);
                         } else {
                             colecao.removercolecao();
-
+                            holder.txt_add_colecao.setText(R.string.adicionar_colecao);
                         }
                     }
 

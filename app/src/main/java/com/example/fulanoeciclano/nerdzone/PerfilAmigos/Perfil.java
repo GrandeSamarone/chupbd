@@ -20,6 +20,7 @@ import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Art_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Livros_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topicos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -35,11 +36,13 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Perfil extends AppCompatActivity implements View.OnClickListener {
+public class Perfil extends AppCompatActivity implements Main, View.OnClickListener {
 
     private TextView nome,fraserapida,n_seguidores;
     private CircleImageView imgperfil;
@@ -103,7 +106,48 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener {
         CarregarDados_do_Usuario();
         recuperarDadosUsuarioLogado();
 
+EventBus.getDefault().postSticky("MulekeDoido");
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.unregisterEventBus();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.registerEventBus();
+    }
+
+    @Override
+    public void registerEventBus() {
+
+        try {
+            EventBus.getDefault().register(this);
+        }catch (Exception Err){
+
+
+        }
+
+    }
+
+    @Override
+    public void unregisterEventBus() {
+        try {
+            EventBus.getDefault().unregister(this);
+        }catch (Exception e){
+
+        }
+
+    }
+
+
+
 
     @Override
     protected void onStop() {

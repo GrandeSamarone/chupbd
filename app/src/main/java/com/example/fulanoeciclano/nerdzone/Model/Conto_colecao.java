@@ -5,13 +5,13 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
 
-public class Add_colecao {
+public class Conto_colecao {
     private Conto conto;
     private Usuario usuario;
     private Boolean adicionado;
     private int qtdadd;
 
-    public  Add_colecao(){
+    public Conto_colecao(){
 
     }
     public void Salvar(){
@@ -20,6 +20,7 @@ public class Add_colecao {
         HashMap<String,Object> dadosusuario = new HashMap<>();
         dadosusuario.put("nomeUsuario",usuario.getNome());
         dadosusuario.put("foto",usuario.getFoto());
+        dadosusuario.put("id",usuario.getId());
 
         DatabaseReference pLikeRef=firebaseRef
                 .child("conto-colecao")
@@ -29,9 +30,19 @@ public class Add_colecao {
 
         //Atualizar quantidade de like
         atualizarQtd(1);
+      adicionei_a_minha_colecao();
 
     }
 
+    public void adicionei_a_minha_colecao(){
+        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+
+        DatabaseReference add_colecao = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("adicionei-colecao")
+                .child(idUsuario);
+        add_colecao.setValue(conto.getUid());
+
+    }
     private void atualizarQtd(int valor){
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeRef=firebaseRef
@@ -46,11 +57,12 @@ public class Add_colecao {
 
     }
     public   void removercolecao(){
+
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeRef=firebaseRef
                 .child("conto-colecao")
-                .child(conto.getUid())
-                .child(usuario.getId());
+                .child(usuario.getId())
+                .child(conto.getUid());
         pLikeRef.removeValue();
         //Atualizar quantidade de like
         atualizarQtd(-1);

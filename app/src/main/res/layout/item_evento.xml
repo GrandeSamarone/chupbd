@@ -33,7 +33,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                android:background="@drawable/gradientefundopreto"
+                android:background="@drawable/gradientefundo_peq_preto"
                 android:fitsSystemWindows="true" />
 
 

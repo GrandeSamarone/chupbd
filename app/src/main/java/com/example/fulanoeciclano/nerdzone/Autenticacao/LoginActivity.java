@@ -14,8 +14,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Activits.Cadastrar_icon_nome_Activity;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -38,8 +39,10 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseUser user;
     private SignInButton botaologin;
+    private Usuario usuario;
     private AlertDialog dialog;
     private SharedPreferences sPreferences = null;
+    private String identificadorUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +78,9 @@ public class LoginActivity extends AppCompatActivity {
             mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
         }else{
-            Verificar();
+            Intent it = new Intent(LoginActivity.this,MainActivity.class);
+            startActivity(it);
+            finish();
         }
     }
 
@@ -130,17 +135,16 @@ public class LoginActivity extends AppCompatActivity {
 
         if (sPreferences.getBoolean("firstRun", true)) {
             sPreferences.edit().putBoolean("firstRun", false).apply();
-            Intent it = new Intent(LoginActivity.this,Cadastrar_icon_nome_Activity.class);
-            startActivity(it);
+            /*Intent it = new Intent(LoginActivity.this,Cadastrar_icon_nome_Activity.class);
+            startActivity(it);*/
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
             }else{
-                finish();
+
             }
         } else {
 
-            Intent it = new Intent(LoginActivity.this,MainActivity.class);
-            startActivity(it);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
             }else{
@@ -178,14 +182,29 @@ public class LoginActivity extends AppCompatActivity {
 
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = auth.getCurrentUser();
+                            identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+                        //    Verificar();
+                            usuario = new Usuario();
+                            usuario.setNome(user.getDisplayName());
+                            usuario.setFoto(String.valueOf(user.getPhotoUrl()));
+                            usuario.setCapa("https://firebasestorage.googleapis.com/v0/b/geeksgibi.appspot." +
+                                    "com/o/capa%2Ffundo_da_capa_add_evento.jpg?alt=media&token=7d7dd425-ceef-47c2-bfd1-7245bfc98248");
 
-                            Verificar();
+                                usuario.setTipoconta(user.getEmail());
+                            usuario.setTiposuario("usuario");
+                            //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
+                            usuario.setId(identificadorUsuario);
+                            usuario.salvar();
                             dialog.dismiss();
+                            Intent it = new Intent( LoginActivity.this, MainActivity.class);
+                            startActivity(it);
                             finish();
+
 
                         } else {
                             dialog.dismiss();
-                            Toast.makeText(LoginActivity.this, "Verifique sua conexão com a  internet", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this,
+                                    "Tente Novamente", Toast.LENGTH_LONG).show();
                             // If sign in fails, display a message to the user.
                           /* Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();

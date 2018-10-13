@@ -131,6 +131,7 @@ public class Novo_Topico extends AppCompatActivity {
                          perfil = dataSnapshot.getValue(Usuario.class );
                         assert perfil != null;
                         String icone = perfil.getFoto();
+
                         IconeUsuario(icone);
                     }
                     @Override
@@ -237,8 +238,10 @@ public class Novo_Topico extends AppCompatActivity {
                 Uri url = taskSnapshot.getDownloadUrl();
                 topico.setFoto(String.valueOf(url));
                 // SalvarPost(url);
-
                 topico.SalvarTopico();
+              int qtdTopicos=perfil.getTopicos()+1;
+              perfil.setTopicos(qtdTopicos);
+              perfil.atualizarQtdTopicos();
                 Toast.makeText(Novo_Topico.this, "Tópico Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
                 Intent it = new Intent(Novo_Topico.this, ListaTopicos.class);
                 startActivity(it);
@@ -302,6 +305,7 @@ public class Novo_Topico extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
+                startActivity(new Intent(this, ListaTopicos.class));
                 finish();
         }
               /*

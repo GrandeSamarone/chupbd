@@ -62,7 +62,7 @@
                 android:title="@string/drawer_Suporte"
                 android:icon="@drawable/ic_support"/>
 
-            <item android:id="@+id/minha_conta_dmsenu"
+            <item android:id="@+id/menu_sair"
                 android:title="@string/drawer_Sair"
                 android:icon="@drawable/ic_sair"/>
 

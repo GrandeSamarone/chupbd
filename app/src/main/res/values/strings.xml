@@ -64,6 +64,7 @@
     <string name="txt_titulo">Titúlo</string>
     <string name="adicionar_colecao">Adicionar á Coleção</string>
     <string name="adicionado_colecao">Adicionado</string>
+    <string name="cadastra_icon_nome">Criar Perfil </string>
 
     <string-array name="estados">
         <item>Estado</item>

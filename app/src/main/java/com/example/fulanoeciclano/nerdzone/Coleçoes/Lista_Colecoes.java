@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Topico;
+package com.example.fulanoeciclano.nerdzone.Coleçoes;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -19,10 +20,10 @@ import android.view.WindowManager;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
-import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Topico;
+import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Conto;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Topico;
+import com.example.fulanoeciclano.nerdzone.Model.Conto;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,6 +31,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -37,63 +39,62 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ListaTopicos extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class Lista_Colecoes extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+
     private Toolbar toolbar;
     private CircleImageView icone;
     private SwipeRefreshLayout refresh;
 
-    private DatabaseReference database,database_topico;
+    private DatabaseReference database,database_colecoes;
     private FirebaseUser usuario;
-    private MaterialSearchView SeachViewTopico;
-    private Adapter_Topico adapter_topico;
-    private ChildEventListener ChildEventListenerperfil;
-    private FloatingActionButton botaoMaisTopicos;
-    private RecyclerView recyclerView_lista_topico;
-    private ArrayList<Topico> ListaTopico = new ArrayList<>();
-    private ChildEventListener valueEventListenerTopicos;
+    private  Usuario perfil;
+    private String idUsuario;
+    private MaterialSearchView SeachViewConto;
+    private Adapter_Conto adapter_conto;
+    private ChildEventListener ChildEventListenerconto;
+    private FloatingActionButton botaoMaisconto;
+    private RecyclerView recycleview_colecoes;
+    private ArrayList<Conto> ListaColecoes = new ArrayList<>();
+    private ChildEventListener valueEventListenerConto;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_topicos);
-
+        setContentView(R.layout.activity_list__colecoes);
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Tópicos");
+        toolbar.setTitle("Coleções");
         setSupportActionBar(toolbar);
 
-        refresh = findViewById(R.id.refreshtopico);
+        refresh = findViewById(R.id.refreshcolecoes);
         refresh.setOnRefreshListener(this);
         refresh.post(new Runnable() {
             @Override
             public void run() {
-                RecuperarTopicos();
+
+
             }
         });
         refresh.setColorSchemeResources
                 (R.color.colorPrimaryDark, R.color.amareloclaro,
                         R.color.accent);
-       //Configuraçoes Basicas
-        recyclerView_lista_topico = findViewById(R.id.recycleview_topico);
-        botaoMaisTopicos=findViewById(R.id.buton_novo_topico);
-        botaoMaisTopicos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(ListaTopicos.this,Novo_Topico.class);
-                startActivity(it);
-                finish();
-            }
-        });
+
+
+        //Configuraçoes Basicas
+        recycleview_colecoes = findViewById(R.id.recycleview_colecoes);
+        idUsuario = ConfiguracaoFirebase.getIdUsuario();
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
-        database_topico = ConfiguracaoFirebase.getDatabase().getReference().child("topico");
+        database_colecoes= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("adicionei-colecao")
+                .child(idUsuario);
         //adapter
-        adapter_topico = new Adapter_Topico(ListaTopico,this);
+        adapter_conto = new Adapter_Conto(ListaColecoes,this);
 
         //Adapter
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
-        recyclerView_lista_topico.setLayoutManager(layoutManager);
-        recyclerView_lista_topico.setHasFixedSize(true);
-        recyclerView_lista_topico.setAdapter(adapter_topico);
-
-//Aplicar Evento click
+        recycleview_colecoes.setLayoutManager(layoutManager);
+        recycleview_colecoes.setHasFixedSize(true);
+        recycleview_colecoes.setAdapter(adapter_conto);
 
 
         CarregarDados_do_Usuario();
@@ -101,43 +102,64 @@ public class ListaTopicos extends AppCompatActivity implements SwipeRefreshLayou
 
 
         //Botao Pesquisa
-        SeachViewTopico = findViewById(R.id.materialSeachComercio);
-        SeachViewTopico.setHint("Pesquisar");
-        SeachViewTopico.setHintTextColor(R.color.cinzaclaro);
+        SeachViewConto = findViewById(R.id.materialSeachComercio);
+        SeachViewConto.setHint("Pesquisar");
+        SeachViewConto.setHintTextColor(R.color.cinzaclaro);
 
+        database_colecoes.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(perfil.getId())) {
+                    Log.i("asas","verdadeiro");
+                    Log.i("asas",perfil.getId());
+                    //   holder.txt_add_colecao.setText(R.string.adicionado_colecao);
+                } else {
+                    Log.i("asas","falso");
+                    //  holder.txt_add_colecao.setText(R.string.adicionar_colecao);
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
+
 
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        RecuperarTopicos();
-    }
-    @Override
-    public void onRefresh() {
+        TrocarFundos_status_bar();
+        CarregarDados_do_Usuario();
+        //RecuperarColecoes();
 
-        RecuperarTopicos();
     }
 
-    private void RecuperarTopicos(){
-        ListaTopico.clear();
-        valueEventListenerTopicos = database_topico.addChildEventListener(new ChildEventListener() {
+
+
+
+
+    private void RecuperarColecoes(){
+        ListaColecoes.clear();
+        valueEventListenerConto = database_colecoes.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Topico topico = dataSnapshot.getValue(Topico.class);
-                    ListaTopico.add(0, topico);
+                Conto conto = dataSnapshot.getValue(Conto.class);
+                ListaColecoes.add(0, conto);
 
-                    adapter_topico.notifyDataSetChanged();
+                adapter_conto.notifyDataSetChanged();
                 refresh.setRefreshing(false);
 
-
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -153,80 +175,6 @@ public class ListaTopicos extends AppCompatActivity implements SwipeRefreshLayou
 
 
     }
-    private void CarregarDados_do_Usuario(){
-        usuario = UsuarioFirebase.getUsuarioAtual();
-        String email = usuario.getEmail();
-        ChildEventListenerperfil=database.orderByChild("tipoconta")
-                .equalTo(email).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Usuario perfil = dataSnapshot.getValue(Usuario.class );
-                assert perfil != null;
-                String icone = perfil.getFoto();
-                IconeUsuario(icone);
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-    private void IconeUsuario(String url) {
-        //Imagem do icone do usuario
-        icone = findViewById(R.id.icone_user_toolbar);
-        icone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(ListaTopicos.this, MinhaConta.class);
-                startActivity(it);
-                finish();
-
-            }
-        });
-        Glide.with(ListaTopicos.this)
-                .load(url)
-                .into(icone);
-    }
-
-
-    public boolean  onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.menufiltro:
-                //abrirConfiguracoes();
-                break;
-            case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
-                startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    finishAffinity();
-                }else{
-                    finish();
-                }
-        }/*
-        case android.R.id.home:
-        // NavUtils.navigateUpFromSameTask(this);
-        startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            finishAffinity();
-        }else{
-            finish();
-        }
-
-        break;
-        */
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
 
 
     private void TrocarFundos_status_bar(){
@@ -269,5 +217,72 @@ public class ListaTopicos extends AppCompatActivity implements SwipeRefreshLayou
         win.setAttributes(winParams);
     }
 
+    public boolean  onOptionsItemSelected(MenuItem item) {
 
+        switch (item.getItemId()) {
+            case R.id.menufiltro:
+                //abrirConfiguracoes();
+                break;
+            case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
+                startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    finishAffinity();
+                }else{
+                    finish();
+                }
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void CarregarDados_do_Usuario(){
+        usuario = UsuarioFirebase.getUsuarioAtual();
+        String email = usuario.getEmail();
+        ChildEventListenerconto=database.orderByChild("tipoconta")
+                .equalTo(email).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                         perfil = dataSnapshot.getValue(Usuario.class );
+                        assert perfil != null;
+                        String icone = perfil.getFoto();
+                        IconeUsuario(icone);
+                    }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+
+    private void IconeUsuario(String url) {
+        //Imagem do icone do usuario
+        icone = findViewById(R.id.icone_user_toolbar);
+        icone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Lista_Colecoes.this, MinhaConta.class);
+                startActivity(it);
+                finish();
+
+            }
+        });
+        Glide.with(Lista_Colecoes.this)
+                .load(url)
+                .into(icone);
+    }
+
+    @Override
+    public void onRefresh() {
+
+    }
 }
