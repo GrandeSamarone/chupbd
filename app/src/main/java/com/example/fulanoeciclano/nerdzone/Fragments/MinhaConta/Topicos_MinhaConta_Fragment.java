@@ -1,12 +1,10 @@
-package com.example.fulanoeciclano.nerdzone.Fragments.perfil;
+package com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta;
+
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,14 +27,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-
-public class TopicoFragment extends Fragment  implements Main, SwipeRefreshLayout.OnRefreshListener {
-
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class Topicos_MinhaConta_Fragment extends Fragment implements Main {
     private DatabaseReference mDatabasetopico;
-    private SwipeRefreshLayout atualizar_topico;
     private FirebaseAuth autenticacao;
     private FirebaseAuth mFirebaseAuth;
-    private FloatingActionButton Novo_Evento;
     private RecyclerView recyclerTopico;
     private Adapter_Topico adapter_topico;
     private ArrayList<Topico> ListaTopico = new ArrayList<>();
@@ -45,32 +41,19 @@ public class TopicoFragment extends Fragment  implements Main, SwipeRefreshLayou
     private LinearLayoutManager mManager;
     private Usuario user;
 
-    public TopicoFragment() {}
+
+    public Topicos_MinhaConta_Fragment() {
+        // Required empty public constructor
+    }
 
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-            Fresco.initialize(getContext());
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.noticia_post_list, container, false);
+       View view= inflater.inflate(R.layout.fragment_topicos__perfil_, container, false);
 
-        //Atualizar TOpico
-        atualizar_topico =view.findViewById(R.id.swip_atualizar_noticia);
-        atualizar_topico.setOnRefreshListener(TopicoFragment.this);
-
-        atualizar_topico.post(new Runnable() {
-            @Override
-            public void run() {
-          atualizar_topico.setRefreshing(true);
-                RecuperarTopico();
-
-            }
-        });
-        //cores atualizar topico
-        atualizar_topico.setColorSchemeResources (R.color.colorPrimaryDark, R.color.amareloclaro,
-                R.color.accent);
-        //COnfiguracoes Basicas
-        recyclerTopico = view.findViewById(R.id.lista_topico);
+        recyclerTopico = view.findViewById(R.id.lista_topico_minha_conta);
         mDatabasetopico = ConfiguracaoFirebase.getFirebaseDatabase().child("topico");
         //Configuracao Adapter
         adapter_topico =new Adapter_Topico(ListaTopico,getActivity());
@@ -80,21 +63,21 @@ public class TopicoFragment extends Fragment  implements Main, SwipeRefreshLayou
         recyclerTopico.setLayoutManager(layoutManager);
         recyclerTopico.setHasFixedSize(true);
         recyclerTopico.setAdapter(adapter_topico);
+    return  view;
 
-        return view;
 
     }
 
     @Override
-    public void onRefresh() {
-        RecuperarTopico();
+    public void onStart() {
+        super.onStart();
+
     }
 
     public void onStop() {
         super.onStop();
         mDatabasetopico.removeEventListener(valueEventListenerTopico);
     }
-
 
 
     @Override
@@ -136,22 +119,23 @@ public class TopicoFragment extends Fragment  implements Main, SwipeRefreshLayou
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void setUserOfDrawer(String account) {
-        // Toast.makeText(this, account, Toast.LENGTH_SHORT).show();
-        Log.i("eeo34",account);
+
+        RecuperarTopico(account);
+       //  Toast.makeText(getContext(), id, Toast.LENGTH_SHORT).show();
+
     }
 
-
-    public void RecuperarTopico(){
+    public void RecuperarTopico(String id){
         ListaTopico.clear();
-        atualizar_topico.setRefreshing(true);
-        valueEventListenerTopico=mDatabasetopico.addChildEventListener(new ChildEventListener() {
+        valueEventListenerTopico=mDatabasetopico.orderByChild("idauthor").equalTo(id)
+                .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Topico topico = dataSnapshot.getValue(Topico.class);
                 ListaTopico.add(0,topico);
 
-            adapter_topico.notifyDataSetChanged();
-            atualizar_topico.setRefreshing(false);
+                adapter_topico.notifyDataSetChanged();
+
             }
 
             @Override
@@ -175,4 +159,5 @@ public class TopicoFragment extends Fragment  implements Main, SwipeRefreshLayou
             }
         });
     }
+
 }

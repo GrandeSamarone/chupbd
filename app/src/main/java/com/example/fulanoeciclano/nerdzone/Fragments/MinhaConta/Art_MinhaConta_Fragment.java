@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Fragments.perfil;
+package com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta;
 
 
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import com.example.fulanoeciclano.nerdzone.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Art_Perfil_Fragment extends Fragment {
+public class Art_MinhaConta_Fragment extends Fragment {
 
 
-    public Art_Perfil_Fragment() {
+    public Art_MinhaConta_Fragment() {
         // Required empty public constructor
     }
 

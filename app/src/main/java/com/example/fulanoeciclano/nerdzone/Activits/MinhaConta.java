@@ -13,11 +13,9 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,15 +27,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Adapter.TabsAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Art_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Art_MinhaConta_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Contos_MinhaConta_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Topicos_MinhaConta_Fragment;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Icons.PageIcon;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.example.fulanoeciclano.nerdzone.Seguidores.MinhaConta.MeusSeguidores;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,12 +52,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
 
@@ -79,10 +80,10 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     private static final int MINHA_CONTA=12;
     private CircleImageView circleImageViewperfil;
     private ImageView capa_perfil;
-    private LinearLayout btn_voltar,prim,seg,ter,quart;
+    private LinearLayout btn_voltar,topicoclick,contoclick,fanatsclick,seguidor_click;
     private StorageReference storageReference;
     private String identificadorUsuario;
-    private TextView nome,fraserapida,n_topicos;
+    private TextView nome,fraserapida,n_topicos,n_contos,n_fanats,n_seguidores;
     private FloatingActionButton botaotrocarfoto;
     private Usuario usuarioLogado;
     private Usuario user;
@@ -90,9 +91,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     private RelativeLayout relative;
     private AlertDialog alerta;
     private ViewPager mViewPager;
-    private Usuario perfil;
     private DatabaseReference database;
-    private  TabLayout tabLayout;
     private com.google.firebase.database.ChildEventListener ChildEventListener;
 
     @Override
@@ -103,10 +102,14 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
 
         //configuracoes iniciais
+        usuario = UsuarioFirebase.getUsuarioAtual();
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         n_topicos=findViewById(R.id.num_topicos);
+        n_seguidores=findViewById(R.id.num_total_seguidores);
+        n_contos=findViewById(R.id.num_contos);
+        n_fanats=findViewById(R.id.num_fantars);
         circleImageViewperfil=findViewById(R.id.circleImageViewFotoPerfil);
         nome= findViewById(R.id.nomeusuario_perfil);
         fraserapida = findViewById(R.id.fraserapida_perfil);
@@ -115,9 +118,15 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
         capa_perfil= findViewById(R.id.capameuperfil);
         capa_perfil.setOnClickListener(this);
         btn_voltar=findViewById(R.id.perfil_button_back_perfil);
-       btn_voltar.setOnClickListener(this);
-       prim=findViewById(R.id.primeiro);
-       prim.setOnClickListener(this);
+        btn_voltar.setOnClickListener(this);
+        topicoclick=findViewById(R.id.topico_click);
+        topicoclick.setOnClickListener(this);
+        contoclick=findViewById(R.id.contos_click);
+        contoclick.setOnClickListener(this);
+        fanatsclick=findViewById(R.id.fanats_click);
+        fanatsclick.setOnClickListener(this);
+        seguidor_click=findViewById(R.id.seguidores_click);
+        seguidor_click.setOnClickListener(this);
         usuarioLogado=UsuarioFirebase.getDadosUsuarioLogado();
         user = new Usuario();
 
@@ -128,72 +137,31 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
 
 
+        //Configurar Abas
+        final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
+                getSupportFragmentManager(),
+                FragmentPagerItems.with(this)
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPagerperfil);
-        setupViewPager(viewPager);
+                        .add("TÓPICOS", Topicos_MinhaConta_Fragment.class )
+                        // .add("Noticia",Noticia_Fragment.class)
+                        .add("CONTOS", Contos_MinhaConta_Fragment.class)
+                        .add("FANARTS",Art_MinhaConta_Fragment.class)
+                        .add("COMÉRCIOS",Art_MinhaConta_Fragment.class)
+                        .add("EVENTOS",Art_MinhaConta_Fragment.class)
+                        // .add("Tops", RankFragment.class)
+                        .create()
 
-         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-            public void onPageSelected(int position) {
-
-                switch (position){
-                    case 0:{
-                        tabLayout.getTabAt(0).setText("TÓPICOS");
-                        tabLayout.getTabAt(1).setText("oii");
-                        tabLayout.getTabAt(2).setText("oii");
-                        break;
-                    }
-                    case 1 :{
-                        tabLayout.getTabAt(0).setText("TÓPICOS");
-
-                        tabLayout.getTabAt(1).setText("oii");
-                        tabLayout.getTabAt(2).setText("oii");
-                        break;
-                    }
-                    case 2 :{
-                        tabLayout.getTabAt(0).setText("TÓPICOS");
-                        tabLayout.getTabAt(1).setText("oii");
-                        tabLayout.getTabAt(2).setText("oii");
-                        break;
-                    }
-                }
-            }
+        );
+        SmartTabLayout ViewPageTab = findViewById(R.id.SmartTabLayoutperfil);
+        mViewPager = findViewById(R.id.viewPagerperfil);
+        mViewPager.setAdapter(adapter);
+        ViewPageTab.setViewPager(mViewPager);
 
 
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
     }
 
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setText("TÓPICOS");
-        tabLayout.getTabAt(1).setText("oii");
-        tabLayout.getTabAt(2).setText("oii");
-
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        TabsAdapter adapter = new TabsAdapter(getSupportFragmentManager());
-        String topico = String.valueOf(perfil.getTopicos());
-        if(topico!=null){
-        adapter.addFrag(new Art_Perfil_Fragment(), "ONE");
-        }
-        adapter.addFrag(new Art_Perfil_Fragment(), "TWO");
-        adapter.addFrag(new Art_Perfil_Fragment(), "THREE");
-        viewPager.setAdapter(adapter);
-
-
-    }
-        //Botao Voltar
+    //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
         //Botão adicional na ToolBar voltar
         switch (item.getItemId()) {
@@ -226,8 +194,15 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
             case R.id.perfil_button_back_perfil:
                 finish();
                 break;
-            case R.id.primeiro:
+            case R.id.topico_click:
+                mViewPager.setCurrentItem(0);
+                break;
+            case R.id.contos_click:
                 mViewPager.setCurrentItem(1);
+                break;
+            case R.id.fanats_click:
+                mViewPager.setCurrentItem(2);
+                break;
         }
     }
     @Override
@@ -236,10 +211,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
         RecuperarIcone();
         CarregarDados_do_Usuario();
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
+
     }
 
     @Override
@@ -278,21 +250,13 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
     }
 
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void setUserOfDrawer(String account) {
-      //  Toast.makeText(this, account, Toast.LENGTH_SHORT).show();
-        Log.i("eeo34",account);
-    }
-
-
     private void CarregarDados_do_Usuario(){
-        usuario = UsuarioFirebase.getUsuarioAtual();
+
         String email = usuario.getEmail();
         ChildEventListener=database.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                 perfil = dataSnapshot.getValue(Usuario.class );
+                Usuario perfil = dataSnapshot.getValue(Usuario.class );
                 assert perfil != null;
 
                 String capa = perfil.getCapa();
@@ -307,6 +271,21 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
                 nome.setText(perfil.getNome());
                 n_topicos.setText(String.valueOf(perfil.getTopicos()));
+                n_contos.setText(String.valueOf(perfil.getContos()));
+                n_fanats.setText(String.valueOf(perfil.getArts()));
+                n_seguidores.setText(String.valueOf(perfil.getSeguidores()));
+
+                //Meus Seguidores
+          seguidor_click.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  Intent it = new Intent(MinhaConta.this, MeusSeguidores.class);
+                  it.putExtra("id",perfil.getId());
+                  startActivity(it);
+              }
+          });
+                //eventoBUS
+                EventBus.getDefault().postSticky(perfil.getId());
             }
 
             @Override
@@ -336,11 +315,8 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     private void AlterarNome(){
         final String nome = nome.getText().toString();
         final boolean retorno = UsuarioFirebase.atualizarNomeUsuario(nome);
-
-
         if (retorno) {
             usuarioLogado.setNome(nome);
-
             usuarioLogado.atualizar();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("alteracao");
@@ -352,16 +328,11 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                     Intent it = new Intent(MinhaConta.this,MainActivity.class);
                     startActivity(it);
                     finish();
-
                 }
             });
             AlertDialog dialog = builder.create();
             dialog.show();
-
-
-
         }
-
     }
     */
     //Recebendo Icone
@@ -552,13 +523,13 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
         }
         Toast.makeText(this, "Sua foto foi alterada", Toast.LENGTH_SHORT).show();
     }
-        private void atualizaCapaUsuario(Uri url) {
-            boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
-            if(retorno){
-                usuarioLogado.setCapa(url.toString());
-                usuarioLogado.atualizarCapa();
-            }
+    private void atualizaCapaUsuario(Uri url) {
+        boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
+        if(retorno){
+            usuarioLogado.setCapa(url.toString());
+            usuarioLogado.atualizarCapa();
         }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[]
             permissions, @NonNull int[] grantResults) {

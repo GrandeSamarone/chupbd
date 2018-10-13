@@ -99,6 +99,9 @@ public class Novo_Conto extends AppCompatActivity {
             return;
         }
         conto.SalvarConto();
+        int qtdContos=perfil.getContos()+1;
+        perfil.setContos(qtdContos);
+        perfil.atualizarQtdContos();
     }
     @Override
     protected void onStart() {

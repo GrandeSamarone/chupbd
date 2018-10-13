@@ -36,7 +36,6 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-
         <activity android:name=".Activits.MainActivity" />
         <activity android:name=".Autenticacao.LoginActivity">
             <intent-filter>
@@ -49,8 +48,8 @@
         <activity
             android:name=".Icons.PageIcon"
             android:label="@string/title_activity_page_icon1"
-
-            android:theme="@style/AppTheme">/>
+            android:theme="@style/AppTheme">
+            />
         </activity>
         <activity
             android:name=".Activits.MinhaConta"
@@ -86,8 +85,8 @@
         <activity android:name=".Topico.Detalhe_topico" />
         <activity android:name=".Conto.ListaConto" />
         <activity android:name=".Conto.Novo_Conto" />
-        <activity android:name=".Coleçoes.Lista_Colecoes"></activity>
-
+        <activity android:name=".Coleçoes.Lista_Colecoes" />
+        <activity android:name=".Seguidores.MinhaConta.MeusSeguidores"></activity>
     </application>
 
 </manifest>

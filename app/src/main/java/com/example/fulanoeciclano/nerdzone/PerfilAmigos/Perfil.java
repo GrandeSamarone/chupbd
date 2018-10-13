@@ -16,10 +16,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Art_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Livros_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topicos_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Art_MinhaConta_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Contos_MinhaConta_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Livros_Perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Topicos_MinhaConta_Fragment;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
@@ -44,13 +44,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Perfil extends AppCompatActivity implements Main, View.OnClickListener {
 
-    private TextView nome,fraserapida,n_seguidores;
+    private TextView nome,fraserapida,n_seguidores,n_topicos,n_contos,n_arts;
     private CircleImageView imgperfil;
     private SimpleDraweeView capausuario;
     private ChildEventListener ChildEventListenerperfil;
     private DatabaseReference database_perfil,seguidores_ref,usuarioLogadoRef;
     private ViewPager mViewPager;
-    private LinearLayout botao_voltar;
+    private LinearLayout botao_voltar,btn_topico_click,btn_conto_click,btn_fanats_click;
     private Button botao_seguir,botao_msg;
     private String id_do_usuario;
     private String id_usuariologado;
@@ -67,6 +67,15 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
     database_perfil = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
     seguidores_ref = ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
      nome = findViewById(R.id.nomeusuario_perfil);
+     btn_conto_click=findViewById(R.id.conto_click_perfil);
+     btn_conto_click.setOnClickListener(this);
+     btn_topico_click = findViewById(R.id.topico_click_perfil);
+     btn_topico_click.setOnClickListener(this);
+     btn_fanats_click = findViewById(R.id.fanats_click_perfil);
+     btn_fanats_click.setOnClickListener(this);
+     n_contos=findViewById(R.id.num_contos_perfil);
+     n_topicos=findViewById(R.id.num_topicos_perfil);
+     n_arts=findViewById(R.id.num_fantars_perfil);
      n_seguidores= findViewById(R.id.n_seguidores);
      fraserapida= findViewById(R.id.fraserapida_perfil);
      capausuario = findViewById(R.id.capaperfilusuario);
@@ -81,11 +90,12 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
         final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                        .add("HISTÓRIAS", Livros_Perfil_Fragment.class )
+                        .add("TÓPICOS", Livros_Perfil_Fragment.class )
                         // .add("Noticia",Noticia_Fragment.class)
-                        .add("TOPICOS", Topicos_Perfil_Fragment.class)
-                        .add("CONTOS",Contos_Perfil_Fragment.class)
-                        .add("FANARTS",Art_Perfil_Fragment.class)
+                        .add("CONTOS", Topicos_MinhaConta_Fragment.class)
+                        .add("FANARTS",Contos_MinhaConta_Fragment.class)
+                        .add("COMÉRCIO",Art_MinhaConta_Fragment.class)
+                        .add("EVENTO",Art_MinhaConta_Fragment.class)
                         // .add("Tops", RankFragment.class)
                         .create()
         );
@@ -166,6 +176,15 @@ EventBus.getDefault().postSticky("MulekeDoido");
                 it.putExtra("id",id_do_usuario);
                 startActivity(it);
                 break;
+            case R.id.topico_click_perfil:
+                mViewPager.setCurrentItem(0);
+                break;
+            case R.id.conto_click_perfil:
+                mViewPager.setCurrentItem(1);
+                break;
+            case R.id.fanats_click_perfil:
+                mViewPager.setCurrentItem(2);
+                break;
         }
     }
     private void CarregarDados_do_Usuario(){
@@ -178,6 +197,9 @@ EventBus.getDefault().postSticky("MulekeDoido");
 
 
                          nome.setText(usuarioselecionado.getNome());
+                        n_topicos.setText(String.valueOf(usuarioselecionado.getTopicos()));
+                        n_contos.setText(String.valueOf(usuarioselecionado.getContos()));
+                        n_arts.setText(String.valueOf(usuarioselecionado.getArts()));
                          n_seguidores.setText(String.valueOf(usuarioselecionado.getSeguidores()));
                         Uri  capa = Uri.parse(usuarioselecionado.getCapa());
 
@@ -307,8 +329,6 @@ private void SalvarSeguidor(Usuario ulogado,Usuario uamigo){
 
     HashMap<String, Object> dadosUsuarioLogado = new HashMap<>();
     dadosUsuarioLogado.put("id", ulogado.getId() );
-    dadosUsuarioLogado.put("nome", ulogado.getNome() );
-    dadosUsuarioLogado.put("caminhoFoto", ulogado.getFoto() );
 
         DatabaseReference seguidorRef = seguidores_ref
                .child(uamigo.getId())
@@ -332,7 +352,7 @@ private void SalvarSeguidor(Usuario ulogado,Usuario uamigo){
     DatabaseReference usuarioSeguidores = database_perfil
             .child( uamigo.getId() );
     usuarioSeguidores.updateChildren( dadosSeguidores );
-
+    botao_seguir.setText(R.string.botao_txt_seguindo);
     //Incrementar seguindo do usuário logado
     int seguindo = ulogado.getSeguindo() + 1;
     HashMap<String, Object> dadosSeguindo = new HashMap<>();

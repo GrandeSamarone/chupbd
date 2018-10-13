@@ -19,6 +19,7 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
+import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -71,10 +72,25 @@ public class Detalhe_topico extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario  user = dataSnapshot.getValue(Usuario.class);
                nome_autor.setText(user.getNome());
-
+           nome_autor.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   Intent it = new Intent(Detalhe_topico.this, Perfil.class);
+                   it.putExtra("id",user.getId());
+                   startActivity(it);
+               }
+           });
                 Glide.with(Detalhe_topico.this)
                         .load(user.getFoto())
                         .into(icone);
+                icone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(Detalhe_topico.this, Perfil.class);
+                        it.putExtra("id",user.getId());
+                        startActivity(it);
+                    }
+                });
 
             }
 

@@ -135,12 +135,13 @@
 
 
 <LinearLayout
-    android:id="@+id/seguidores"
+    android:id="@+id/seguidores_click"
     android:layout_weight="1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
             <TextView
+                android:id="@+id/num_total_seguidores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_0_n_perfil"
@@ -154,7 +155,7 @@
 
 </LinearLayout>
         <LinearLayout
-            android:id="@+id/primeiro"
+            android:id="@+id/topico_click"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -174,12 +175,13 @@
 
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/segundo"
+            android:id="@+id/contos_click"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/num_contos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_0_n_perfil"
@@ -192,12 +194,13 @@
                 android:text="Contos" />
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/terceiro"
+            android:id="@+id/fanats_click"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/num_fantars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/_0_n_perfil"
@@ -206,36 +209,26 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Livros"
+                android:text="FanArts"
                 android:textAlignment="center"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/quarto"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/_0_n_perfil"
-                android:textSize="18sp"
-                android:textAlignment="center"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Arts"
-                android:textAlignment="center"/>
-        </LinearLayout>
+
+
+
     </LinearLayout>
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
+            <com.ogaclejapan.smarttablayout.SmartTabLayout
+                android:id="@+id/SmartTabLayoutperfil"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:background="@color/background"
-                app:tabGravity="fill"
-                app:tabMode="fixed"
-               app:tabTextColor="@color/primary"/>
+                app:stl_defaultTabTextColor="@color/custom_tab"
+                app:stl_dividerColor="@color/branco"
+                app:stl_indicatorColor="@color/colorPrimary"
+                app:stl_defaultTabTextHorizontalPadding="24dp"
+                app:stl_indicatorInterpolation="linear"
+                app:stl_indicatorThickness="3dp"
+                app:stl_underlineThickness="1dp"
+                />
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPagerperfil"
                 android:layout_width="match_parent"

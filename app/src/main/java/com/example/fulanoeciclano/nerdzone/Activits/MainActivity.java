@@ -34,7 +34,6 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
-import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
@@ -56,14 +55,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements Main,
+public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         SwipeRefreshLayout.OnRefreshListener {
 
@@ -194,44 +191,9 @@ public class MainActivity extends AppCompatActivity implements Main,
         CarregarInformacoesNoDrawer();
         botoes_Mais();
         CarregarDados_do_Usuario();
-        EventBus.getDefault().postSticky("MulekeDoido");
+       // EventBus.getDefault().postSticky("MulekeDoido");
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        this.unregisterEventBus();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        this.registerEventBus();
-    }
-
-    @Override
-    public void registerEventBus() {
-
-        try {
-            EventBus.getDefault().register(this);
-        }catch (Exception Err){
-
-
-        }
-
-    }
-
-    @Override
-    public void unregisterEventBus() {
-        try {
-            EventBus.getDefault().unregister(this);
-        }catch (Exception e){
-
-        }
-
-    }
 
     @Override
     public void onStop() {

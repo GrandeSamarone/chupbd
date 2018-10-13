@@ -35,6 +35,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/topico_click_perfil"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,12 +55,13 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/conto_click_perfil"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-
+                    android:id="@+id/num_contos_perfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/_0_n_perfil"
@@ -72,11 +74,13 @@
                     android:text="Contos" />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/fanats_click_perfil"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/num_fantars_perfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/_0_n_perfil"
@@ -85,26 +89,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Livros"
+                    android:text="FanArts"
                     android:textAlignment="center"/>
             </LinearLayout>
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/_0_n_perfil"
-                    android:textSize="18sp"
-                    android:textAlignment="center"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Arts"
-                    android:textAlignment="center"/>
-            </LinearLayout>
+
         </LinearLayout>
         <com.ogaclejapan.smarttablayout.SmartTabLayout
             android:id="@+id/SmartTabLayoutperfilusuario"

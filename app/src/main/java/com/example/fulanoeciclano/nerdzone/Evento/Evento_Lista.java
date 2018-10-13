@@ -315,22 +315,15 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 IconeUsuario(icone);
 
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
