@@ -216,6 +216,7 @@
             android:background="@drawable/line_divider"
             android:fitsSystemWindows="true" />
         <RelativeLayout
+            android:id="@+id/click_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
           >

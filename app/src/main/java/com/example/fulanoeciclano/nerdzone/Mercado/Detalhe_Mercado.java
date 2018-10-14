@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Activits.AbrirImagem;
+import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagemComercio;
 import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
@@ -66,6 +66,7 @@ public class Detalhe_Mercado extends AppCompatActivity {
     private CircleImageView perfil;
     private ChildEventListener ChildEventListeneruser;
     private String usuarioLogado;
+    private RelativeLayout click;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class Detalhe_Mercado extends AppCompatActivity {
         criador = findViewById(R.id.detalhe_mercado_criador);
         descricao = findViewById(R.id.detalhe_mercado_descricao);
         endereco = findViewById(R.id.detalhe_mercado_endereco);
+        click = findViewById(R.id.click_layout);
         botaovoltar = findViewById(R.id.mercado_button_back);
         botaovoltar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,14 +150,14 @@ public class Detalhe_Mercado extends AppCompatActivity {
             public void onClick(int position) {
                     /*Bundle bundle = new Bundle();
                     bundle.putString("id", mercadoselecionado.getIdMercado());
-                    Intent it = new Intent(Detalhe_Mercado.this, AbrirImagem.class);
+                    Intent it = new Intent(Detalhe_Mercado.this, AbrirImagemComercio.class);
                     it.putExtras(bundle);
                     startActivity(it);
                     */
 
 
                 List<String> ff = mercadoselecionado.getFotos();
-                Intent it = new Intent(Detalhe_Mercado.this, AbrirImagem.class);
+                Intent it = new Intent(Detalhe_Mercado.this, AbrirImagemComercio.class);
                 it.putExtra("fotoselecionada", (Serializable) ff);
                 it.putExtra("nome", mercadoselecionado.getTitulo());
                 startActivity(it);
@@ -187,23 +189,13 @@ public class Detalhe_Mercado extends AppCompatActivity {
                         assert user != null;
                         RatingBar(user);
                         String foto = user.getFoto();
-                        Log.i("soskdoaksd", foto);
-                        Log.i("wqq", user.getNome());
                         Glide.with(Detalhe_Mercado.this)
                                 .load(foto)
                                 .into(perfil);
                         criador.setText(user.getNome());
-                        if (!usuarioLogado.equals(user.getId())) {
-                            criador.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent it = new Intent(Detalhe_Mercado.this, Perfil.class);
-                                    it.putExtra("id", user.getId());
-                                    startActivity(it);
-                                }
-                            });
 
-                            perfil.setOnClickListener(new View.OnClickListener() {
+                        if (!usuarioLogado.equals(user.getId())) {
+                            click.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     Intent it = new Intent(Detalhe_Mercado.this, Perfil.class);
@@ -212,16 +204,7 @@ public class Detalhe_Mercado extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            criador.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent it = new Intent(Detalhe_Mercado.this, MinhaConta.class);
-                                    it.putExtra("id", user.getId());
-                                    startActivity(it);
-                                }
-                            });
-
-                            perfil.setOnClickListener(new View.OnClickListener() {
+                            click.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     Intent it = new Intent(Detalhe_Mercado.this, MinhaConta.class);

@@ -16,14 +16,16 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Art_MinhaConta_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Contos_MinhaConta_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Livros_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta.Topicos_MinhaConta_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Comercio_perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Evento_perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.FanArts_perfil_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topico_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.example.fulanoeciclano.nerdzone.Seguidores.Perfil.SeguidoresPerfil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -50,7 +52,7 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
     private ChildEventListener ChildEventListenerperfil;
     private DatabaseReference database_perfil,seguidores_ref,usuarioLogadoRef;
     private ViewPager mViewPager;
-    private LinearLayout botao_voltar,btn_topico_click,btn_conto_click,btn_fanats_click;
+    private LinearLayout botao_voltar,btn_topico_click,btn_conto_click,btn_fanats_click,btn_seguidor_click;
     private Button botao_seguir,botao_msg;
     private String id_do_usuario;
     private String id_usuariologado;
@@ -73,6 +75,8 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
      btn_topico_click.setOnClickListener(this);
      btn_fanats_click = findViewById(R.id.fanats_click_perfil);
      btn_fanats_click.setOnClickListener(this);
+     btn_seguidor_click = findViewById(R.id.seguidores_click_perfil);
+     btn_seguidor_click.setOnClickListener(this);
      n_contos=findViewById(R.id.num_contos_perfil);
      n_topicos=findViewById(R.id.num_topicos_perfil);
      n_arts=findViewById(R.id.num_fantars_perfil);
@@ -90,12 +94,11 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
         final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                        .add("TÓPICOS", Livros_Perfil_Fragment.class )
-                        // .add("Noticia",Noticia_Fragment.class)
-                        .add("CONTOS", Topicos_MinhaConta_Fragment.class)
-                        .add("FANARTS",Contos_MinhaConta_Fragment.class)
-                        .add("COMÉRCIO",Art_MinhaConta_Fragment.class)
-                        .add("EVENTO",Art_MinhaConta_Fragment.class)
+                        .add("TÓPICOS", Topico_Perfil_Fragment.class)
+                        .add("CONTOS", Contos_perfil_Fragment.class)
+                        .add("FANARTS",FanArts_perfil_Fragment.class)
+                        .add("COMÉRCIO",Comercio_perfil_Fragment.class)
+                        .add("EVENTO",Evento_perfil_Fragment.class)
                         // .add("Tops", RankFragment.class)
                         .create()
         );
@@ -116,7 +119,7 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
         CarregarDados_do_Usuario();
         recuperarDadosUsuarioLogado();
 
-EventBus.getDefault().postSticky("MulekeDoido");
+
     }
 
 
@@ -185,6 +188,10 @@ EventBus.getDefault().postSticky("MulekeDoido");
             case R.id.fanats_click_perfil:
                 mViewPager.setCurrentItem(2);
                 break;
+            case R.id.seguidores_click_perfil:
+                Intent it_id = new Intent(Perfil.this, SeguidoresPerfil.class);
+                it_id.putExtra("id",usuarioselecionado.getId());
+                startActivity(it_id);
         }
     }
     private void CarregarDados_do_Usuario(){
@@ -201,20 +208,26 @@ EventBus.getDefault().postSticky("MulekeDoido");
                         n_contos.setText(String.valueOf(usuarioselecionado.getContos()));
                         n_arts.setText(String.valueOf(usuarioselecionado.getArts()));
                          n_seguidores.setText(String.valueOf(usuarioselecionado.getSeguidores()));
+
                         Uri  capa = Uri.parse(usuarioselecionado.getCapa());
-
-                            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                                    .setUri(capa)
-                                    .setAutoPlayAnimations(true)
-                                    .build();
-
-                            capausuario.setController(controllerOne);
-
+                             if(capa==null){
+                                 capausuario.setBackgroundResource(R.drawable.gradiente_toolbar);
+                             }else {
+                                 DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                                         .setUri(capa)
+                                         .setAutoPlayAnimations(true)
+                                         .build();
+                                 capausuario.setController(controllerOne);
+                             }
 
                         String fotoperfil = usuarioselecionado.getFoto();
                         Glide.with(Perfil.this)
                                 .load(fotoperfil)
                                 .into(imgperfil);
+
+
+                        //EventBUS
+                        EventBus.getDefault().postSticky(usuarioselecionado.getId());
                     }
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {

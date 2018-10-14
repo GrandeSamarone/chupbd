@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +38,8 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Seguidores.MinhaConta.MeusSeguidores;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,7 +80,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     private static final int SELECAO_ICONE=300;
     private static final int MINHA_CONTA=12;
     private CircleImageView circleImageViewperfil;
-    private ImageView capa_perfil;
+    private SimpleDraweeView capa_perfil;
     private LinearLayout btn_voltar,topicoclick,contoclick,fanatsclick,seguidor_click;
     private StorageReference storageReference;
     private String identificadorUsuario;
@@ -102,10 +103,10 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
 
         //configuracoes iniciais
+       identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         usuario = UsuarioFirebase.getUsuarioAtual();
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
-        identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         n_topicos=findViewById(R.id.num_topicos);
         n_seguidores=findViewById(R.id.num_total_seguidores);
         n_contos=findViewById(R.id.num_contos);
@@ -146,9 +147,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                         // .add("Noticia",Noticia_Fragment.class)
                         .add("CONTOS", Contos_MinhaConta_Fragment.class)
                         .add("FANARTS",Art_MinhaConta_Fragment.class)
-                        .add("COMÉRCIOS",Art_MinhaConta_Fragment.class)
-                        .add("EVENTOS",Art_MinhaConta_Fragment.class)
-                        // .add("Tops", RankFragment.class)
+
                         .create()
 
         );
@@ -251,7 +250,11 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
     }
 
     private void CarregarDados_do_Usuario(){
-
+//Progress
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Aguarde");
+        progressDialog.show();
+        progressDialog.setCancelable(false);
         String email = usuario.getEmail();
         ChildEventListener=database.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
             @Override
@@ -259,10 +262,17 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 Usuario perfil = dataSnapshot.getValue(Usuario.class );
                 assert perfil != null;
 
-                String capa = perfil.getCapa();
-                Glide.with(MinhaConta.this)
-                        .load(capa)
-                        .into(capa_perfil );
+                Uri  capa = Uri.parse(perfil.getCapa());
+                if(capa==null){
+                    capa_perfil.setBackgroundResource(R.drawable.fundo_da_capa_add_evento);
+                }else {
+                    DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                            .setUri(capa)
+                            .setAutoPlayAnimations(true)
+                            .build();
+                    capa_perfil.setController(controllerOne);
+                }
+
 
                 String icone = perfil.getFoto();
                 Glide.with(MinhaConta.this)
@@ -274,7 +284,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 n_contos.setText(String.valueOf(perfil.getContos()));
                 n_fanats.setText(String.valueOf(perfil.getArts()));
                 n_seguidores.setText(String.valueOf(perfil.getSeguidores()));
-
+                progressDialog.dismiss();
                 //Meus Seguidores
           seguidor_click.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -290,7 +300,27 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                assert perfil != null;
 
+                String capa = perfil.getCapa();
+                if(capa==null){
+                    capa_perfil.setBackgroundResource(R.drawable.fundo_da_capa_add_evento);
+                }else {
+                    Glide.with(getApplicationContext())
+                            .load(capa)
+                            .into(capa_perfil);
+                }
+                String icone = perfil.getFoto();
+                Glide.with(getApplicationContext())
+                        .load(icone)
+                        .into(circleImageViewperfil );
+
+                nome.setText(perfil.getNome());
+                n_topicos.setText(String.valueOf(perfil.getTopicos()));
+                n_contos.setText(String.valueOf(perfil.getContos()));
+                n_fanats.setText(String.valueOf(perfil.getArts()));
+                n_seguidores.setText(String.valueOf(perfil.getSeguidores()));
             }
 
             @Override
@@ -487,7 +517,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
+
                             Toast.makeText(MinhaConta.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
 
                             Uri url = taskSnapshot.getDownloadUrl();
@@ -496,7 +526,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                             Glide.with(MinhaConta.this)
                                     .load(url)
                                     .into(capa_perfil);
-
+                            progressDialog.dismiss();
                         }
 
                     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

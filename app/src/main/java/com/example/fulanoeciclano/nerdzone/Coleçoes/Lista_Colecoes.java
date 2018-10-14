@@ -31,7 +31,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -83,9 +82,10 @@ public class Lista_Colecoes extends AppCompatActivity implements SwipeRefreshLay
         //Configuraçoes Basicas
         recycleview_colecoes = findViewById(R.id.recycleview_colecoes);
         idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        Log.i("sdsd",idUsuario);
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         database_colecoes= ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("adicionei-colecao")
+                .child("conto-colecao")
                 .child(idUsuario);
         //adapter
         adapter_conto = new Adapter_Conto(ListaColecoes,this);
@@ -106,24 +106,7 @@ public class Lista_Colecoes extends AppCompatActivity implements SwipeRefreshLay
         SeachViewConto.setHint("Pesquisar");
         SeachViewConto.setHintTextColor(R.color.cinzaclaro);
 
-        database_colecoes.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(perfil.getId())) {
-                    Log.i("asas","verdadeiro");
-                    Log.i("asas",perfil.getId());
-                    //   holder.txt_add_colecao.setText(R.string.adicionado_colecao);
-                } else {
-                    Log.i("asas","falso");
-                    //  holder.txt_add_colecao.setText(R.string.adicionar_colecao);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -137,7 +120,7 @@ public class Lista_Colecoes extends AppCompatActivity implements SwipeRefreshLay
         super.onStart();
         TrocarFundos_status_bar();
         CarregarDados_do_Usuario();
-        //RecuperarColecoes();
+        RecuperarColecoes();
 
     }
 

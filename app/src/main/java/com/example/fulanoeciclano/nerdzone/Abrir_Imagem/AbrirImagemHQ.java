@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Activits;
+package com.example.fulanoeciclano.nerdzone.Abrir_Imagem;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;

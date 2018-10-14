@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -95,6 +96,20 @@ holder.click.setOnClickListener(new View.OnClickListener() {
         }
     }
 });
+        holder.clicktambem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Topico> listTopicoAtualizado = getTopicos();
+                if (listTopicoAtualizado.size() > 0) {
+                    Topico topicoselecionado = listTopicoAtualizado.get(position);
+                    Intent it = new Intent(context, Detalhe_topico.class);
+                    it.putExtra("topicoselecionado", topicoselecionado);
+                    context.startActivity(it);
+
+                }
+            }
+
+        });
 
         DatabaseReference topicoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("topico-likes")
@@ -162,6 +177,7 @@ holder.click.setOnClickListener(new View.OnClickListener() {
         private TextView titulo,mensagem,autor,num_curtida;
         private CircleImageView foto_autor;
         private LinearLayout click;
+        private RelativeLayout clicktambem;
         private SparkButton botaocurtir;
 
         public MyViewHolder(View itemView) {
@@ -171,6 +187,7 @@ holder.click.setOnClickListener(new View.OnClickListener() {
         autor  = itemView.findViewById(R.id.topico_autor);
         foto_autor = itemView.findViewById(R.id.topico_foto_autor);
          click = itemView.findViewById(R.id.tituloline);
+         clicktambem = itemView.findViewById(R.id.ico);
          botaocurtir = itemView.findViewById(R.id.botaocurtirtopico);
          num_curtida = itemView.findViewById(R.id.topico_num_curit);
 

@@ -2,6 +2,7 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.firebase.database.DatabaseReference;
 
@@ -41,10 +42,10 @@ public class Comercio implements Serializable {
 
 
     public void salvar(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("meuscomercio");
-        anuncioref.child(idUsuario)
+        anuncioref.child(identificadorUsuario)
                 .child(getIdMercado()).setValue(this);
 
        salvarMercadoPublico();

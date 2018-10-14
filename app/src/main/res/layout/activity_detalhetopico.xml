@@ -62,16 +62,26 @@
         app:fontFamily="sans-serif-condensed"
         tools:text="topico" />
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_marginLeft="8dp"
+        android:id="@+id/foto_topico"
+        android:layout_width="80sp"
+        android:scaleType="center"
+        app:actualImageScaleType="center"
+        android:layout_height="80sp" />
+
 <ImageView
     android:id="@+id/foto_detalhe_topico"
     android:layout_width="100dp"
     android:layout_height="100dp"
     android:visibility="gone"/>
     <LinearLayout
+        android:id="@+id/nome_foto_click"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp">
+       >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/icon_topico_detalhe_author"
             android:layout_width="24dp"

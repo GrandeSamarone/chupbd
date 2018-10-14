@@ -3,6 +3,7 @@ package com.example.fulanoeciclano.nerdzone.Topico;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -21,6 +24,9 @@ import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,10 +41,12 @@ public class Detalhe_topico extends AppCompatActivity {
 
     private Toolbar toolbar;
     private CircleImageView icone;
+    private SimpleDraweeView foto;
     private TextView nome_autor,titulo,mensagem,titulotoolbar;
     private DatabaseReference database,database_topico;
     private FirebaseUser usuario;
     private Topico topicoselecionado;
+    private LinearLayout clickPerfil;
     private ChildEventListener ChildEventListenerdetalhe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +59,11 @@ public class Detalhe_topico extends AppCompatActivity {
         //Configuracoes Iniciais
 
         icone = findViewById(R.id.icon_topico_detalhe_author);
+        foto = findViewById(R.id.foto_topico);
         nome_autor = findViewById(R.id.nome_topico__detalhe_autor);
         titulo = findViewById(R.id.detalhe_topico_titulo);
         mensagem = findViewById(R.id.detalhe_topico_mensagem);
-
+       clickPerfil = findViewById(R.id.nome_foto_click);
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         topicoselecionado = (Topico)  getIntent().getSerializableExtra("topicoselecionado");
         if(topicoselecionado!=null){
@@ -62,6 +71,26 @@ public class Detalhe_topico extends AppCompatActivity {
             titulo.setText(topicoselecionado.getTitulo());
             mensagem.setText(topicoselecionado.getMensagem());
             RecuperarIcone_e_nome_author(topicoselecionado.getIdauthor());
+            Uri capa = Uri.parse(topicoselecionado.getFoto());
+            if(capa!=null){
+                DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                        .setUri(capa)
+                        .setAutoPlayAnimations(true)
+                        .build();
+                foto.setController(controllerOne);
+            }else{
+                foto.setVisibility(View.GONE);
+            }
+
+            foto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   String ff = topicoselecionado.getFoto();
+                    Intent it = new Intent(Detalhe_topico.this, AbrirImagem.class);
+                    it.putExtra("id_foto",  topicoselecionado.getFoto());
+                    startActivity(it);
+                }
+            });
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -72,25 +101,33 @@ public class Detalhe_topico extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario  user = dataSnapshot.getValue(Usuario.class);
                nome_autor.setText(user.getNome());
-           nome_autor.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent it = new Intent(Detalhe_topico.this, Perfil.class);
-                   it.putExtra("id",user.getId());
-                   startActivity(it);
-               }
-           });
+                String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+
+
+
+                if(!user.getId().equals(identificadorUsuario)) {
+
+                    clickPerfil.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent it = new Intent(Detalhe_topico.this, Perfil.class);
+                            it.putExtra("id", user.getId());
+                            startActivity(it);
+                        }
+                    });
+                }else{
+                    clickPerfil.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent it = new Intent(Detalhe_topico.this, MinhaConta.class);
+                            startActivity(it);
+                        }
+                    });
+                }
                 Glide.with(Detalhe_topico.this)
                         .load(user.getFoto())
                         .into(icone);
-                icone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent it = new Intent(Detalhe_topico.this, Perfil.class);
-                        it.putExtra("id",user.getId());
-                        startActivity(it);
-                    }
-                });
+
 
             }
 

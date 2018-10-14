@@ -187,9 +187,7 @@ public class LoginActivity extends AppCompatActivity {
                             usuario = new Usuario();
                             usuario.setNome(user.getDisplayName());
                             usuario.setFoto(String.valueOf(user.getPhotoUrl()));
-                            usuario.setCapa("https://firebasestorage.googleapis.com/v0/b/geeksgibi.appspot." +
-                                    "com/o/capa%2Ffundo_da_capa_add_evento.jpg?alt=media&token=7d7dd425-ceef-47c2-bfd1-7245bfc98248");
-
+                            usuario.setCapa("");
                                 usuario.setTipoconta(user.getEmail());
                             usuario.setTiposuario("usuario");
                             //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());

@@ -160,7 +160,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                     public void onEvent(ImageView button, boolean buttonState) {
                         if (buttonState) {
                             colecao.Salvar();
-
+                            conto.AdicioneiConto();
                             holder.txt_add_colecao.setText(R.string.adicionado_colecao);
                         } else {
                             colecao.removercolecao();

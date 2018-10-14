@@ -18,8 +18,6 @@ public class Conto_colecao {
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
 
         HashMap<String,Object> dadosusuario = new HashMap<>();
-        dadosusuario.put("nomeUsuario",usuario.getNome());
-        dadosusuario.put("foto",usuario.getFoto());
         dadosusuario.put("id",usuario.getId());
 
         DatabaseReference pLikeRef=firebaseRef
@@ -30,19 +28,11 @@ public class Conto_colecao {
 
         //Atualizar quantidade de like
         atualizarQtd(1);
-      adicionei_a_minha_colecao();
+
 
     }
 
-    public void adicionei_a_minha_colecao(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
 
-        DatabaseReference add_colecao = ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("adicionei-colecao")
-                .child(idUsuario);
-        add_colecao.setValue(conto.getUid());
-
-    }
     private void atualizarQtd(int valor){
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeRef=firebaseRef

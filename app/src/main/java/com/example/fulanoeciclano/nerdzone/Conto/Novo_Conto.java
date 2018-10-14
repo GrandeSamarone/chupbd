@@ -102,6 +102,9 @@ public class Novo_Conto extends AppCompatActivity {
         int qtdContos=perfil.getContos()+1;
         perfil.setContos(qtdContos);
         perfil.atualizarQtdContos();
+        Intent it = new Intent(Novo_Conto.this,ListaConto.class);
+        startActivity(it);
+        finish();
     }
     @Override
     protected void onStart() {

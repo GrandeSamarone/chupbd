@@ -63,14 +63,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-   android:gravity="center">
-    <de.hdodenhof.circleimageview.CircleImageView
+  >
+    <ImageView
         android:id="@+id/imageTopicoCadastro"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_marginRight="8dp"
-        android:layout_height="100dp"
-        android:background="@drawable/fundoloja"
+        android:layout_height="wrap_content"
+        android:src="@drawable/fundoloja"
         />
+    <TextView
+        android:layout_marginLeft="8dp"
+        android:textColor="@color/cinzasecunradrio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="(OPCIONAL)"/>
 
 </LinearLayout>
     <Button

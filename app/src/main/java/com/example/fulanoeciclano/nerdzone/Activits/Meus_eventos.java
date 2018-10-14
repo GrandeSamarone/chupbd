@@ -90,9 +90,9 @@ public class Meus_eventos extends AppCompatActivity implements SwipeRefreshLayou
         refresh.setColorSchemeResources
                 (R.color.colorPrimaryDark, R.color.amareloclaro,
                         R.color.accent);
-        identificadoUsuario= UsuarioFirebase.getIdentificadorUsuario();
-        meus_eventosref=database.child("meusevento").child(ConfiguracaoFirebase.getIdUsuario());
-        meus_comercioref = database.child("meuscomercio").child(ConfiguracaoFirebase.getIdUsuario());
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        meus_eventosref=database.child("meusevento").child(identificadorUsuario);
+        meus_comercioref = database.child("meuscomercio").child(identificadorUsuario);
 
          mAdapter = new Adapter_Meus_Eventos(lista_Meus_Eventos,Meus_eventos.this);
          adapterComercio = new Adapter_Meus_Comercio(lista_meus_comercio,Meus_eventos.this);

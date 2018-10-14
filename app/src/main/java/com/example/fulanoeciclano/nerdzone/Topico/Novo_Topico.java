@@ -57,7 +57,8 @@ public class Novo_Topico extends AppCompatActivity {
     private static final int SELECAO_GALERIA = 200;
 
     private Toolbar toolbar;
-    private CircleImageView icone,img_topico;
+    private CircleImageView icone;
+    private ImageView img_topico;
     private Button botaosalvar;
     private DatabaseReference databaseusuario,databasetopico;
     private FirebaseUser usuario;
@@ -180,6 +181,42 @@ public class Novo_Topico extends AppCompatActivity {
         return  topico;
 
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            Bitmap imagem = null;
+
+            try {
+                switch (requestCode) {
+                    case SELECAO_CAMERA:
+                        CropImage.ActivityResult resultCAMERA = CropImage.getActivityResult(data);
+                        Uri resultUriCAMERA = resultCAMERA.getUri();
+                        Glide.with(getApplicationContext())
+                                .load(resultUriCAMERA)
+                                .into(img_topico);
+                        break;
+                    case SELECAO_GALERIA:
+                        CropImage.ActivityResult resultGALERIA = CropImage.getActivityResult(data);
+                        Uri resultUriGALERIA = resultGALERIA.getUri();
+                        Glide.with(getApplicationContext())
+                                .load(resultUriGALERIA)
+                                .into(img_topico);
+
+                        break;
+
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void validarDadosTopico() {
         topico = configurarTopico();
 
@@ -239,9 +276,9 @@ public class Novo_Topico extends AppCompatActivity {
                 topico.setFoto(String.valueOf(url));
                 // SalvarPost(url);
                 topico.SalvarTopico();
-              int qtdTopicos=perfil.getTopicos()+1;
-              perfil.setTopicos(qtdTopicos);
-              perfil.atualizarQtdTopicos();
+                int qtdTopicos=perfil.getTopicos()+1;
+                perfil.setTopicos(qtdTopicos);
+                perfil.atualizarQtdTopicos();
                 Toast.makeText(Novo_Topico.this, "Tópico Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
                 Intent it = new Intent(Novo_Topico.this, ListaTopicos.class);
                 startActivity(it);
@@ -258,46 +295,6 @@ public class Novo_Topico extends AppCompatActivity {
 
 
     }
-
-
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            Bitmap imagem = null;
-
-            try {
-                switch (requestCode) {
-                    case SELECAO_CAMERA:
-                        CropImage.ActivityResult resultCAMERA = CropImage.getActivityResult(data);
-                        Uri resultUriCAMERA = resultCAMERA.getUri();
-                        Glide.with(Novo_Topico.this)
-                                .load(resultUriCAMERA)
-                                .into(img_topico);
-                        break;
-                    case SELECAO_GALERIA:
-                        CropImage.ActivityResult resultGALERIA = CropImage.getActivityResult(data);
-                        Uri resultUriGALERIA = resultGALERIA.getUri();
-                        Glide.with(Novo_Topico.this)
-                                .load(resultUriGALERIA)
-                                .into(img_topico);
-
-                        break;
-
-
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
 
 
 

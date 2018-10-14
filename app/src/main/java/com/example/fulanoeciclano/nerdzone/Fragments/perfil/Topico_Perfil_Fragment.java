@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Fragments.MinhaConta;
+package com.example.fulanoeciclano.nerdzone.Fragments.perfil;
 
 
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Topico;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -21,12 +21,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Topicos_MinhaConta_Fragment extends Fragment  {
+public class Topico_Perfil_Fragment extends Fragment  implements Main{
+
     private DatabaseReference mDatabasetopico;
     private FirebaseAuth autenticacao;
     private FirebaseAuth mFirebaseAuth;
@@ -36,9 +41,7 @@ public class Topicos_MinhaConta_Fragment extends Fragment  {
     private ChildEventListener valueEventListenerTopico;
     private LinearLayoutManager mManager;
     private Usuario user;
-
-
-    public Topicos_MinhaConta_Fragment() {
+    public Topico_Perfil_Fragment() {
         // Required empty public constructor
     }
 
@@ -47,9 +50,9 @@ public class Topicos_MinhaConta_Fragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View view= inflater.inflate(R.layout.fragment_topicos__perfil_, container, false);
+       View view=inflater.inflate(R.layout.fragment_topico__perfil_, container, false);
 
-        recyclerTopico = view.findViewById(R.id.lista_topico_minha_conta);
+        recyclerTopico = view.findViewById(R.id.lista_topico_perfil);
         mDatabasetopico = ConfiguracaoFirebase.getFirebaseDatabase().child("topico");
         //Configuracao Adapter
         adapter_topico =new Adapter_Topico(ListaTopico,getActivity());
@@ -59,15 +62,11 @@ public class Topicos_MinhaConta_Fragment extends Fragment  {
         recyclerTopico.setLayoutManager(layoutManager);
         recyclerTopico.setHasFixedSize(true);
         recyclerTopico.setAdapter(adapter_topico);
-    return  view;
-
-
+       return view;
     }
-
     @Override
     public void onStart() {
         super.onStart();
-        RecuperarTopico();
 
     }
 
@@ -77,44 +76,84 @@ public class Topicos_MinhaConta_Fragment extends Fragment  {
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        this.unregisterEventBus();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.registerEventBus();
+    }
+
+    @Override
+    public void registerEventBus() {
+
+        try {
+            EventBus.getDefault().register(this);
+        }catch (Exception Err){
 
 
+        }
+
+    }
+
+    @Override
+    public void unregisterEventBus() {
+        try {
+            EventBus.getDefault().unregister(this);
+        }catch (Exception e){
+
+        }
+
+    }
 
 
-    public void RecuperarTopico(){
-        String identificadoUsuario= UsuarioFirebase.getIdentificadorUsuario();
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void UsuarioSelecionado(String account) {
+
+        RecuperarTopico(account);
+        //  Toast.makeText(getContext(), id, Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void RecuperarTopico(String id){
         ListaTopico.clear();
-        valueEventListenerTopico=mDatabasetopico.orderByChild("idauthor").equalTo(identificadoUsuario)
+        valueEventListenerTopico=mDatabasetopico.orderByChild("idauthor").equalTo(id)
                 .addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Topico topico = dataSnapshot.getValue(Topico.class);
-                ListaTopico.add(0,topico);
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Topico topico = dataSnapshot.getValue(Topico.class);
+                        ListaTopico.add(0,topico);
 
-                adapter_topico.notifyDataSetChanged();
+                        adapter_topico.notifyDataSetChanged();
 
-            }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                    }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
 }

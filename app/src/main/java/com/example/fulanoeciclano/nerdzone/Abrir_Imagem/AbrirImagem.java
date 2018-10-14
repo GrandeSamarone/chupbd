@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Activits;
+package com.example.fulanoeciclano.nerdzone.Abrir_Imagem;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,18 +14,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_ampliar_imagem;
 import com.example.fulanoeciclano.nerdzone.Adapter.MyViewPagerAdapter;
-import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.database.DatabaseReference;
 
 public class AbrirImagem extends AppCompatActivity {
 
-    private String[] imageUrls ;
+    private String imageUrls ;
     private String nomedomercado;
     private Adapter_ampliar_imagem myAdapter;
     private ViewPager viewPager;
@@ -45,30 +43,21 @@ public class AbrirImagem extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_abrir_imagem);
-        viewPager = findViewById(R.id.viewpager_imagem);
+        setContentView(R.layout.activity_abrir_imagem2);
+
+
+        viewPager = findViewById(R.id.viewpager_imagem_unica);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-      //Recebendo o link da pagina detalhe do comercio e armazenando
-        imageUrls= getIntent().getStringArrayListExtra("fotoselecionada").toArray(new String[0]);
-        nomedomercado=getIntent().getStringExtra("nome");
+        //Recebendo o link da pagina detalhe do comercio e armazenando
+        imageUrls=getIntent().getStringExtra("id_foto");
         myAdapter = new Adapter_ampliar_imagem( AbrirImagem.this,imageUrls);
         viewPager.setAdapter(myAdapter);
 
 
-          //Configuracoes Basicas
-        fotos_mercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
-        tantasfotos = findViewById(R.id.tantasfotos);
-        nome = findViewById(R.id.nome_do_mercado_fotos);
-        nome.setText(nomedomercado);
-        nome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        tantasfotos.setText("1" + " de " + imageUrls.length);
+        //Configuracoes Basicas
+       // fotos_mercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
 
-        botaovoltar = findViewById(R.id.foto_button_back);
+        botaovoltar = findViewById(R.id.foto_button_back_unica);
         botaovoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +70,7 @@ public class AbrirImagem extends AppCompatActivity {
         primeiravez = getSharedPreferences("primeiravezzom", MODE_PRIVATE);
         if (primeiravez.getBoolean("primeiravezzom", true)) {
             primeiravez.edit().putBoolean("primeiravezzom", false).apply();
-                Zoom();
+            Zoom();
         }else{
 
         }
@@ -114,12 +103,7 @@ public class AbrirImagem extends AppCompatActivity {
                 case R.id.navigation_prox:
 
                     viewPager.setCurrentItem(prox(+1),true);
-                    if(viewPager.getCurrentItem()+1==imageUrls.length){
-                        Toast.makeText(AbrirImagem.this, "Ultima", Toast.LENGTH_LONG).show();
 
-
-
-                    }
                     return true;
             }
             return false;
@@ -146,8 +130,8 @@ public class AbrirImagem extends AppCompatActivity {
     };
 
     private void displayMetaInfo(int position) {
-        tantasfotos.setText((position + 1) + " de " + imageUrls.length);
-        nome.setText(nomedomercado);
+        //tantasfotos.setText((position + 1) + " de " + imageUrls.length);
+       // nome.setText(nomedomercado);
 
 
 
@@ -156,7 +140,7 @@ public class AbrirImagem extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-       recuperarFotos();
+        recuperarFotos();
     }
 
     private void recuperarFotos(){

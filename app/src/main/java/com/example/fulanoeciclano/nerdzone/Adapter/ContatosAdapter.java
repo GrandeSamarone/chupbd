@@ -11,7 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -64,6 +66,7 @@ public class ContatosAdapter extends RecyclerView.Adapter<ContatosAdapter.MyView
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
                         assert perfil != null;
 
                         holder.nome.setText(perfil.getNome());
@@ -78,14 +81,25 @@ public class ContatosAdapter extends RecyclerView.Adapter<ContatosAdapter.MyView
                             holder.foto.setImageResource(R.drawable.fundo_user);
                         }
 
-                    holder.click.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent it =new Intent(context, Perfil.class);
-                            it.putExtra("id",perfil.getId());
-                            context.startActivity(it);
+
+                        if(!perfil.getId().equals(identificadorUsuario)) {
+                            holder.click.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(context, Perfil.class);
+                                    it.putExtra("id", perfil.getId());
+                                    context.startActivity(it);
+                                }
+                            });
+                        }else{
+                            holder.click.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent it = new Intent(context, MinhaConta.class);
+                                    context.startActivity(it);
+                                }
+                            });
                         }
-                    });
                     }
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {

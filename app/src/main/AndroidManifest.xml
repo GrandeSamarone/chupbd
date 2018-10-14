@@ -57,7 +57,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activits.GeralContatosActivity" />
         <activity android:name=".Activits.ChatActivity" />
-        <activity android:name=".Activits.AbrirImagemHQ" />
+        <activity android:name=".Abrir_Imagem.AbrirImagemHQ" />
         <activity android:name=".Activits.MensagensActivity" />
         <activity android:name=".Activits.MeusAmigosActivity" />
         <activity android:name=".Evento.Cadastrar_Novo_Evento" />
@@ -72,7 +72,7 @@
             android:name=".Mercado.Detalhe_Mercado"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activits.Gifteste" />
-        <activity android:name=".Activits.AbrirImagem" />
+        <activity android:name=".Abrir_Imagem.AbrirImagemComercio" />
         <activity android:name=".Evento.Evento_Lista" />
         <activity
             android:name=".PerfilAmigos.Perfil"
@@ -86,7 +86,9 @@
         <activity android:name=".Conto.ListaConto" />
         <activity android:name=".Conto.Novo_Conto" />
         <activity android:name=".Coleçoes.Lista_Colecoes" />
-        <activity android:name=".Seguidores.MinhaConta.MeusSeguidores"></activity>
+        <activity android:name=".Seguidores.MinhaConta.MeusSeguidores" />
+        <activity android:name=".Seguidores.Perfil.SeguidoresPerfil" />
+        <activity android:name=".Abrir_Imagem.AbrirImagem"></activity>
     </application>
 
 </manifest>

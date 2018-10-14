@@ -40,10 +40,10 @@ public class Evento implements Serializable {
 
 
     public void salvar(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("meusevento");
-        anuncioref.child(idUsuario)
+        anuncioref.child(identificadorUsuario)
                 .child(getUid()).setValue(this);
 
           salvarEventoPublico();
@@ -57,10 +57,10 @@ public class Evento implements Serializable {
     }
 
     public void remover(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("meusevento")
-                .child(idUsuario)
+                .child(identificadorUsuario)
                 .child(getUid());
 
         anuncioref.removeValue();

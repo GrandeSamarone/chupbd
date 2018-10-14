@@ -67,6 +67,7 @@
     <string name="adicionado_colecao">Adicionado</string>
     <string name="cadastra_icon_nome">Criar Perfil </string>
     <string name="Meus_seguidores">Meus Seguidores</string>
+    <string name="Seguidores">Seguidores</string>
 
     <string-array name="estados">
         <item>Estado</item>

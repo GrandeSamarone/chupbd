@@ -28,7 +28,7 @@
         app:expandedTitleGravity="center|bottom"
         app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:fitsSystemWindows="true"
                 android:id="@+id/capameuperfil"
                 android:layout_width="match_parent"
@@ -224,7 +224,7 @@
                 app:stl_defaultTabTextColor="@color/custom_tab"
                 app:stl_dividerColor="@color/branco"
                 app:stl_indicatorColor="@color/colorPrimary"
-                app:stl_defaultTabTextHorizontalPadding="24dp"
+                app:stl_defaultTabTextHorizontalPadding="40dp"
                 app:stl_indicatorInterpolation="linear"
                 app:stl_indicatorThickness="3dp"
                 app:stl_underlineThickness="1dp"

@@ -3,7 +3,6 @@ package com.example.fulanoeciclano.nerdzone.Adapter;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,22 +16,20 @@ import com.facebook.imagepipeline.image.ImageInfo;
 
 import me.relex.photodraweeview.PhotoDraweeView;
 
-public class Adapter_ampliar_imagem extends PagerAdapter {
-
+public class Adapter_ampliar_Array_de_imagem extends PagerAdapter {
     private Context mContext;
-    private String imageUrl;
+    private String[] imageUrls;
     private LayoutInflater layoutInflater;
 
-    public Adapter_ampliar_imagem(Context context,String imgurl){
-        this.imageUrl=imgurl;
-        this.mContext=context;
 
+    public Adapter_ampliar_Array_de_imagem(Context context, String[] imageUrls) {
+        this.mContext = context;
+        this.imageUrls = imageUrls;
     }
 
 
-    @Override
     public int getCount() {
-        return imageUrl.length();
+        return imageUrls.length;
     }
 
     @Override
@@ -41,37 +38,39 @@ public class Adapter_ampliar_imagem extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.example_item, container, false);
         final PhotoDraweeView imageViewPreview = view.findViewById(R.id.image_view);
 
-        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
-        controller.setUri(Uri.parse(imageUrl));
+       PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+            controller.setUri(Uri.parse(imageUrls[position]));
+            controller.setOldController(imageViewPreview.getController());
+            controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+                @Override
+                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                    super.onFinalImageSet(id, imageInfo, animatable);
+                    // int width = 400, height = 400;
+                    if (imageInfo == null) {
 
-        controller.setOldController(imageViewPreview.getController());
-        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
-            @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                super.onFinalImageSet(id, imageInfo, animatable);
-                // int width = 400, height = 400;
-                if (imageInfo == null) {
-
-                    return;
+                        return;
+                    }
+                    imageViewPreview.update(imageInfo.getWidth(), imageInfo.getHeight());
                 }
-                imageViewPreview.update(imageInfo.getWidth(), imageInfo.getHeight());
-            }
-        });
-        imageViewPreview.setController(controller.build());
+            });
+            imageViewPreview.setController(controller.build());
 
-        container.addView(view);
+            container.addView(view);
 
-        return view;
-    }
+            return view;
+        }
 
 
 
     @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == ((View) object);
+    public boolean isViewFromObject(View view, Object obj) {
+        return view == ((View) obj);
     }
+
+
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
 }
+

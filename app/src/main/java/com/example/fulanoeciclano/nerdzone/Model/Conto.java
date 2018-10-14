@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Model;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
@@ -22,10 +23,10 @@ public class Conto   implements Serializable {
         setUid(eventoref.push().getKey());  }
 
     public  void SalvarConto(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("meusconto");
-        anuncioref.child(idUsuario)
+        anuncioref.child(identificadorUsuario)
                 .child(getUid()).setValue(this);
 
         salvarContoPublico();
@@ -36,7 +37,15 @@ public class Conto   implements Serializable {
                 .child("conto");
         anuncioref.child(getUid()).setValue(this);
     }
+    public  void AdicioneiConto(){
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("adicionei-conto");
+        anuncioref.child(identificadorUsuario)
+                .child(getUid()).setValue(this);
 
+        salvarContoPublico();
+    }
     public String getUid() {
         return uid;
     }
