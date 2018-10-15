@@ -8,11 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -51,30 +55,26 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
 
         List<String> urlFotos = comercio.getFotos();
         String stringcapa = urlFotos.get(0);
-
         if (stringcapa != null) {
             Uri uri = Uri.parse(stringcapa);
-
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setLocalThumbnailPreviewsEnabled(true)
                     .setProgressiveRenderingEnabled(true)
-
                     .build();
+
             DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setTapToRetryEnabled(true)
                     .setImageRequest(request)
-
-                    .setOldController(holder.mercadocapa.getController())
                     .build();
-
-            /*mSimpleDraweeView.setController(controller);
-            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-*/
             holder.mercadocapa.setController(controller);
+
+            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
+            GenericDraweeHierarchy hierarchy = builder
+                    .setProgressBarImage(new CircleProgressDrawable())
+                  //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                    .build();
+            holder.mercadocapa.setHierarchy(hierarchy);
         }
-        holder.card.setRadius(9);
+
     }
 
     @Override
@@ -84,17 +84,18 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
 
-        SimpleDraweeView mercadocapa;
-        TextView mercadonome;
-        LinearLayout mercadolayout;
-        CardView card;
+        private  SimpleDraweeView mercadocapa;
+        private  TextView mercadonome;
+        private  LinearLayout mercadolayout;
+        private  CardView card;
+        private ProgressBar progresso;
+
 
         public MyviewHolder(View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.cardevento);
             mercadocapa = itemView.findViewById(R.id.iconeevento);
             mercadonome = itemView.findViewById(R.id.nomeevento);
-
         }
     }
 }

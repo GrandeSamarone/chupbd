@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +69,7 @@ public class Novo_Topico extends AppCompatActivity {
     private  Usuario perfil;
     private StorageReference storageReference;
     private Dialog dialog;
+    private   Uri url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,23 +168,6 @@ public class Novo_Topico extends AppCompatActivity {
     }
 
 
-    private Topico configurarTopico(){
-        String titulo = titulo_topico.getText().toString();
-        String mensagem = mensagem_topico.getText().toString();
-        final Calendar calendartempo = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y");// MM'/'dd'/'y;
-        String data = simpleDateFormat.format(calendartempo.getTime());
-
-        topico.setIdauthor(perfil.getId());
-        topico.setTitulo(titulo);
-        topico.setMensagem(mensagem);
-        topico.setData(data);
-
-        return  topico;
-
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -195,19 +180,72 @@ public class Novo_Topico extends AppCompatActivity {
                     case SELECAO_CAMERA:
                         CropImage.ActivityResult resultCAMERA = CropImage.getActivityResult(data);
                         Uri resultUriCAMERA = resultCAMERA.getUri();
-                        Glide.with(getApplicationContext())
-                                .load(resultUriCAMERA)
-                                .into(img_topico);
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUriCAMERA);
                         break;
                     case SELECAO_GALERIA:
                         CropImage.ActivityResult resultGALERIA = CropImage.getActivityResult(data);
                         Uri resultUriGALERIA = resultGALERIA.getUri();
-                        Glide.with(getApplicationContext())
-                                .load(resultUriGALERIA)
-                                .into(img_topico);
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUriGALERIA);
 
                         break;
 
+
+                }
+                if(imagem!=null) {
+                    //Recuperar dados da imagem  para o  Firebase
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] dadosImagem = baos.toByteArray();
+
+                    StorageReference imagemRef = storageReference
+                            .child("imagens")
+                            .child("topico")
+                            .child(perfil.getId())
+                            .child(topico.getUid());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setCancelable(false);
+                    LayoutInflater layoutInflater = LayoutInflater.from(Novo_Topico.this);
+                    final View view = layoutInflater.inflate(R.layout.dialog_carregando_gif_analisando, null);
+                    ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+                    Glide.with(this)
+                            .asGif()
+                            .load(R.drawable.gif_analizando)
+                            .into(imageViewgif);
+                    builder.setView(view);
+
+                    dialog = builder.create();
+                    dialog.show();
+                    ;
+                    UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
+                    //caso de errado
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            dialog.dismiss();
+                            Toast.makeText(Novo_Topico.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
+                        }
+                        //caso o carregamento no firebase de tudo certo
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            dialog.dismiss();
+                            url = taskSnapshot.getDownloadUrl();
+
+                            Glide.with(getApplicationContext())
+                                    .load(url)
+                                    .into(img_topico);
+
+
+                        }
+
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        }
+                    });
 
                 }
 
@@ -217,6 +255,25 @@ public class Novo_Topico extends AppCompatActivity {
         }
     }
 
+    private Topico configurarTopico(){
+        String titulo = titulo_topico.getText().toString();
+        String mensagem = mensagem_topico.getText().toString();
+        final Calendar calendartempo = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y");// MM'/'dd'/'y;
+        String data = simpleDateFormat.format(calendartempo.getTime());
+
+        topico.setIdauthor(perfil.getId());
+        topico.setTitulo(titulo);
+        topico.setMensagem(mensagem);
+        topico.setData(data);
+        if(url!=null) {
+            topico.setFoto(String.valueOf(url));
+        }else{
+
+        }
+        return  topico;
+
+    }
     public void validarDadosTopico() {
         topico = configurarTopico();
 
@@ -228,70 +285,16 @@ public class Novo_Topico extends AppCompatActivity {
             mensagem_topico.setError(padrao);
             return;
         }
+        topico.SalvarTopico();
+        int qtdTopicos = perfil.getTopicos() + 1;
+        perfil.setTopicos(qtdTopicos);
+        perfil.atualizarQtdTopicos();
+        Toast.makeText(Novo_Topico.this, "Tópico Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
+        Intent it = new Intent(Novo_Topico.this, ListaTopicos.class);
+        startActivity(it);
+        finish();
 
 
-        img_topico.setDrawingCacheEnabled(true);
-        img_topico.buildDrawingCache();
-        final Bitmap bitmap = img_topico.getDrawingCache();
-        //Recuperar dados da imagem  para o  Firebase
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] dadosImagem = baos.toByteArray();
-
-        StorageReference imagemRef = storageReference
-                .child("imagens")
-                .child("topico")
-                .child(perfil.getId())
-                .child(topico.getUid());
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        LayoutInflater layoutInflater = LayoutInflater.from(Novo_Topico.this);
-        final View view = layoutInflater.inflate(R.layout.dialog_carregando_gif_analisando, null);
-        ImageView imageViewgif = view.findViewById(R.id.gifimage);
-
-        Glide.with(this)
-                .asGif()
-                .load(R.drawable.gif_analizando)
-                .into(imageViewgif);
-        builder.setView(view);
-
-        dialog = builder.create();
-        dialog.show();
-        ;
-        UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
-        //caso de errado
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                dialog.dismiss();
-                Toast.makeText(Novo_Topico.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
-            }
-            //caso o carregamento no firebase de tudo certo
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                dialog.dismiss();
-                Uri url = taskSnapshot.getDownloadUrl();
-                topico.setFoto(String.valueOf(url));
-                // SalvarPost(url);
-                topico.SalvarTopico();
-                int qtdTopicos=perfil.getTopicos()+1;
-                perfil.setTopicos(qtdTopicos);
-                perfil.atualizarQtdTopicos();
-                Toast.makeText(Novo_Topico.this, "Tópico Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
-                Intent it = new Intent(Novo_Topico.this, ListaTopicos.class);
-                startActivity(it);
-                finish();
-
-            }
-
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            }
-        });
 
 
     }

@@ -9,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
 
 import me.relex.photodraweeview.PhotoDraweeView;
@@ -41,6 +44,10 @@ public class Adapter_ampliar_imagem extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.example_item, container, false);
         final PhotoDraweeView imageViewPreview = view.findViewById(R.id.image_view);
 
+
+
+
+
         PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
         controller.setUri(Uri.parse(imageUrl));
 
@@ -57,6 +64,12 @@ public class Adapter_ampliar_imagem extends PagerAdapter {
                 imageViewPreview.update(imageInfo.getWidth(), imageInfo.getHeight());
             }
         });
+        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
+        GenericDraweeHierarchy hierarchy = builder
+                .setProgressBarImage(new CircleProgressDrawable())
+                //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                .build();
+        imageViewPreview.setHierarchy(hierarchy);
         imageViewPreview.setController(controller.build());
 
         container.addView(view);

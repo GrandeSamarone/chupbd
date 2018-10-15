@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        ;
         RecuperarTopico();
         //carregar informacao no Drawer
         CarregarInformacoesNoDrawer();
@@ -265,9 +264,6 @@ public class MainActivity extends AppCompatActivity implements
     public void RecuperarEvento(){
         ListaEvento.clear();
 
-
-
-
         valueEventListenerEvento =GibiEventos.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -296,12 +292,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     //recupera e nao deixa duplicar
     public void RecuperarMercado(){
         listaGibiComercio.clear();
-
-
         GibiMercado.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

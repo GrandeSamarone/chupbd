@@ -12,9 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
+import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -54,21 +57,21 @@ public class EventoAdapterPagInicial extends RecyclerView.Adapter<EventoAdapterP
 
             Uri uri = Uri.parse(ev.getCapaevento());
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setLocalThumbnailPreviewsEnabled(true)
                     .setProgressiveRenderingEnabled(true)
                     .build();
+
             DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setTapToRetryEnabled(true)
                     .setImageRequest(request)
-                    .setOldController(holder.eventocapa.getController())
                     .build();
-            /*mSimpleDraweeView.setController(controller);
-            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-*/
             holder.eventocapa.setController(controller);
-//            holder.foto.getHierarchy().setRetryImage(R.drawable.emoji_google_1f3ca_1f3fb);
+
+            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
+            GenericDraweeHierarchy hierarchy = builder
+                    .setProgressBarImage(new CircleProgressDrawable())
+                    //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                    .build();
+            holder.eventocapa.setHierarchy(hierarchy);
         }
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override

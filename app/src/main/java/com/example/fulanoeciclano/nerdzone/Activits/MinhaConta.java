@@ -473,7 +473,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                             Uri url = taskSnapshot.getDownloadUrl();
                             atualizaFotoUsuario(url);
 
-                            Glide.with(MinhaConta.this)
+                            Glide.with(getApplicationContext())
                                     .load(url)
                                     .into(circleImageViewperfil);
 
@@ -641,6 +641,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 startActivityForResult(it, SELECAO_ICONE);
                 //desfaz o dialog_opcao_foto.
                 alerta.dismiss();
+                finish();
 
             }
         });

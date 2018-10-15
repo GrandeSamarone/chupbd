@@ -19,14 +19,20 @@ import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -71,13 +77,28 @@ public class Detalhe_topico extends AppCompatActivity {
             titulo.setText(topicoselecionado.getTitulo());
             mensagem.setText(topicoselecionado.getMensagem());
             RecuperarIcone_e_nome_author(topicoselecionado.getIdauthor());
-            Uri capa = Uri.parse(topicoselecionado.getFoto());
-            if(capa!=null){
-                DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                        .setUri(capa)
-                        .setAutoPlayAnimations(true)
-                        .build();
-                foto.setController(controllerOne);
+            if(topicoselecionado.getFoto()!=null) {
+                Uri capa = Uri.parse(topicoselecionado.getFoto());
+                if (capa != null) {
+                    foto.setVisibility(View.VISIBLE);
+                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(capa)
+                            .setLocalThumbnailPreviewsEnabled(true)
+                            .setProgressiveRenderingEnabled(true)
+                            .build();
+
+                    DraweeController controller = Fresco.newDraweeControllerBuilder()
+                            .setImageRequest(request)
+                            .build();
+                   foto.setController(controller);
+                    RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
+                    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
+                    GenericDraweeHierarchy hierarchy = builder
+                            .setRoundingParams(roundingParams)
+                            .setProgressBarImage(new CircleProgressDrawable())
+                            //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                            .build();
+                    foto.setHierarchy(hierarchy);
+                }
             }else{
                 foto.setVisibility(View.GONE);
             }

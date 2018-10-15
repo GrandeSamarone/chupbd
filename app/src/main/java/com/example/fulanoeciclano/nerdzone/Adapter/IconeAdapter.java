@@ -6,11 +6,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Model.Icones;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.util.List;
 
@@ -47,16 +54,24 @@ public class IconeAdapter   extends RecyclerView.Adapter<IconeAdapter.MyViewHold
         if(icone.getUrl() !=null){
             Uri uri = Uri.parse(icone.getUrl());
 
-           /* DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setLocalThumbnailPreviewsEnabled(true)
+                    .setProgressiveRenderingEnabled(true)
                     .build();
 
-            holder.draweeView.setController(controllerOne);
-            */
-             Glide.with(c)
-            .load(uri)
-            .into(holder.draweeView);
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setImageRequest(request)
+                    .build();
+            holder.draweeView.setController(controller);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(1f);
+            roundingParams.setRoundAsCircle(true);
+            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(c.getResources());
+            GenericDraweeHierarchy hierarchy = builder
+                    .setRoundingParams(roundingParams)
+                    .setProgressBarImage(new CircleProgressDrawable())
+                    //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                    .build();
+            holder.draweeView.setHierarchy(hierarchy);
 
 
         }else{
@@ -89,7 +104,7 @@ public class IconeAdapter   extends RecyclerView.Adapter<IconeAdapter.MyViewHold
 
 
 
-        ImageView draweeView;
+        SimpleDraweeView draweeView;
         public MyViewHolder(View itemView) {
             super(itemView);
             draweeView= itemView.findViewById(R.id.drawee_foto);

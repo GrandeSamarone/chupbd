@@ -65,9 +65,8 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:layout_marginLeft="8dp"
         android:id="@+id/foto_topico"
+        android:visibility="gone"
         android:layout_width="80sp"
-        android:scaleType="center"
-        app:actualImageScaleType="center"
         android:layout_height="80sp" />
 
 <ImageView

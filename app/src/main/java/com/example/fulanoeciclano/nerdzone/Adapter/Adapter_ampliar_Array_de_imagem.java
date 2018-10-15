@@ -45,15 +45,17 @@ public class Adapter_ampliar_Array_de_imagem extends PagerAdapter {
                 @Override
                 public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                     super.onFinalImageSet(id, imageInfo, animatable);
-                    // int width = 400, height = 400;
                     if (imageInfo == null) {
 
                         return;
                     }
                     imageViewPreview.update(imageInfo.getWidth(), imageInfo.getHeight());
+
+
                 }
             });
             imageViewPreview.setController(controller.build());
+
 
             container.addView(view);
 

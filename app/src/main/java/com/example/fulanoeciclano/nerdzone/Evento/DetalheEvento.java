@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_comentario;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Comentario;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
@@ -26,8 +28,12 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -168,12 +174,31 @@ public class DetalheEvento extends AppCompatActivity {
 
 
                 Uri uri = Uri.parse(eventoselecionado.getCapaevento());
-                DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                        .setUri(uri)
-                        .setAutoPlayAnimations(true)
+                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                        .setLocalThumbnailPreviewsEnabled(true)
+                        .setProgressiveRenderingEnabled(true)
                         .build();
 
-                eventobanner.setController(controllerOne);
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .build();
+               eventobanner.setController(controller);
+
+                GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
+                GenericDraweeHierarchy hierarchy = builder
+                        .setProgressBarImage(new CircleProgressDrawable())
+                        //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                        .build();
+                eventobanner.setHierarchy(hierarchy);
+
+                eventobanner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(DetalheEvento.this, AbrirImagem.class);
+                        it.putExtra("id_foto",eventoselecionado.getCapaevento());
+                        startActivity(it);
+                    }
+                });
 
                 mensagem_evento.setText(eventoselecionado.getMensagem());
                 quant_visu_evento.setText(String.valueOf(eventoselecionado.getQuantVisualizacao()));

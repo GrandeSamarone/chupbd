@@ -14,14 +14,19 @@ import android.widget.TextView;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
+import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.EventoLike;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,13 +72,21 @@ public class Evento_Adapter extends RecyclerView.Adapter<Evento_Adapter.MyViewHo
 
         if(evento.getCapaevento()!=null) {
             Uri uri = Uri.parse(evento.getCapaevento());
-            Log.i("url", String.valueOf(uri));
-            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                    .setLocalThumbnailPreviewsEnabled(true)
+                    .setProgressiveRenderingEnabled(true)
                     .build();
 
-            holder.imgevento.setController(controllerOne);
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setImageRequest(request)
+                    .build();
+            holder.imgevento.setController(controller);
+            GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
+            GenericDraweeHierarchy hierarchy = builder
+                    .setProgressBarImage(new CircleProgressDrawable())
+                    //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                    .build();
+            holder.imgevento.setHierarchy(hierarchy);
         }
 
         holder.imgevento.setOnClickListener(new View.OnClickListener() {
