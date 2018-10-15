@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,7 +20,6 @@ import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_comentario;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Comentario;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
@@ -28,12 +28,8 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,7 +61,7 @@ public class DetalheEvento extends AppCompatActivity {
     private DatabaseReference mCommentsReference;
     private ChildEventListener childEventListener;
     private Evento eventoselecionado;
-    private String identificadorUsuario;
+    private ProgressBar progressBar;
     private TextView Author_evento_View,toolbarnome_evento;
     private SimpleDraweeView eventobanner;
     private CircleImageView AuthorFoto_evento_View;
@@ -99,6 +95,7 @@ public class DetalheEvento extends AppCompatActivity {
 
 
         //configuracoes iniciais
+        progressBar= findViewById(R.id.progressbar_detalhe_Evento);
         database_evento = ConfiguracaoFirebase.getDatabase().getReference().child("evento");
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         collapsingToolbarLayout = findViewById(R.id.collapseLayoutevento);
@@ -174,28 +171,22 @@ public class DetalheEvento extends AppCompatActivity {
 
 
                 Uri uri = Uri.parse(eventoselecionado.getCapaevento());
-                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                        .setLocalThumbnailPreviewsEnabled(true)
-                        .setProgressiveRenderingEnabled(true)
+
+                DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                        .setUri(uri)
+                        .setAutoPlayAnimations(true)
                         .build();
 
-                DraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setImageRequest(request)
-                        .build();
-               eventobanner.setController(controller);
+                eventobanner.setController(controllerOne);
+                progressBar.setVisibility(View.GONE);
 
-                GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
-                GenericDraweeHierarchy hierarchy = builder
-                        .setProgressBarImage(new CircleProgressDrawable())
-                        //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
-                        .build();
-                eventobanner.setHierarchy(hierarchy);
 
                 eventobanner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent it = new Intent(DetalheEvento.this, AbrirImagem.class);
                         it.putExtra("id_foto",eventoselecionado.getCapaevento());
+                        it.putExtra("nome_foto",  eventoselecionado.getTitulo());
                         startActivity(it);
                     }
                 });

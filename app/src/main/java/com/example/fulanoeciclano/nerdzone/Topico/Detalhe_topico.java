@@ -109,6 +109,7 @@ public class Detalhe_topico extends AppCompatActivity {
                    String ff = topicoselecionado.getFoto();
                     Intent it = new Intent(Detalhe_topico.this, AbrirImagem.class);
                     it.putExtra("id_foto",  topicoselecionado.getFoto());
+                    it.putExtra("nome_foto",  topicoselecionado.getTitulo());
                     startActivity(it);
                 }
             });

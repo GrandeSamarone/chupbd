@@ -116,7 +116,6 @@ public class ListaConto extends AppCompatActivity implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         refresh.setRefreshing(true);
-        Listaconto.clear();
         RecuperarContos();
     }
 

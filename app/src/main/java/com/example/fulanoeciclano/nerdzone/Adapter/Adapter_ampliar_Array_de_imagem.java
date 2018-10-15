@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -37,7 +38,9 @@ public class Adapter_ampliar_Array_de_imagem extends PagerAdapter {
         layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.example_item, container, false);
         final PhotoDraweeView imageViewPreview = view.findViewById(R.id.image_view);
-
+        final ProgressBar progressBar = view.findViewById(R.id.progressBarImag);
+        progressBar.getIndeterminateDrawable().setColorFilter(0xFF0000FF,
+                android.graphics.PorterDuff.Mode.MULTIPLY);
        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
             controller.setUri(Uri.parse(imageUrls[position]));
             controller.setOldController(imageViewPreview.getController());
@@ -46,11 +49,11 @@ public class Adapter_ampliar_Array_de_imagem extends PagerAdapter {
                 public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                     super.onFinalImageSet(id, imageInfo, animatable);
                     if (imageInfo == null) {
-
+                        progressBar.setVisibility(View.VISIBLE);
                         return;
                     }
                     imageViewPreview.update(imageInfo.getWidth(), imageInfo.getHeight());
-
+                    progressBar.setVisibility(View.GONE);
 
                 }
             });

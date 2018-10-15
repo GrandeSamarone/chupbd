@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Comercio_perfil_Fragment;
@@ -20,20 +22,14 @@ import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_perfil_Fragme
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Evento_perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.FanArts_perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topico_Perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Seguidores.Perfil.SeguidoresPerfil;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,10 +43,13 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Perfil extends AppCompatActivity implements Main, View.OnClickListener {
 
     private TextView nome,fraserapida,n_seguidores,n_topicos,n_contos,n_arts;
-    private SimpleDraweeView imgperfil;
+    private CircleImageView imgperfil;
+    private ProgressBar progressBar;
     private SimpleDraweeView capausuario;
     private ChildEventListener ChildEventListenerperfil;
     private DatabaseReference database_perfil,seguidores_ref,usuarioLogadoRef;
@@ -68,6 +67,7 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
         id_do_usuario=getIntent().getStringExtra("id");
 
      //Configuraçoes Originais
+        progressBar = findViewById(R.id.progressbar_perfil);
         id_usuariologado =  UsuarioFirebase.getIdentificadorUsuario();
     database_perfil = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
     seguidores_ref = ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
@@ -205,7 +205,7 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
                         usuarioselecionado = dataSnapshot.getValue(Usuario.class );
                         assert usuarioselecionado != null;
 
-
+                        progressBar.setVisibility(View.VISIBLE);
                          nome.setText(usuarioselecionado.getNome());
                         n_topicos.setText(String.valueOf(usuarioselecionado.getTopicos()));
                         n_contos.setText(String.valueOf(usuarioselecionado.getContos()));
@@ -216,48 +216,17 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
                              if(capa==null){
                                  capausuario.setBackgroundResource(R.drawable.gradiente_toolbar);
                              }else {
-                                 ImageRequest request = ImageRequestBuilder.newBuilderWithSource(capa)
-                                         .setLocalThumbnailPreviewsEnabled(true)
-                                         .setProgressiveRenderingEnabled(true)
+                                 DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                                         .setUri(capa)
                                          .build();
-
-                                 DraweeController controller = Fresco.newDraweeControllerBuilder()
-                                         .setImageRequest(request)
-                                         .build();
-                                 capausuario.setController(controller);
-                                 RoundingParams roundingParams = RoundingParams.fromCornersRadius(1f);
-                                 GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder
-                                         (getResources());
-                                 GenericDraweeHierarchy hierarchy = builder
-                                         .setRoundingParams(roundingParams)
-                                         .setProgressBarImage(new CircleProgressDrawable())
-                                         //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
-                                         .build();
-                                 capausuario.setHierarchy(hierarchy);
+                                 capausuario.setController(controllerOne);
+                                 progressBar.setVisibility(View.GONE);
                              }
 
-                             //IMG PERFIL
                         String fotoperfil = usuarioselecionado.getFoto();
-                        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(fotoperfil))
-                                .setLocalThumbnailPreviewsEnabled(true)
-                                .setProgressiveRenderingEnabled(true)
-                                .build();
-
-                        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                                .setImageRequest(request)
-                                .build();
-                        imgperfil.setController(controller);
-                        RoundingParams roundingParams = RoundingParams.fromCornersRadius(1f);
-                        roundingParams.setRoundAsCircle(true);
-                        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder
-                                (getResources());
-                        GenericDraweeHierarchy hierarchy = builder
-                                .setRoundingParams(roundingParams)
-                                .setProgressBarImage(new CircleProgressDrawable())
-                                //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
-                                .build();
-                        imgperfil.setHierarchy(hierarchy);
-
+                        Glide.with(Perfil.this)
+                                .load(fotoperfil)
+                                .into(imgperfil);
 
 
                         //EventBUS

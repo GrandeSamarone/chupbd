@@ -42,7 +42,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="210dp"
                     android:background="@drawable/gradientefundobranco" />
-
+                <ProgressBar
+                    android:id="@+id/progressbar_perfil"
+                    android:indeterminateTint="@color/primary_dark"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="80dp"/>
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbarlayout"
                     android:layout_width="match_parent"
@@ -75,7 +81,7 @@
                 android:id="@+id/relativeimgperfil"
                 android:layout_width="100dp"
                 android:layout_height="100dp">
-                <com.facebook.drawee.view.SimpleDraweeView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/circleImageViewFotoPerfilusuario"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -39,6 +39,12 @@
                 android:layout_gravity="bottom"
                 android:background="@drawable/gradientefundobranco"
                 android:fitsSystemWindows="true" />
+            <ProgressBar
+                android:id="@+id/progressbar_detalhe_Evento"
+                android:indeterminateTint="@color/primary_dark"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"/>
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbarlayout"
                 android:layout_width="match_parent"

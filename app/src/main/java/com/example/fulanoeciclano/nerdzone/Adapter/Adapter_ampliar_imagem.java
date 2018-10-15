@@ -8,14 +8,12 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
-import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.image.ImageInfo;
 
 import me.relex.photodraweeview.PhotoDraweeView;
@@ -43,14 +41,11 @@ public class Adapter_ampliar_imagem extends PagerAdapter {
         layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.example_item, container, false);
         final PhotoDraweeView imageViewPreview = view.findViewById(R.id.image_view);
-
-
-
+        final ProgressBar progressBar = view.findViewById(R.id.progressBarImag);
 
 
         PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
         controller.setUri(Uri.parse(imageUrl));
-
         controller.setOldController(imageViewPreview.getController());
         controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
             @Override
@@ -58,22 +53,15 @@ public class Adapter_ampliar_imagem extends PagerAdapter {
                 super.onFinalImageSet(id, imageInfo, animatable);
                 // int width = 400, height = 400;
                 if (imageInfo == null) {
-
+             progressBar.setVisibility(View.VISIBLE);
                     return;
                 }
                 imageViewPreview.update(imageInfo.getWidth(), imageInfo.getHeight());
+                progressBar.setVisibility(View.GONE);
             }
         });
-        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-        GenericDraweeHierarchy hierarchy = builder
-                .setProgressBarImage(new CircleProgressDrawable())
-                //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
-                .build();
-        imageViewPreview.setHierarchy(hierarchy);
         imageViewPreview.setController(controller.build());
-
         container.addView(view);
-
         return view;
     }
 

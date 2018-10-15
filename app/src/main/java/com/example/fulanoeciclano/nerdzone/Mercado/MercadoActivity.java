@@ -201,12 +201,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        listamercado.clear();
-        RecuperarMercadoPublicos();
-    }
+
 
     @Override
     public void onRefresh() {

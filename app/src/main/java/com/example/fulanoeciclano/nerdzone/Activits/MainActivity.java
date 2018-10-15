@@ -157,7 +157,10 @@ public class MainActivity extends AppCompatActivity implements
 
                 RecuperarMercado();
                 RecuperarEvento();
+                RecuperarTopico();
                 CarregarInformacoesNoDrawer();
+                botoes_Mais();
+                CarregarDados_do_Usuario();
             }
         });
 
@@ -182,17 +185,6 @@ public class MainActivity extends AppCompatActivity implements
         CarregarInformacoesNoDrawer();
 
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        RecuperarTopico();
-        //carregar informacao no Drawer
-        CarregarInformacoesNoDrawer();
-        botoes_Mais();
-        CarregarDados_do_Usuario();
-       // EventBus.getDefault().postSticky("MulekeDoido");
-    }
-
 
     @Override
     public void onStop() {

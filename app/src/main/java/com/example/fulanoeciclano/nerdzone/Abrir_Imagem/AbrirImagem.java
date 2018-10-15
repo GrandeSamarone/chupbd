@@ -1,39 +1,37 @@
 package com.example.fulanoeciclano.nerdzone.Abrir_Imagem;
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_ampliar_imagem;
-import com.example.fulanoeciclano.nerdzone.Adapter.MyViewPagerAdapter;
-import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.google.firebase.database.DatabaseReference;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.imagepipeline.image.ImageInfo;
+
+import me.relex.photodraweeview.PhotoDraweeView;
 
 public class AbrirImagem extends AppCompatActivity {
 
     private String imageUrls ;
-    private String nomedomercado;
-    private Adapter_ampliar_imagem myAdapter;
-    private ViewPager viewPager;
+    private String nome_id;
     private AlertDialog alerta;
-    private MyViewPagerAdapter adapter;
-    private Comercio comercio;
-    private DatabaseReference fotos_mercado;
     private TextView tantasfotos,nome;
     private ImageView botaovoltar;
     private SharedPreferences primeiravez = null;
+    private PhotoDraweeView photoDraweeView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +44,33 @@ public class AbrirImagem extends AppCompatActivity {
         setContentView(R.layout.activity_abrir_imagem2);
 
 
-        viewPager = findViewById(R.id.viewpager_imagem_unica);
-        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+         photoDraweeView = findViewById(R.id.image_view_img_Unica);
+         progressBar = findViewById(R.id.progressBarImg_unica);
+        progressBar.getIndeterminateDrawable().setColorFilter(0xFF0000FF,
+                android.graphics.PorterDuff.Mode.MULTIPLY);
+         nome=findViewById(R.id.nome_de_foto_unica);
         //Recebendo o link da pagina detalhe do comercio e armazenando
         imageUrls=getIntent().getStringExtra("id_foto");
-        myAdapter = new Adapter_ampliar_imagem( AbrirImagem.this,imageUrls);
-        viewPager.setAdapter(myAdapter);
+        nome_id=getIntent().getStringExtra("nome_foto");
+        nome.setText(nome_id);
+        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+        controller.setUri(Uri.parse(imageUrls));
+        controller.setOldController(photoDraweeView.getController());
+        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
+                // int width = 400, height = 400;
+                if (imageInfo == null) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    return;
+                }
+                photoDraweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+        photoDraweeView.setController(controller.build());
+
 
 
         //Configuracoes Basicas
@@ -75,77 +94,15 @@ public class AbrirImagem extends AppCompatActivity {
 
         }
     }
-    private int prox(int i) {
-        return viewPager.getCurrentItem() + i;
-    }
-    private int voltar(int i) {
-        return viewPager.getCurrentItem()-1;
-    }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            switch (item.getItemId()) {
-                case R.id.navigation_finish:
-                    finish();
-                    return true;
-                case R.id.navigation_zoom:
-                    Zoom();
-                    return true;
-                case R.id.navigation_voltar:
-
-                    viewPager.setCurrentItem(voltar(-1),true);
-
-                    return true;
-                case R.id.navigation_prox:
-
-                    viewPager.setCurrentItem(prox(+1),true);
-
-                    return true;
-            }
-            return false;
-        }
-    };
-    //  page change listener
-    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
-
-        @Override
-        public void onPageSelected(int position)
-        {
-            displayMetaInfo(position);
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-
-        }
-    };
-
-    private void displayMetaInfo(int position) {
-        //tantasfotos.setText((position + 1) + " de " + imageUrls.length);
-       // nome.setText(nomedomercado);
-
-
-
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        recuperarFotos();
-    }
-
-    private void recuperarFotos(){
 
     }
+
+
 
     //dialog de opcoes
     private void Zoom() {
