@@ -69,17 +69,19 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_margin="8dp">
 
 
             <TextView
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
                 android:id="@+id/detalhe_evento_titulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,12 +92,8 @@
                 android:textSize="18sp"
                 tools:text="Titulo" />
 
-
-
-
-
-
             <TextView
+                android:layout_below="@+id/detalhe_evento_titulo"
                 android:id="@+id/detalhe_evento_mensagem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,18 +106,13 @@
 
 
 
-            <LinearLayout
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-
-            </LinearLayout>
             <RelativeLayout
+                android:id="@+id/detalhe_evento_perfil"
+                android:layout_below="@id/detalhe_evento_mensagem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+
                 android:layout_marginTop="8dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -162,73 +155,70 @@
                     android:layout_height="wrap_content"
                     />
 
-
+            <android.support.v7.widget.RecyclerView
+                android:layout_below="@+id/icone_author"
+                android:id="@+id/recycler_comentario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="100dp"
+                tools:listitem="@layout/adapter_commentario" />
             </RelativeLayout>
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_comentario"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/comment_form"
-                android:layout_below="@+id/post_text_layout"
-                android:divider="@android:color/transparent"
-                android:paddingBottom="64dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="16dp"
-                android:transcriptMode="alwaysScroll"
-                app:stackFromEnd="true"
-                tools:listitem="@layout/adapter_commentario" />
-        </LinearLayout>
-
-
+        </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
-        android:paddingBottom="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
         android:layout_gravity="bottom"
+        android:weightSum="1.0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp">
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
         android:layout_marginBottom="3dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="3dp"
         android:layout_weight="1"
         android:elevation="2dp"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+
         android:background="@drawable/fundo_mensagem_chat">
-        <LinearLayout
-            android:padding="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/botao_post_icone"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_emotion_chat"/>
-        </LinearLayout>
         <com.vanniktech.emoji.EmojiEditText
-            android:layout_weight="1"
             android:id="@+id/caixa_de_texto_comentario"
-            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_width="250dp"
+            android:background="@android:color/white"
+            android:inputType="textMultiLine"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:hint="Comente..."/>
+            android:hint="Deixe um comentário"/>
+        <ImageView
+            android:visibility="invisible"
+            android:id="@+id/imageCamera"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/ic_emotion_chat" />
     </LinearLayout>
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/button_postar_comentario"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_enviarmsgchat_branco_24dp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_marginTop="8dp"
+        android:id="@+id/button_postar_comentario"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/icon_enviar" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

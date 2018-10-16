@@ -38,6 +38,7 @@ import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
 import com.example.fulanoeciclano.nerdzone.Mercado.MercadoActivity;
+import com.example.fulanoeciclano.nerdzone.MinhasColecoes.Minhas_Colecoes;
 import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
@@ -183,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements
         RecuperarMercado();
         RecuperarEvento();
         CarregarInformacoesNoDrawer();
+        CarregarDados_do_Usuario();
 
     }
 
@@ -584,7 +586,7 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.minhascolecoes_menu) {
-            Intent it = new Intent(MainActivity.this,teste.class);
+            Intent it = new Intent(MainActivity.this,Minhas_Colecoes.class);
             startActivity(it);
         } else if (id == R.id.minhaloja_menu) {
             Intent it = new Intent(MainActivity.this,Meus_eventos.class);

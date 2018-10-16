@@ -3,6 +3,7 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -23,17 +24,17 @@ public class Topico  implements Serializable {
     public int likecount = 0;
     public  int quantcomentario=0;
     public Map<String, Boolean> stars = new HashMap<>();
-
+    String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
     public Topico() {
         DatabaseReference eventoref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("topico");
         setUid(eventoref.push().getKey());  }
 
   public  void SalvarTopico(){
-      String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+
       DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
               .child("meustopicos");
-      anuncioref.child(idUsuario)
+      anuncioref.child(usuariologado)
               .child(getUid()).setValue(this);
 
       salvarTopicoPublico();

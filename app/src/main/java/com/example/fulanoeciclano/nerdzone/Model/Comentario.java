@@ -1,6 +1,9 @@
 package com.example.fulanoeciclano.nerdzone.Model;
 
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
 
@@ -9,49 +12,79 @@ import java.io.Serializable;
  */
 
 public class Comentario implements Serializable {
-    public String uid;
-    public String author;
-    public String foto;
-    public String text;
-    public int totalcomentarios;
-
+    private String idcomentario;
+    private String id_postagem;
+    private String id_author;
+    private String text;
+    private int totalcomentarios =0;
+    private int quantcomentario=0;
+    String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
     @JsonIgnore
     private String key;
 
     public Comentario() {
     }
+    public  boolean salvar(){
 
+        DatabaseReference comentarioRef = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("comentario-evento")
+                .child(getId_postagem());
 
-    public String getKey() {
-        return key;
+        String chave = comentarioRef.push().getKey();
+        setIdcomentario(chave);
+        comentarioRef.child(getIdcomentario()).setValue(this);
+
+        return true;
+}
+
+    public  boolean salvar_Topico(){
+
+        DatabaseReference comentarioRef = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("comentario-topico")
+                .child(getId_postagem());
+
+        String chave = comentarioRef.push().getKey();
+        setIdcomentario(chave);
+        comentarioRef.child(getIdcomentario()).setValue(this);
+        atualizarQtdComentarioTopico(1);
+
+        return true;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    private void atualizarQtdComentarioTopico(int valor) {
+        DatabaseReference firebaseRef_evento = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference VisuRef_evento=firebaseRef_evento
+                .child("comentario-topico-quant")
+                .child(getId_postagem())
+                .child("quantcomentario");
+
+        setTotalcomentarios(getTotalcomentarios()+valor);
+        VisuRef_evento.setValue(getTotalcomentarios());
     }
 
-    public String getUid() {
-        return uid;
+
+    public String getIdcomentario() {
+        return idcomentario;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setIdcomentario(String idcomentario) {
+        this.idcomentario = idcomentario;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getId_postagem() {
+        return id_postagem;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setId_postagem(String id_postagem) {
+        this.id_postagem = id_postagem;
     }
 
-    public String getFoto() {
-        return foto;
+    public String getId_author() {
+        return id_author;
     }
 
-    public void setFoto(String foto) {
-        this.foto = foto;
+    public void setId_author(String id_author) {
+        this.id_author = id_author;
     }
 
     public String getText() {
@@ -70,9 +103,19 @@ public class Comentario implements Serializable {
         this.totalcomentarios = totalcomentarios;
     }
 
-    public void setValues(Comentario comentario) {
-        author=comentario.author;
-        foto=comentario.foto;
+    public int getQuantcomentario() {
+        return quantcomentario;
+    }
 
+    public void setQuantcomentario(int quantcomentario) {
+        this.quantcomentario = quantcomentario;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem;
@@ -51,18 +52,16 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.example.fulanoeciclano.nerdzone.Helper.App.getUid;
-
 public class DetalheEvento extends AppCompatActivity {
 
-    private DatabaseReference database;
+
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
-    private DatabaseReference mCommentsReference;
-    private ChildEventListener childEventListener;
+    private DatabaseReference ComentarioReference;
+
     private Evento eventoselecionado;
     private ProgressBar progressBar;
-    private TextView Author_evento_View,toolbarnome_evento;
+    private TextView Author_evento_View;
     private SimpleDraweeView eventobanner;
     private CircleImageView AuthorFoto_evento_View;
     private TextView titutoevento,datainicial,datafinal;
@@ -73,16 +72,13 @@ public class DetalheEvento extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private static RecyclerView recyclerViewcomentarios;
     private String usuarioLogado;
-    private String mCommentIds;
     private Adapter_comentario adapter;
-    private Comentario comentar = new Comentario();
     private List<Comentario> listcomentario = new ArrayList<>();
     private DatabaseReference database_evento,database_usuario;
     private com.google.firebase.database.ChildEventListener ChildEventListenerevento;
     private View root_view;
     private EmojiPopup emojiPopup;
     private ChildEventListener ChildEventListeneruser;
-    private  int count=0;
     private String ids;
 
     @Override
@@ -90,7 +86,7 @@ public class DetalheEvento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe_evento);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarlayout);
+         toolbar = (Toolbar) findViewById(R.id.toolbarlayout);
         setSupportActionBar(toolbar);
 
 
@@ -112,7 +108,7 @@ public class DetalheEvento extends AppCompatActivity {
         botao_env_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                SalvarComentario();
             }
         });
         Author_evento_View = findViewById(R.id.author_evento);
@@ -129,15 +125,12 @@ public class DetalheEvento extends AppCompatActivity {
         //configurando recycleview
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewcomentarios.setLayoutManager(layoutManager);
-        // recyclemensagens.setHasFixedSize(true);
+        //recyclerViewcomentarios.setHasFixedSize(true);
         recyclerViewcomentarios.setAdapter(adapter);
 
 
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.background));
         collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.branco));
-
-        mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("evento-comentario").child(getUid());
 
         //emotion
         root_view=findViewById(R.id.root_view);
@@ -153,10 +146,9 @@ public class DetalheEvento extends AppCompatActivity {
 
 
         CarregarDados_do_Evento();
+        CarregarDados_Comentario_Evento();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
-
 
     private void CarregarDados_do_Evento(){
 
@@ -217,15 +209,31 @@ public class DetalheEvento extends AppCompatActivity {
             }
         });
     }
-    private void CarregarDados_do_Criador_do_Evento(String idusuario){
 
+    public void SalvarComentario(){
+        String textoComentario = edit_chat_emoji.getText().toString();
+        if(textoComentario!=null && !textoComentario.equals(""))
+        {
+            Comentario comentario = new Comentario();
+            comentario.setId_postagem(ids);
+            comentario.setId_author(usuarioLogado);
+            comentario.setText(textoComentario);
+            comentario.salvar();
+
+        }else{
+            Toast.makeText(this, "Insira um comentário antes da salvar!",
+                    Toast.LENGTH_LONG).show();
+        }
+        //Limpar comentario
+        edit_chat_emoji.setText("");
+    }
+    private void CarregarDados_do_Criador_do_Evento(String idusuario){
         ChildEventListeneruser=database_usuario.orderByChild("id")
                 .equalTo(idusuario).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Usuario user = dataSnapshot.getValue(Usuario.class );
                         assert user != null;
-
 
                         String foto =user.getFoto();
                         Glide.with(DetalheEvento.this)
@@ -289,36 +297,39 @@ public class DetalheEvento extends AppCompatActivity {
     }
 
 
-    private void CarregarDados_Comentario_Evento(String idusuario){
+    private void CarregarDados_Comentario_Evento(){
+        ComentarioReference = FirebaseDatabase.getInstance().getReference()
+                .child("comentario-evento").child(ids);
+        ChildEventListeneruser=ComentarioReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Comentario comentario = dataSnapshot.getValue(Comentario.class);
+                listcomentario.add(comentario);
 
-        ChildEventListeneruser=database_usuario.orderByChild("id")
-                .equalTo(idusuario).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Usuario user = dataSnapshot.getValue(Usuario.class );
-                        assert user != null;
+                recyclerViewcomentarios.scrollToPosition(listcomentario.size()-1);
+                adapter.notifyItemInserted(listcomentario.size()-1);
+            }
 
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                        String foto =user.getFoto();
-                        Glide.with(DetalheEvento.this)
-                                .load(foto)
-                                .into(AuthorFoto_evento_View );
+            }
 
-                        Author_evento_View.setText(user.getNome());
-                    }
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    }
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    }
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

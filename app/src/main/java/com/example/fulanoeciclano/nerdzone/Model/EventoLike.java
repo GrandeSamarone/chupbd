@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Model;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
@@ -10,7 +11,7 @@ public class EventoLike {
     private Evento evento;
     private Usuario usuario;
     private int qtdlikes = 0;
-
+    String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
     public EventoLike() {
 
     }
@@ -73,11 +74,10 @@ public class EventoLike {
         pLikeQuantRef.setValue(getQtdlikes());
     }
     private void atualizarQtd_MeusEvento(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeQuantRef=firebaseRefs
                 .child("meusevento")
-                .child(idUsuario)
+                .child(usuariologado)
                 .child(evento.getUid())
                 .child("curtirCount");
 

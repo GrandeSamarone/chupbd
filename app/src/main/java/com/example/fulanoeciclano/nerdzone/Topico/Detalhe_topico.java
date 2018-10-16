@@ -7,20 +7,27 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
+import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_comentario;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Model.Comentario;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
@@ -38,22 +45,45 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.vanniktech.emoji.EmojiEditText;
+import com.vanniktech.emoji.EmojiPopup;
+import com.vanniktech.emoji.listeners.OnEmojiBackspaceClickListener;
+import com.vanniktech.emoji.listeners.OnEmojiPopupDismissListener;
+import com.vanniktech.emoji.listeners.OnEmojiPopupShownListener;
+import com.vanniktech.emoji.listeners.OnSoftKeyboardCloseListener;
+import com.vanniktech.emoji.listeners.OnSoftKeyboardOpenListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Detalhe_topico extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private Adapter_comentario adapter;
+    private List<Comentario> listcomentario = new ArrayList<>();
+    private RecyclerView recyclerView_comentarios;
     private CircleImageView icone;
     private SimpleDraweeView foto;
     private TextView nome_autor,titulo,mensagem,titulotoolbar;
+    private EmojiEditText edit_chat_emoji;
+    private  android.support.v7.widget.AppCompatButton botao_env_msg;
+    private EmojiPopup emojiPopup;
+    private ImageView botaoicone;
+    private View root;
     private DatabaseReference database,database_topico;
     private FirebaseUser usuario;
+    private String usuarioLogado;
     private Topico topicoselecionado;
     private LinearLayout clickPerfil;
     private ChildEventListener ChildEventListenerdetalhe;
+    private ChildEventListener ChildEventListeneruser;
+    private DatabaseReference ComentarioReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +93,44 @@ public class Detalhe_topico extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Configuracoes Iniciais
-
         icone = findViewById(R.id.icon_topico_detalhe_author);
         foto = findViewById(R.id.foto_topico);
         nome_autor = findViewById(R.id.nome_topico__detalhe_autor);
         titulo = findViewById(R.id.detalhe_topico_titulo);
         mensagem = findViewById(R.id.detalhe_topico_mensagem);
        clickPerfil = findViewById(R.id.nome_foto_click);
+       edit_chat_emoji=findViewById(R.id.caixa_de_texto_comentario_topico);
+       botao_env_msg=findViewById(R.id.button_postar_comentario_topico);
+       botaoicone=findViewById(R.id.botao_post_icone_topico);
+        usuarioLogado =  UsuarioFirebase.getIdentificadorUsuario();
+       //RecycleView
+        recyclerView_comentarios = findViewById(R.id.recycler_comentario_topico);
+        //configurar adapter
+        adapter = new Adapter_comentario(listcomentario, getApplicationContext());
+        //configurando recycleview
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView_comentarios.setLayoutManager(layoutManager);
+        //recyclerViewcomentarios.setHasFixedSize(true);
+        recyclerView_comentarios.setAdapter(adapter);
+
+        //emotion
+        root=findViewById(R.id.root_view_topico);
+        emojiPopup = EmojiPopup.Builder.fromRootView(root).build(edit_chat_emoji);
+        setUpEmojiPopup();
+        botaoicone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emojiPopup.toggle();
+
+            }
+        });
+        botao_env_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    SalvarComentario();
+            }
+        });
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         topicoselecionado = (Topico)  getIntent().getSerializableExtra("topicoselecionado");
         if(topicoselecionado!=null){
@@ -117,6 +178,71 @@ public class Detalhe_topico extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        CarregarDados_do_Usuario();
+        TrocarFundos_status_bar();
+        CarregarDados_Comentario_Evento();
+    }
+
+
+
+    public void SalvarComentario(){
+        String textoComentario = edit_chat_emoji.getText().toString();
+        if(textoComentario!=null && !textoComentario.equals(""))
+        {
+            Comentario comentario = new Comentario();
+            comentario.setId_postagem(topicoselecionado.getUid());
+            comentario.setId_author(usuarioLogado);
+            comentario.setText(textoComentario);
+            comentario.salvar_Topico();
+
+        }else{
+            Toast.makeText(this, "Insira um comentário antes da salvar!",
+                    Toast.LENGTH_LONG).show();
+        }
+        //Limpar comentario
+        edit_chat_emoji.setText("");
+    }
+
+
+    private void CarregarDados_Comentario_Evento(){
+        ComentarioReference = FirebaseDatabase.getInstance().getReference()
+                .child("comentario-topico").child(topicoselecionado.getUid());
+        ChildEventListeneruser=ComentarioReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Comentario comentario = dataSnapshot.getValue(Comentario.class);
+                listcomentario.add(comentario);
+
+                recyclerView_comentarios.scrollToPosition(listcomentario.size()-1);
+                adapter.notifyItemInserted(listcomentario.size()-1);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     private void RecuperarIcone_e_nome_author(String id ) {
         database.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -124,8 +250,6 @@ public class Detalhe_topico extends AppCompatActivity {
                 Usuario  user = dataSnapshot.getValue(Usuario.class);
                nome_autor.setText(user.getNome());
                 String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
-
-
 
                 if(!user.getId().equals(identificadorUsuario)) {
 
@@ -158,13 +282,6 @@ public class Detalhe_topico extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        CarregarDados_do_Usuario();
-        TrocarFundos_status_bar();
     }
 
 
@@ -261,5 +378,47 @@ public class Detalhe_topico extends AppCompatActivity {
             winParams.flags &= ~bits;
         }
         win.setAttributes(winParams);
+    }
+
+
+    private void setUpEmojiPopup() {
+        emojiPopup = EmojiPopup.Builder.fromRootView(root)
+                .setOnEmojiBackspaceClickListener(new OnEmojiBackspaceClickListener() {
+                    @Override
+                    public void onEmojiBackspaceClick(View v) {
+                        if(emojiPopup.isShowing()){
+                            emojiPopup.dismiss();
+                        }
+                        Log.d("ss","Clicked on Backspace");
+                    }
+                })
+                .setOnEmojiPopupShownListener(new OnEmojiPopupShownListener() {
+                    @Override
+                    public void onEmojiPopupShown() {
+                        botaoicone.setImageResource(R.drawable.ic_teclado);
+                    }
+                })
+                .setOnSoftKeyboardOpenListener(new OnSoftKeyboardOpenListener() {
+                    @Override
+                    public void onKeyboardOpen(final int keyBoardHeight) {
+                        Log.d("ss","Clicked on Backspace");
+                    }
+                })
+                .setOnEmojiPopupDismissListener(new OnEmojiPopupDismissListener() {
+                    @Override
+                    public void onEmojiPopupDismiss() {
+                        botaoicone.setImageResource(R.drawable.ic_emotion_chat);
+                    }
+                })
+                .setOnSoftKeyboardCloseListener(new OnSoftKeyboardCloseListener() {
+                    @Override
+                    public void onKeyboardClose() {
+                        if (emojiPopup.isShowing()){
+                            emojiPopup.dismiss();
+                        }
+                        Log.d("ss","Clicked on Backspace");
+                    }
+                })
+                .build(edit_chat_emoji);
     }
 }
