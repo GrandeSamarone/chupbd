@@ -46,7 +46,7 @@ public class Comentario implements Serializable {
         String chave = comentarioRef.push().getKey();
         setIdcomentario(chave);
         comentarioRef.child(getIdcomentario()).setValue(this);
-        atualizarQtdComentarioTopico(1);
+
 
         return true;
     }
@@ -54,11 +54,11 @@ public class Comentario implements Serializable {
     private void atualizarQtdComentarioTopico(int valor) {
         DatabaseReference firebaseRef_evento = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference VisuRef_evento=firebaseRef_evento
-                .child("comentario-topico-quant")
-                .child(getId_postagem())
-                .child("quantcomentario");
+                .child("comentario-topico")
+                .child("quantcomentario")
+                .child(getId_postagem());
 
-        setTotalcomentarios(getTotalcomentarios()+valor);
+        setQuantcomentario(getQuantcomentario()+valor);
         VisuRef_evento.setValue(getTotalcomentarios());
     }
 

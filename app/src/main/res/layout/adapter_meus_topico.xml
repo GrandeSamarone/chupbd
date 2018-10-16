@@ -13,33 +13,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-<RelativeLayout
-android:id="@+id/ico"
-    android:layout_width="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_height="wrap_content">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/topico_foto_autor"
-        android:layout_alignParentLeft="true"
-        android:layout_width="40sp"
-        android:background="@drawable/fundo_user"
-        android:layout_height="40sp"
-        fresco:roundAsCircle="true"
-        fresco:overlayImage="@drawable/oval"
-       />
 
-    <TextView
-        android:id="@+id/topico_autor"
-        style="@style/Base.TextAppearance.AppCompat.Small"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        tools:text="someauthor@email.com" />
-
-</RelativeLayout>
 
         <LinearLayout
             android:id="@+id/tituloline"
@@ -49,7 +23,7 @@ android:id="@+id/ico"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/ico">
             <TextView
-                android:id="@+id/topico_titulo"
+                android:id="@+id/meus_topico_titulo"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,15 +32,7 @@ android:id="@+id/ico"
                 android:textColor="@color/preto"
                 tools:text="Titulo" />
 
-            <TextView
-                android:id="@+id/topico_mensagem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/pretoclaro"
-                android:textSize="16sp"
-                android:maxLines="10"
-                tools:text="topico" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -86,30 +52,27 @@ android:id="@+id/ico"
 
             <TextView
                 android:textSize="14sp"
-                android:id="@+id/topico_num_Coment"
+                android:id="@+id/meus_topico_num_Coment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
 
                 />
-            <com.varunest.sparkbutton.SparkButton
+            <ImageView
                 android:layout_below="@id/relaimg"
                 android:id="@+id/botaocurtirtopico"
                 android:layout_width="24sp"
                 android:layout_height="24sp"
-                app:sparkbutton_iconSize="24dp"
+               android:background="@drawable/ic_like"
                 android:layout_marginBottom="8dp"
                android:layout_margin="8dp"
                 android:layout_gravity="bottom"
-                app:sparkbutton_activeImage="@drawable/likecolorido"
-                app:sparkbutton_inActiveImage="@drawable/likepreto"
-                app:sparkbutton_primaryColor="@color/amareloclaro"
-                app:sparkbutton_secondaryColor="@color/amareloescuro" />
+              />
 
 
              <TextView
                  android:textSize="14sp"
-            android:id="@+id/topico_num_curit"
+            android:id="@+id/meus_topico_num_curit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -117,6 +80,31 @@ android:id="@+id/ico"
              />
 
         </LinearLayout>
+        <TextView
+            android:layout_below="@+id/tituloline"
+            android:id="@+id/editartopico"
+            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:textSize="14sp"
+            android:text="@string/editar_evento"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/Corrastag"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_below="@+id/editarmercado"
+            android:id="@+id/excluirtopico"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:paddingTop="8dp"
+            android:text="EXCLUIR"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/Corrastag"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
     </RelativeLayout>
 
 

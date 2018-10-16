@@ -61,7 +61,7 @@
         <activity android:name=".Activits.MensagensActivity" />
         <activity android:name=".Activits.MeusAmigosActivity" />
         <activity android:name=".Evento.Cadastrar_Novo_Evento" />
-        <activity android:name=".Activits.Meus_eventos" />
+        <activity android:name=".Activits.Minhas_Publicacoes" />
         <activity android:name=".Mercado.MercadoActivity" />
         <activity android:name=".Mercado.Cadastrar_Novo_MercadoActivity" />
         <activity

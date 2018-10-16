@@ -11,7 +11,7 @@
             android:icon="@drawable/ic_colecao"/>
 
         <item android:id="@+id/minhaloja_menu"
-            android:title="Loja/Evento"
+            android:title="Minhas Publicações"
             android:icon="@drawable/ic_loja"/>
 
         <item android:id="@+id/mensagens_menu"

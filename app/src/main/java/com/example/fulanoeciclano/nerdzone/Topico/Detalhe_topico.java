@@ -175,6 +175,9 @@ public class Detalhe_topico extends AppCompatActivity {
                 }
             });
         }
+
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -214,6 +217,8 @@ public class Detalhe_topico extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Comentario comentario = dataSnapshot.getValue(Comentario.class);
+
+
                 listcomentario.add(comentario);
 
                 recyclerView_comentarios.scrollToPosition(listcomentario.size()-1);
@@ -222,7 +227,7 @@ public class Detalhe_topico extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Log.i("sdsd", String.valueOf(dataSnapshot.getChildrenCount()));
             }
 
             @Override

@@ -589,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements
             Intent it = new Intent(MainActivity.this,Minhas_Colecoes.class);
             startActivity(it);
         } else if (id == R.id.minhaloja_menu) {
-            Intent it = new Intent(MainActivity.this,Meus_eventos.class);
+            Intent it = new Intent(MainActivity.this,Minhas_Publicacoes.class);
             startActivity(it);
         } else if (id == R.id.mensagens_menu) {
             Intent it = new Intent(MainActivity.this,MensagensActivity.class);

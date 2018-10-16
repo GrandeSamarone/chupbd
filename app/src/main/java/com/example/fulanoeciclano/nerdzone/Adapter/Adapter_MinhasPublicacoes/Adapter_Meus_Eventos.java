@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Adapter;
+package com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MinhasPublicacoes;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fulanoeciclano.nerdzone.Activits.Meus_eventos;
+import com.example.fulanoeciclano.nerdzone.Activits.Minhas_Publicacoes;
 import com.example.fulanoeciclano.nerdzone.Edit.Edit_evento_Activity;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
@@ -113,7 +113,7 @@ public void onClick(View v) {
                            @Override
                            public void onClick(DialogInterface dialog, int wich) {
                                ev.remover();
-                               Intent it = new Intent(context, Meus_eventos.class);
+                               Intent it = new Intent(context, Minhas_Publicacoes.class);
                                context.startActivity(it);
                                Toast.makeText(context, "Deletado com Sucesso!", Toast.LENGTH_LONG).show();
                            }

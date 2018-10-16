@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Activits.Meus_eventos;
+import com.example.fulanoeciclano.nerdzone.Activits.Minhas_Publicacoes;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.Permissoes;
@@ -373,7 +373,7 @@ private String id_do_usuario;
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             dialog.dismiss();
-                            Intent it = new Intent(Edit_Loja_Activity.this, Meus_eventos.class);
+                            Intent it = new Intent(Edit_Loja_Activity.this, Minhas_Publicacoes.class);
                             startActivity(it);
                             finish();
                             Toast.makeText(Edit_Loja_Activity.this, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
@@ -382,7 +382,7 @@ private String id_do_usuario;
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             dialog.dismiss();
-                            Intent it = new Intent(Edit_Loja_Activity.this, Meus_eventos.class);
+                            Intent it = new Intent(Edit_Loja_Activity.this, Minhas_Publicacoes.class);
                             startActivity(it);
                             finish();
                             Toast.makeText(Edit_Loja_Activity.this, "Erro ao Atualizar, Tente Novamente.", Toast.LENGTH_SHORT).show();

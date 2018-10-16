@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Adapter;
+package com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MinhasPublicacoes;
 
 import android.content.Context;
 import android.content.Intent;
