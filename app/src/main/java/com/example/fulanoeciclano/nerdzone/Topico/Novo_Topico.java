@@ -38,6 +38,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -61,7 +62,8 @@ public class Novo_Topico extends AppCompatActivity {
     private CircleImageView icone;
     private ImageView img_topico;
     private Button botaosalvar;
-    private DatabaseReference databaseusuario,databasetopico;
+    private DatabaseReference databaseusuario,databasetopico,SeguidoresRef;
+    private DataSnapshot seguidoresSnapshot;
     private FirebaseUser usuario;
     private ChildEventListener ChildEventListenerperfil;
     private EditText titulo_topico,mensagem_topico;
@@ -84,6 +86,7 @@ public class Novo_Topico extends AppCompatActivity {
         //Configuraçoes Originais
         databaseusuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         databasetopico = ConfiguracaoFirebase.getDatabase().getReference().child("topico");
+        SeguidoresRef =ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         titulo_topico = findViewById(R.id.nome_topico);
         mensagem_topico = findViewById(R.id.desc_topico);
@@ -136,6 +139,7 @@ public class Novo_Topico extends AppCompatActivity {
                         String icone = perfil.getFoto();
 
                         IconeUsuario(icone);
+                        CarregarSeguidores(perfil.getId());
                     }
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -151,6 +155,26 @@ public class Novo_Topico extends AppCompatActivity {
                     }
                 });
     }
+
+    private void CarregarSeguidores(String id){
+
+        //Recuperar Seguidores
+        DatabaseReference seguidoresref =SeguidoresRef.child(id);
+        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                seguidoresSnapshot=dataSnapshot;
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
     private void IconeUsuario(String url) {
         //Imagem do icone do usuario
         icone = findViewById(R.id.icone_user_toolbar);
@@ -285,7 +309,7 @@ public class Novo_Topico extends AppCompatActivity {
             mensagem_topico.setError(padrao);
             return;
         }
-        topico.SalvarTopico();
+        topico.SalvarTopico(seguidoresSnapshot);
         int qtdTopicos = perfil.getTopicos() + 1;
         perfil.setTopicos(qtdTopicos);
         perfil.atualizarQtdTopicos();

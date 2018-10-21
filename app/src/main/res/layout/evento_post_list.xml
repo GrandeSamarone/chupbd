@@ -18,7 +18,7 @@
         android:clipToPadding="false"
         android:padding="5dp"
         android:scrollbars="vertical"
-        tools:listitem="@layout/item_evento" />
+        tools:listitem="@layout/item_evento_feed" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_new_evento"

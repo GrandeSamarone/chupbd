@@ -40,8 +40,11 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -75,7 +78,8 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
     private CircleImageView icone;
     private Toolbar toolbar;
     // [START declare_database_ref]
-    private DatabaseReference mDatabaseEvento;
+    private DatabaseReference mDatabaseEvento,SeguidoresRef;
+    private DataSnapshot seguidoresSnapshot;
     private Button botaoiniciodata, botaofimdata;
     // [END declare_database_ref]
     private String[] estados;
@@ -87,6 +91,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
     private AlertDialog alerta;
     private String urlimg;
     private DatePickerDialog datePickerDialog;
+
     private int dia, mes, ano;
     private AlertDialog dialog;
 
@@ -109,6 +114,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
         //Configuracao Inicial
         eventos = new Evento();
         mDatabaseEvento = FirebaseDatabase.getInstance().getReference();
+        SeguidoresRef =ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         botaofimdata = findViewById(R.id.botaodatafim);
         botaoiniciodata = findViewById(R.id.botaodatainicio);
@@ -131,6 +137,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
         TrocarFundos_status_bar();
         IconeUsuario();
         CarregarDadosSpinner();
+        CarregarSeguidores();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -208,6 +215,23 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
 
     }
 
+    private void CarregarSeguidores(){
+        String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
+        //Recuperar Seguidores
+        DatabaseReference seguidoresref =SeguidoresRef.child(usuariologado);
+        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                seguidoresSnapshot=dataSnapshot;
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
 
@@ -320,7 +344,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
             builder.setView(view);
 
             dialog = builder.create();
-            dialog.show();;
+            dialog.show();
             UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
             //caso de errado
             uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -340,7 +364,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
                     // SalvarPost(url);
                     urlimg = url.toString();
 
-                    eventos.salvar();
+                    eventos.salvar(seguidoresSnapshot);
                     Toast.makeText(Cadastrar_Novo_Evento.this, "Evento Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
                     Intent it = new Intent( Cadastrar_Novo_Evento.this,Evento_Lista.class);
                     startActivity(it);

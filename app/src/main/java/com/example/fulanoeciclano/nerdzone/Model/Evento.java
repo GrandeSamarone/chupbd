@@ -3,12 +3,15 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // [START post_class]
 @IgnoreExtraProperties
@@ -30,7 +33,7 @@ public class Evento implements Serializable {
     private int quantVisualizacao=0;
 
 
-
+    String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
 
     public Evento() {
         DatabaseReference eventoref = ConfiguracaoFirebase.getFirebaseDatabase()
@@ -39,13 +42,23 @@ public class Evento implements Serializable {
     }
 
 
-    public void salvar(){
+    public void salvar(DataSnapshot seguidoressnapshot){
         String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
-        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("meusevento");
-        anuncioref.child(identificadorUsuario)
-                .child(getUid()).setValue(this);
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase();
+        Map objeto = new HashMap();
+        String combinacaoId="/"+ usuariologado+"/"+getUid();
 
+        objeto.put("/meusevento"+combinacaoId,this);
+        for(DataSnapshot Seguidores:seguidoressnapshot.getChildren()){
+            String idSeguidores=Seguidores.getKey();
+            HashMap<String,Object> dadosSeguidor = new HashMap<>();
+            dadosSeguidor.put("idevento",getUid());
+            String IdAtualizacao="/"+ idSeguidores+"/"+getUid();
+
+            objeto.put("/feed-evento"+IdAtualizacao,dadosSeguidor);
+        }
+
+        anuncioref.updateChildren(objeto);
           salvarEventoPublico();
     }
 

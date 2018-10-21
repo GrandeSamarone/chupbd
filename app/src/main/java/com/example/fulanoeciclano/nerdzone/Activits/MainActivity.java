@@ -33,6 +33,7 @@ import com.example.fulanoeciclano.nerdzone.Autenticacao.LoginActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
+import com.example.fulanoeciclano.nerdzone.Feed.FeedActivity;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -445,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 Intent it = new Intent(MainActivity.this, MinhaConta.class);
                 startActivity(it);
+                finish();
             }
         });
 
@@ -585,7 +587,10 @@ public class MainActivity extends AppCompatActivity implements
         // Handle navigation view item clicks here.
 
         int id = item.getItemId();
-        if (id == R.id.minhascolecoes_menu) {
+        if (id == R.id.feed_menu) {
+            Intent it = new Intent(MainActivity.this,FeedActivity.class);
+            startActivity(it);
+        }else if (id == R.id.minhascolecoes_menu) {
             Intent it = new Intent(MainActivity.this,Minhas_Colecoes.class);
             startActivity(it);
         } else if (id == R.id.minhaloja_menu) {

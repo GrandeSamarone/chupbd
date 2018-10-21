@@ -17,10 +17,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/eventotexto"
+                android:id="@+id/contotexto"
                 android:visibility="gone"
                 android:layout_marginTop="8dp"
-                android:text="@string/evento_nome"
+                android:text="@string/conto_name"
                 android:textColor="@color/preto"
                 android:layout_marginLeft="8dp"
                 android:textAlignment="center"
@@ -55,10 +55,10 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/comerciotexto"
+                android:id="@+id/topicotexto"
                 android:visibility="gone"
                 android:layout_marginTop="8dp"
-                android:text="@string/comercio_nome"
+                android:text="@string/topico_name"
                 android:textColor="@color/preto"
                 android:layout_marginLeft="8dp"
                 android:textAlignment="center"

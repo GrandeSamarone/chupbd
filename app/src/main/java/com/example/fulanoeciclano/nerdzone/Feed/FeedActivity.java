@@ -1,4 +1,4 @@
-package com.example.fulanoeciclano.nerdzone.Activits;
+package com.example.fulanoeciclano.nerdzone.Feed;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,10 +14,14 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.Minhas_publicacoes.Loja_Evento_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Minhas_publicacoes.Minhas_arts_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.Minhas_publicacoes.Minhas_escritas_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.fragment_feed.Comercio_feed_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.fragment_feed.Contos_feed_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.fragment_feed.Evento_feed_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.fragment_feed.FanArts_feed_Fragment;
+import com.example.fulanoeciclano.nerdzone.Fragments.fragment_feed.Topico_feed_Fragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -33,40 +37,40 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Minhas_Publicacoes extends AppCompatActivity {
-
+public class FeedActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private ChildEventListener ChildEventListenerperfil;
+    private ChildEventListener ChildEventListenerfeed;
     private CircleImageView icone;
     private DatabaseReference databaseusuario;
-    private ViewPager mViewPager;
+    private ViewPager mViewPagerfeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meus_eventos);
+        setContentView(R.layout.activity_feed);
+
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Minhas Publicações");
+        toolbar.setTitle("Novos Feeds");
         setSupportActionBar(toolbar);
-
-
         databaseusuario= ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
 
         //Configurar Abas
         final FragmentPagerItemAdapter adapter= new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                        .add("COMÉRCIO & EVENTO",Loja_Evento_Fragment.class)
-                        .add("TÓPICO & CONTO", Minhas_escritas_Fragment.class)
-                        .add("FANARTS",Minhas_arts_Fragment.class)
+                        .add("COMÉRCIO",Comercio_feed_Fragment.class)
+                        .add("EVENTO", Evento_feed_Fragment.class)
+                        .add("TÓPICO",Topico_feed_Fragment.class)
+                        .add("CONTO",Contos_feed_Fragment.class)
+                        .add("FANARTS",FanArts_feed_Fragment.class)
                         // .add("Tops", RankFragment.class)
                         .create()
         );
-        SmartTabLayout ViewPageTab = findViewById(R.id.SmartTabLayoutMinhasPublicacoes);
-        mViewPager = findViewById(R.id.viewPagerMinhasPublicacoes);
-        mViewPager.setAdapter(adapter);
-        ViewPageTab.setViewPager(mViewPager);
+        SmartTabLayout ViewPageTab = findViewById(R.id.SmartTabLayoutFeed);
+        mViewPagerfeed = findViewById(R.id.viewPagerFeed);
+        mViewPagerfeed.setAdapter(adapter);
+        ViewPageTab.setViewPager(mViewPagerfeed);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -106,7 +110,7 @@ public class Minhas_Publicacoes extends AppCompatActivity {
     private void CarregarDados_do_Usuario(){
         FirebaseUser usuario = UsuarioFirebase.getUsuarioAtual();
         String email = usuario.getEmail();
-        ChildEventListenerperfil=databaseusuario.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
+        ChildEventListenerfeed=databaseusuario.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Usuario perfil = dataSnapshot.getValue(Usuario.class );
@@ -138,14 +142,14 @@ public class Minhas_Publicacoes extends AppCompatActivity {
         icone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(Minhas_Publicacoes.this, MinhaConta.class);
+                Intent it = new Intent(FeedActivity.this, MinhaConta.class);
                 startActivity(it);
 
             }
         });
 
 
-        Glide.with(Minhas_Publicacoes.this)
+        Glide.with(FeedActivity.this)
                 .load(url)
                 .into(icone);
     }

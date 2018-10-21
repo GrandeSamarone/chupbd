@@ -113,6 +113,7 @@ public void onClick(View v) {
                            @Override
                            public void onClick(DialogInterface dialog, int wich) {
                                ev.remover();
+
                                Intent it = new Intent(context, Minhas_Publicacoes.class);
                                context.startActivity(it);
                                Toast.makeText(context, "Deletado com Sucesso!", Toast.LENGTH_LONG).show();

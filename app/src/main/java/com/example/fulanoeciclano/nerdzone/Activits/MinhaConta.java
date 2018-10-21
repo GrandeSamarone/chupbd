@@ -166,11 +166,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
         switch (item.getItemId()) {
             case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
                 startActivity(new Intent(this, MainActivity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    finishAffinity();  //Método para matar a activity e não deixa-lá indexada na pilhagem
-                }else{
-                    finish();
-                }
+               finish();
                 break;
             default:break;
         }
@@ -191,6 +187,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 Escolher_Foto_Perfil();
                 break;
             case R.id.perfil_button_back_perfil:
+                startActivity(new Intent(this, MainActivity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
                 finish();
                 break;
             case R.id.topico_click:

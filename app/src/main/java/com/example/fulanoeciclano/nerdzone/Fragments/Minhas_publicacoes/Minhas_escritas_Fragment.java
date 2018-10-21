@@ -41,7 +41,7 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
     private DatabaseReference database, databaseusuario;
     private Query meus_topicosref, meus_contos_ref;
     private String identificadoUsuario;
-    private TextView nomeevento, nomecomercio, errobusca;
+    private TextView nomeconto, nometopico, errobusca;
     private Evento evento;
     private List<Topico> lista_Meus_Topicos = new ArrayList<>();
     private List<Conto> lista_meus_contos = new ArrayList<>();
@@ -68,8 +68,8 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
 //Configurações Originais
         linearLayout = view.findViewById(R.id.linear_nada_cadastrado_conto_topico);
         database = FirebaseDatabase.getInstance().getReference();
-        nomeevento = view.findViewById(R.id.eventotexto);
-        nomecomercio = view.findViewById(R.id.comerciotexto);
+        nomeconto = view.findViewById(R.id.contotexto);
+        nometopico = view.findViewById(R.id.topicotexto);
         databaseusuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         evento = new Evento();
         refresh = view.findViewById(R.id.atualizarminhas_contos_topicos_refresh);
@@ -77,8 +77,8 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
         refresh.post(new Runnable() {
             @Override
             public void run() {
-               // RecuperarMeus_Comercio();
-              //  RecuperarMeus_Eventos();
+                RecuperarMeus_Topicos();
+                RecuperarMeus_Conto();
             }
         });
         refresh.setColorSchemeResources
@@ -86,7 +86,7 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
                         R.color.accent);
         String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         meus_topicosref = database.child("meustopicos").child(identificadorUsuario);
-        meus_contos_ref = database.child("meuscontos").child(identificadorUsuario);
+        meus_contos_ref = database.child("meusconto").child(identificadorUsuario);
 
         mAdapter = new Adapter_Meus_Topicos(lista_Meus_Topicos, getActivity());
         adapterConto = new Adapter_meus_Contos(lista_meus_contos, getActivity());
@@ -109,14 +109,15 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-
+RecuperarMeus_Conto();
+RecuperarMeus_Topicos();
     }
 
 
     private void RecuperarMeus_Topicos() {
         //Progress
         linearLayout.setVisibility(View.VISIBLE);
-        refresh.setRefreshing(false);
+        refresh.setRefreshing(true);
         lista_Meus_Topicos.clear();
         childEventListenerMeus_Topico = meus_topicosref.addChildEventListener(new ChildEventListener() {
             @Override
@@ -124,15 +125,15 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
                 Topico topico = dataSnapshot.getValue(Topico.class);
                 lista_Meus_Topicos.add(topico);
                 if (lista_Meus_Topicos.size() > 0) {
-                    nomeevento.setVisibility(View.VISIBLE);
+                    nometopico.setVisibility(View.VISIBLE);
                     linearLayout.setVisibility(View.GONE);
                 } else {
-                    nomeevento.setVisibility(View.GONE);
+                    nometopico.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.VISIBLE);
 
                 }
                 mAdapter.notifyDataSetChanged();
-
+                refresh.setRefreshing(false);
             }
 
             @Override
@@ -160,7 +161,7 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
     private void RecuperarMeus_Conto() {
         //Progress
 
-        refresh.setRefreshing(false);
+        refresh.setRefreshing(true);
         lista_meus_contos.clear();
         childEventListenerMeus_Conto = meus_contos_ref.addChildEventListener(new ChildEventListener() {
             @Override
@@ -168,15 +169,15 @@ public class Minhas_escritas_Fragment extends Fragment implements SwipeRefreshLa
                 Conto conto = dataSnapshot.getValue(Conto.class);
                 lista_meus_contos.add(conto);
                 if (lista_meus_contos.size() > 0) {
-                    nomecomercio.setVisibility(View.VISIBLE);
+                    nomeconto.setVisibility(View.VISIBLE);
                     linearLayout.setVisibility(View.GONE);
                 } else {
-                    nomecomercio.setVisibility(View.GONE);
+                    nomeconto.setVisibility(View.GONE);
 
 
                 }
                 adapterConto.notifyDataSetChanged();
-
+                refresh.setRefreshing(false);
             }
 
             @Override

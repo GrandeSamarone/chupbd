@@ -67,7 +67,6 @@ public class ListaConto extends AppCompatActivity implements SwipeRefreshLayout.
         refresh.post(new Runnable() {
             @Override
             public void run() {
-                Listaconto.clear();
                 RecuperarContos();
             }
         });
@@ -84,6 +83,7 @@ public class ListaConto extends AppCompatActivity implements SwipeRefreshLayout.
             public void onClick(View v) {
                 Intent it = new Intent(ListaConto.this,Novo_Conto.class);
                 startActivity(it);
+                finish();
             }
         });
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");

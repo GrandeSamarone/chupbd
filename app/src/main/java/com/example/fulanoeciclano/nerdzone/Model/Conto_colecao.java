@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Model;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
@@ -9,14 +10,13 @@ public class Conto_colecao {
     private Conto conto;
     private Usuario usuario;
     private Boolean adicionado;
-    private int qtdadd;
+    private int qtdadd=0;
 
     public Conto_colecao(){
 
     }
     public void Salvar(){
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-
         HashMap<String,Object> dadosusuario = new HashMap<>();
         dadosusuario.put("id",usuario.getId());
 
@@ -42,27 +42,10 @@ public class Conto_colecao {
 
         setQtdadd(getQtdadd()+valor);
         pLikeRef.setValue(getQtdadd());
-        atualizarQtd_Colecao();
+      //  atualizarQtd_Colecao();
         atualizarQtd_MeusColecoes();
 
     }
-    public   void removercolecao(){
-
-        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-        DatabaseReference pLikeRef=firebaseRef
-                .child("conto-colecao")
-                .child(usuario.getId())
-                .child(conto.getUid());
-        pLikeRef.removeValue();
-        //Atualizar quantidade de like
-        atualizarQtd(-1);
-        atualizarQtd_Colecao();
-        atualizarQtd_MeusColecoes();
-
-
-
-    }
-
 
     private void atualizarQtd_Colecao(){
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
@@ -70,20 +53,46 @@ public class Conto_colecao {
                 .child("conto")
                 .child(conto.getUid())
                 .child("quantcolecao");
-
         pLikeQuantRef.setValue(getQtdadd());
     }
     private void atualizarQtd_MeusColecoes(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeQuantRef=firebaseRefs
                 .child("meusconto")
-                .child(idUsuario)
+                .child(identificadorUsuario)
                 .child(conto.getUid())
                 .child("quantcolecao");
 
         pLikeQuantRef.setValue(getQtdadd());
     }
+
+
+    public   void removercolecao(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference pLikeRef=firebaseRef
+                .child("conto-colecao")
+                .child(conto.getUid())
+                .child(usuario.getId());
+        pLikeRef.removeValue();
+        //Atualizar quantidade de like
+        atualizarQtd(-1);
+        remover_adicionei_colecao();
+        atualizarQtd_MeusColecoes();
+        atualizarQtd_MeusColecoes();
+    }
+    public   void remover_adicionei_colecao(){
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference pLikeRef=firebaseRef
+                .child("adicionei-conto")
+                .child(identificadorUsuario)
+                .child(conto.getUid());
+        pLikeRef.removeValue();
+
+    }
+
+
 
 
     public int getQtdadd() {

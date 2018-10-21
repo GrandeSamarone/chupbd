@@ -46,6 +46,7 @@
             android:orientation="horizontal">
 
 <ImageView
+    android:id="@+id/img_comentario"
     android:layout_width="24sp"
     android:layout_height="24sp"
     android:background="@drawable/ic_comentario_evento"/>

@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
@@ -27,6 +28,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.text.SimpleDateFormat;
@@ -39,7 +41,8 @@ public class Novo_Conto extends AppCompatActivity {
     private Toolbar toolbar;
     private CircleImageView icone,img_topico;
     private Button botaosalvar;
-    private DatabaseReference databaseusuario,databasetopico;
+    private DatabaseReference databaseusuario,databasetopico,SeguidoresRef;
+    private DataSnapshot seguidoresSnapshot;
     private FirebaseUser usuario;
     private ChildEventListener ChildEventListenerperfil;
     private EditText titulo_conto,mensagem_conto;
@@ -58,6 +61,7 @@ public class Novo_Conto extends AppCompatActivity {
         //Configuraçoes Originais
         databaseusuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         databasetopico = ConfiguracaoFirebase.getDatabase().getReference().child("conto");
+        SeguidoresRef =ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
         titulo_conto = findViewById(R.id.titulo_conto);
         mensagem_conto = findViewById(R.id.desc_conto);
         botaosalvar = findViewById(R.id.botaosalvarconto);
@@ -98,12 +102,13 @@ public class Novo_Conto extends AppCompatActivity {
             mensagem_conto.setError(padrao);
             return;
         }
-        conto.SalvarConto();
+        conto.SalvarConto(seguidoresSnapshot);
         int qtdContos=perfil.getContos()+1;
         perfil.setContos(qtdContos);
         perfil.atualizarQtdContos();
         Intent it = new Intent(Novo_Conto.this,ListaConto.class);
         startActivity(it);
+        Toast.makeText(this, "Postado com Sucesso", Toast.LENGTH_LONG).show();
         finish();
     }
     @Override
@@ -124,6 +129,8 @@ public class Novo_Conto extends AppCompatActivity {
                         assert perfil != null;
                         String icone = perfil.getFoto();
                         IconeUsuario(icone);
+                        CarregarSeguidores(perfil.getId());
+
                     }
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -139,6 +146,25 @@ public class Novo_Conto extends AppCompatActivity {
                     }
                 });
     }
+
+    private void CarregarSeguidores(String id){
+
+        //Recuperar Seguidores
+        DatabaseReference seguidoresref =SeguidoresRef.child(id);
+        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+              seguidoresSnapshot=dataSnapshot;
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void IconeUsuario(String url) {
         //Imagem do icone do usuario
         icone = findViewById(R.id.icone_user_toolbar);

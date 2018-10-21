@@ -1,10 +1,11 @@
 package com.example.fulanoeciclano.nerdzone.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.Reload;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.MinhasColecoes.Minhas_Colecoes;
 import com.example.fulanoeciclano.nerdzone.Model.Conto;
-import com.example.fulanoeciclano.nerdzone.Model.ContoLike;
 import com.example.fulanoeciclano.nerdzone.Model.Conto_colecao;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
-import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,25 +31,26 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHolder> {
+public class Adapter_Minha_Colecoes extends RecyclerView.Adapter<Adapter_Minha_Colecoes.MyviewHolder> {
 
     private List<Conto> listaconto;
     private Context context;
+
     Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
 
-    public Adapter_Conto(List<Conto> conto,Context c){
+    public Adapter_Minha_Colecoes(List<Conto> conto, Context c){
         this.listaconto=conto;
         this.context=c;
     }
     public List<Conto> getConto(){
-       return this.listaconto;}
+        return this.listaconto;}
 
     @NonNull
     @Override
     public MyviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapterconto,parent,false);
+        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_minhas_colecoes,parent,false);
 
-       return  new MyviewHolder(item);
+        return  new MyviewHolder(item);
     }
 
     @Override
@@ -65,15 +67,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario  user = dataSnapshot.getValue(Usuario.class);
 
-            holder.author.setText(user.getNome());
-            holder.author.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(context, Perfil.class);
-                    it.putExtra("id", user.getId());
-                    context.startActivity(it);
-                }
-            });
+                holder.nome.setText(user.getNome());
 
             /*Glide.with(context)
                         .load(user.getFoto())
@@ -86,57 +80,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
 
             }
         });
-        DatabaseReference topicoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("conto-likes")
-                .child(conto.getUid());
-        topicoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int QtdLikes = 0;
-                if(dataSnapshot.hasChild("qtdlikes")){
-                    ContoLike contoLike = dataSnapshot.getValue(ContoLike.class);
-                    QtdLikes = contoLike.getQtdlikes();
-                }
-                //Verifica se já foi clicado
-                if( dataSnapshot.hasChild( usuariologado.getId() ) ){
-                    holder.botaocurtir.setChecked(true);
-                }else {
-                    holder.botaocurtir.setChecked(false);
-                }
 
-                //Montar objeto postagem curtida
-                ContoLike like = new ContoLike();
-                like.setConto(conto);
-                like.setUsuario(usuariologado);
-                like.setQtdlikes(QtdLikes);
-               Log.i("asas", String.valueOf(usuariologado));
-                //adicionar evento para curtir foto
-                holder.botaocurtir.setEventListener(new SparkEventListener() {
-                    @Override
-                    public void onEvent(ImageView button, boolean buttonState) {
-                        if(buttonState){
-                            like.Salvar();
-
-                            holder.n_curtida.setText(String.valueOf(like.getQtdlikes()));
-                        }else{
-                            like.removerlike();
-                            holder.n_curtida.setText(String.valueOf(like.getQtdlikes()));
-                        }
-                    }
-                    @Override
-                    public void onEventAnimationEnd(ImageView button, boolean buttonState) {
-                    }
-                    @Override
-                    public void onEventAnimationStart(ImageView button, boolean buttonState) {
-                    }
-                });
-                holder.n_curtida.setText(String.valueOf(like.getQtdlikes()));
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
         DatabaseReference conto_add_colecao= ConfiguracaoFirebase.getFirebaseDatabase()
@@ -153,10 +97,10 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                 //Verifica se já foi clicado
                 if (dataSnapshot.hasChild(usuariologado.getId())) {
                     holder.botao_add_colecao.setChecked(true);
-                   holder.txt_add_colecao.setText(R.string.adicionado_colecao);
+                    holder.txt_add_colecao.setText(R.string.adicionado_colecao);
                 } else {
                     holder.botao_add_colecao.setChecked(false);
-                   holder.txt_add_colecao.setText(R.string.adicionar_colecao);
+                    holder.txt_add_colecao.setText(R.string.adicionar_colecao);
                 }
 
                 //Montar objeto postagem curtida
@@ -170,12 +114,38 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                     @Override
                     public void onEvent(ImageView button, boolean buttonState) {
                         if (buttonState) {
-                            colecao.Salvar();
-                            conto.AdicioneiConto();
                             holder.txt_add_colecao.setText(R.string.adicionado_colecao);
                         } else {
-                            colecao.removercolecao();
-                            holder.txt_add_colecao.setText(R.string.adicionar_colecao);
+                            AlertDialog.Builder msgbox = new AlertDialog.Builder(context);
+                            //configurando o titulo
+                            msgbox.setTitle("Remover");
+                            // configurando a mensagem
+                            msgbox.setMessage("Deseja Realmente Remover ?");
+                            // Botao negativo
+
+                            msgbox.setPositiveButton("Sim",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int wich) {
+                                            colecao.removercolecao();
+                                            holder.txt_add_colecao.setText(R.string.adicionar_colecao);
+                                            Intent it = new Intent(context, Minhas_Colecoes.class);
+                                            context.startActivity(it);
+
+                                        }
+
+                                    });
+
+
+                            msgbox.setNegativeButton("Não",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int wich) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            msgbox.show();
+
                         }
                     }
 
@@ -204,17 +174,16 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
 
-        private TextView conto,nome,n_curtida,txt_add_colecao,author;
+        private TextView conto,nome,txt_add_colecao;
         private CircleImageView imgperfil;
         private SparkButton botaocurtir,botao_add_colecao;
         public MyviewHolder(View itemView) {
             super(itemView);
-            author= itemView.findViewById(R.id.conto_author);
+
             conto = itemView.findViewById(R.id.conto_mensagem);
             txt_add_colecao = itemView.findViewById(R.id.txt_add_colecao);
-            n_curtida = itemView.findViewById(R.id.conto_num_curit);
-           // nome = itemView.findViewById(R.id.conto_author);
-          //  imgperfil = itemView.findViewById(R.id.conto_foto_autor);
+            nome = itemView.findViewById(R.id.conto_author);
+            //  imgperfil = itemView.findViewById(R.id.conto_foto_autor);
             botaocurtir = itemView.findViewById(R.id.botaocurtirconto);
             botao_add_colecao = itemView.findViewById(R.id.botao_add_a_colecao);
 

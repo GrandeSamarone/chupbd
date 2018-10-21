@@ -4,6 +4,7 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -30,13 +31,24 @@ public class Topico  implements Serializable {
                 .child("topico");
         setUid(eventoref.push().getKey());  }
 
-  public  void SalvarTopico(){
+  public  void SalvarTopico(DataSnapshot seguidoressnapshot){
 
-      DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
-              .child("meustopicos");
-      anuncioref.child(usuariologado)
-              .child(getUid()).setValue(this);
+      DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase();
+      Map objeto = new HashMap();
+      String combinacaoId="/"+ usuariologado+"/"+getUid();
 
+      objeto.put("/meustopicos"+combinacaoId,this);
+      for(DataSnapshot Seguidores:seguidoressnapshot.getChildren()){
+
+          String idSeguidores=Seguidores.getKey();
+          HashMap<String,Object> dadosSeguidor = new HashMap<>();
+          dadosSeguidor.put("idtopico",getUid());
+          String IdAtualizacao="/"+ idSeguidores+"/"+getUid();
+
+          objeto.put("/feed-topico"+IdAtualizacao,dadosSeguidor);
+      }
+
+      anuncioref.updateChildren(objeto);
       salvarTopicoPublico();
   }
 

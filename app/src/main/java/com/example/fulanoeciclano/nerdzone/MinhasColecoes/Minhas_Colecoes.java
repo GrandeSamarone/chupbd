@@ -19,7 +19,7 @@ import android.view.WindowManager;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
-import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Conto;
+import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Minha_Colecoes;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Conto;
@@ -47,7 +47,7 @@ public class Minhas_Colecoes extends AppCompatActivity  {
     private DatabaseReference database,database_conto;
     private FirebaseUser usuario;
     private MaterialSearchView SeachViewConto;
-    private Adapter_Conto adapter_conto;
+    private Adapter_Minha_Colecoes adapter_conto;
     private ChildEventListener ChildEventListenerconto;
     private FloatingActionButton botaoMaisconto;
     private RecyclerView recyclerView_lista_conto;
@@ -71,7 +71,7 @@ public class Minhas_Colecoes extends AppCompatActivity  {
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         database_conto = ConfiguracaoFirebase.getDatabase().getReference().child("adicionei-conto").child(usuarioLogado);
         //adapter
-        adapter_conto = new Adapter_Conto(Listaconto,this);
+        adapter_conto = new Adapter_Minha_Colecoes(Listaconto,this);
 
         //Adapter
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
@@ -98,6 +98,7 @@ public class Minhas_Colecoes extends AppCompatActivity  {
     @Override
     protected void onStart() {
         super.onStart();
+        Listaconto.clear();
         RecuperarContos();
     }
 

@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Model;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
@@ -73,11 +74,11 @@ public class ContoLike {
         pLikeQuantRef.setValue(getQtdlikes());
     }
     private void atualizarQtd_MeusConto(){
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeQuantRef=firebaseRefs
                 .child("meusconto")
-                .child(idUsuario)
+                .child(identificadorUsuario)
                 .child(conto.getUid())
                 .child("likecount");
 

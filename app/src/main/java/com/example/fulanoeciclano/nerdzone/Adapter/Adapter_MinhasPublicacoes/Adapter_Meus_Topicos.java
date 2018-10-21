@@ -7,9 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -85,20 +86,6 @@ public class Adapter_Meus_Topicos extends RecyclerView.Adapter<Adapter_Meus_Topi
                 }
             }
         });
-        holder.clicktambem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Topico> listTopicoAtualizado = getTopicos();
-                if (listTopicoAtualizado.size() > 0) {
-                    Topico topicoselecionado = listTopicoAtualizado.get(position);
-                    Intent it = new Intent(context, Detalhe_topico.class);
-                    it.putExtra("topicoselecionado", topicoselecionado);
-                    context.startActivity(it);
-
-                }
-            }
-
-        });
 
         DatabaseReference topicoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("topico-likes")
@@ -132,8 +119,21 @@ public class Adapter_Meus_Topicos extends RecyclerView.Adapter<Adapter_Meus_Topi
             }
         });
 
-
+holder.comentario_img.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(context, "Total de comentario eu sua publicação", Toast.LENGTH_LONG).show();
     }
+});
+    holder.topico_img.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(context, "Total de curtida em sua publicação", Toast.LENGTH_SHORT).show();
+        }
+    });
+    }
+
+
 
     @Override
     public int getItemCount() {
@@ -146,13 +146,14 @@ public class Adapter_Meus_Topicos extends RecyclerView.Adapter<Adapter_Meus_Topi
 
         private TextView titulo,num_curtida,total_comentario;
         private LinearLayout click;
-        private RelativeLayout clicktambem;
+        private ImageView comentario_img,topico_img;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            comentario_img = itemView.findViewById(R.id.img_comentario);
+            topico_img = itemView.findViewById(R.id.botaocurtirtopico);
             titulo = itemView.findViewById(R.id.meus_topico_titulo);
             click = itemView.findViewById(R.id.tituloline);
-            clicktambem = itemView.findViewById(R.id.ico);
             num_curtida = itemView.findViewById(R.id.meus_topico_num_curit);
             total_comentario = itemView.findViewById(R.id.meus_topico_num_Coment);
 

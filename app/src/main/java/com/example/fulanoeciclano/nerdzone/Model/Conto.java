@@ -2,9 +2,12 @@ package com.example.fulanoeciclano.nerdzone.Model;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Conto   implements Serializable {
 
@@ -22,14 +25,29 @@ public class Conto   implements Serializable {
                 .child("conto");
         setUid(eventoref.push().getKey());  }
 
-    public  void SalvarConto(){
+    public  void SalvarConto(DataSnapshot seguidoressnapshot){
         String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
-        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("meusconto");
-        anuncioref.child(identificadorUsuario)
-                .child(getUid()).setValue(this);
+        Map objeto = new HashMap();
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase();
+        String combinacaoId="/"+ getIdauthor()+"/"+getUid();
 
-        salvarContoPublico();
+       objeto.put("/meusconto"+combinacaoId,this);
+
+      for(DataSnapshot Seguidores:seguidoressnapshot.getChildren()){
+
+          String idSeguidores=Seguidores.getKey();
+          HashMap<String,Object> dadosSeguidor = new HashMap<>();
+          dadosSeguidor.put("idconto",getUid());
+          String IdAtualizacao="/"+ idSeguidores+"/"+getUid();
+
+          objeto.put("/feed-conto"+IdAtualizacao,dadosSeguidor);
+      }
+
+         anuncioref.updateChildren(objeto);
+
+         salvarContoPublico();
+
+
     }
 
     public void salvarContoPublico(){

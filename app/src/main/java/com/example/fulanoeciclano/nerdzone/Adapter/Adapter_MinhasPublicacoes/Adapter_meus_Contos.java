@@ -3,10 +3,13 @@ package com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MinhasPublicacoes;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -70,6 +73,7 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
 
 
                 holder.n_curtida.setText(String.valueOf(like.getQtdlikes()));
+                Log.i("asasg", String.valueOf(like.getQtdlikes()));
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -97,7 +101,9 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
                 colecao.setUsuario(usuariologado);
                 colecao.setQtdadd(QtdAdd);
 
-                //adicionar evento para curtir foto
+
+
+                        holder.n_add_colecao.setText(String.valueOf(colecao.getQtdadd()));
 
             }
             @Override
@@ -105,7 +111,18 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
 
             }
         });
-
+     holder.colecao.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(context, "Total de pessoas que adicionaram sua publicação em suas coleções", Toast.LENGTH_LONG).show();
+    }
+});
+        holder.curtir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Total de pessoas que curtiram sua publicação", Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
@@ -115,13 +132,14 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
     }
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
-
+      private ImageView colecao,curtir;
         private TextView conto,n_curtida,n_add_colecao,txt_add_colecao;
         public MyviewHolder(View itemView) {
             super(itemView);
 
             conto = itemView.findViewById(R.id.meus_contos_mensagem);
-            txt_add_colecao = itemView.findViewById(R.id.meus_contos_txt_add_colecao);
+           colecao = itemView.findViewById(R.id.botao_add_a_colecao);
+           curtir=itemView.findViewById(R.id.botaocurtirconto);
             n_curtida = itemView.findViewById(R.id.meus_conto_num_curt);
             n_add_colecao = itemView.findViewById(R.id.meus_conto_num_colecao);
 

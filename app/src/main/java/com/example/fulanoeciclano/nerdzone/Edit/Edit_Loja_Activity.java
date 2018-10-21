@@ -275,7 +275,7 @@ private String id_do_usuario;
 
                 if(totalfotos==listaURLFotos.size()){
                     comercio.setFotos(listaURLFotos);
-                    comercio.salvar();
+                  //  comercio.salvar(seguidoresSnapshot);
                     dialog.dismiss();
                     finish();
                 }

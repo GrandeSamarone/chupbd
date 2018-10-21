@@ -83,7 +83,33 @@ public class MensagensActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onLongItemClick(View view, int position) {
+                    public void onLongItemClick(View view, int position) {/*
+                        AlertDialog.Builder msgbox = new AlertDialog.Builder(MensagensActivity.this);
+                        //configurando o titulo
+                        msgbox.setTitle("Deletar Conversa");
+                        // configurando a mensagem
+                        msgbox.setMessage("Deseja Realmente deletar conversa com  "+usuarioselecionado.getNome()+" ?");
+                        // Botao negativo
+
+                        msgbox.setPositiveButton("Sim",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int wich) {
+                                        RemoverSeguidor(usuarioLogado,usuarioselecionado);
+                                    }
+
+                                });
+
+
+                        msgbox.setNegativeButton("Não",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int wich) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        msgbox.show();
+                        */
                         List<Conversa> listConversaAtualizada = adapter.getConversas();
                         Conversa conversaRemover = listConversaAtualizada.get(position);
                         conversaRemover.removerConversa();

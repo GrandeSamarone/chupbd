@@ -4,10 +4,13 @@ package com.example.fulanoeciclano.nerdzone.Model;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fulanoeciclano on 14/08/2018.
@@ -41,13 +44,23 @@ public class Comercio implements Serializable {
 
 
 
-    public void salvar(){
+    public void salvar(DataSnapshot seguidoressnapshot){
         String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
-        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("meuscomercio");
-        anuncioref.child(identificadorUsuario)
-                .child(getIdMercado()).setValue(this);
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase();
+        Map objeto = new HashMap();
+        String combinacaoId="/"+ identificadorUsuario+"/"+getIdMercado();
 
+        objeto.put("/meuscomercio"+combinacaoId,this);
+        for(DataSnapshot Seguidores:seguidoressnapshot.getChildren()){
+            String idSeguidores=Seguidores.getKey();
+            HashMap<String,Object> dadosSeguidor = new HashMap<>();
+            dadosSeguidor.put("idmercado",getIdMercado());
+            String IdAtualizacao="/"+ idSeguidores+"/"+getIdMercado();
+
+            objeto.put("/feed-comercio"+IdAtualizacao,dadosSeguidor);
+        }
+
+        anuncioref.updateChildren(objeto);
        salvarMercadoPublico();
     }
     public void salvarMercadoPublico(){

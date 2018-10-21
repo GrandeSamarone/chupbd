@@ -44,6 +44,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -72,7 +73,8 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private StorageReference storageReference;
     private Spinner campoLocal, campoloja;
     private Button botaosalvar;
-    private DatabaseReference database,databaseconta;
+    private DatabaseReference database,databaseconta,SeguidoresRef;
+    private DataSnapshot seguidoresSnapshot;
     private String identificadorUsuario,estadostring,lojastring,autorstring;
     private FirebaseAuth autenticacao;
     private Comercio comercio;
@@ -132,6 +134,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         comercio = new Comercio();
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         database = ConfiguracaoFirebase.getDatabase().getReference().child("comercio");
+        SeguidoresRef =ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
         databaseconta = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
@@ -204,7 +207,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
 
                 if(totalfotos==listaURLFotos.size()){
                     comercio.setFotos(listaURLFotos);
-                    comercio.salvar();
+                    comercio.salvar(seguidoresSnapshot);
                     dialog.dismiss();
                     finish();
                 }
@@ -233,23 +236,34 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
                 assert perfil != null;
 
                 id_do_usuario = perfil.getId();
+                CarregarSeguidores(id_do_usuario);
                 String icone = perfil.getFoto();
                 IconeUsuario(icone);
 
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void CarregarSeguidores(String id){
+
+        //Recuperar Seguidores
+        DatabaseReference seguidoresref =SeguidoresRef.child(id);
+        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                seguidoresSnapshot=dataSnapshot;
 
             }
 
@@ -259,6 +273,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
             }
         });
     }
+
     private Comercio configurarMercado(){
         String estado = campoLocal.getSelectedItem().toString();
         String loja = campoloja.getSelectedItem().toString();
