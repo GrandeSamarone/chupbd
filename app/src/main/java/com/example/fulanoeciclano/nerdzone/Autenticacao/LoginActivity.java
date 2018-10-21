@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
         ImageView imageViewgif = view.findViewById(R.id.gifimage);
 
-        Glide.with(this)
+        Glide.with(getApplicationContext())
                 .asGif()
                 .load(R.drawable.gif_briguinha)
                 .into(imageViewgif);
@@ -131,6 +131,81 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+      //  Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
+        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+        Glide.with(getApplicationContext())
+                .asGif()
+                .load(R.drawable.gif_briguinha)
+                .into(imageViewgif);
+        builder.setView(view);
+
+        dialog = builder.create();
+
+        dialog.show();
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+
+                            FirebaseUser user = auth.getCurrentUser();
+
+                            identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+
+                            usuario = new Usuario();
+                            Log.i("sdsd",identificadorUsuario+"ID"+user.getUid());
+                            if( !user.getUid().isEmpty()){
+                                Intent it = new Intent( LoginActivity.this, MainActivity.class);
+                                startActivity(it);
+                                Toast.makeText(LoginActivity.this, "é aqui", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }else {
+                                usuario.setNome(user.getDisplayName());
+                                usuario.setFoto(String.valueOf(user.getPhotoUrl()));
+                                usuario.setCapa("");
+                                usuario.setSeguidores(usuario.getSeguidores());
+                                usuario.setSeguindo(usuario.getSeguindo());
+                                usuario.setContos(usuario.getContos());
+                                usuario.setTopicos(usuario.getTopicos());
+                                usuario.setArts(usuario.getArts());
+                                usuario.setComercio(usuario.getComercio());
+                                usuario.setEvento(usuario.getEvento());
+                                usuario.setTipoconta(user.getEmail());
+                                usuario.setTiposuario("usuario");
+                                //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
+                                usuario.setId(identificadorUsuario);
+                                usuario.salvar();
+                                dialog.dismiss();
+                                Intent it = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(it);
+                                finish();
+                            }
+
+
+                        } else {
+                            dialog.dismiss();
+                            Toast.makeText(LoginActivity.this,
+                                    "Tente Novamente mais tarde", Toast.LENGTH_LONG).show();
+                            // If sign in fails, display a message to the user.
+                          /* Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                           */
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+
     public void Verificar(){
 
         if (sPreferences.getBoolean("firstRun", true)) {
@@ -153,67 +228,6 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
-
-
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-      //  Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
-        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
-        ImageView imageViewgif = view.findViewById(R.id.gifimage);
-
-        Glide.with(this)
-                .asGif()
-                .load(R.drawable.gif_briguinha)
-                .into(imageViewgif);
-        builder.setView(view);
-
-        dialog = builder.create();
-
-        dialog.show();
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = auth.getCurrentUser();
-                            identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
-                        //    Verificar();
-                            usuario = new Usuario();
-                            usuario.setNome(user.getDisplayName());
-                            usuario.setFoto(String.valueOf(user.getPhotoUrl()));
-                            usuario.setCapa("");
-                                usuario.setTipoconta(user.getEmail());
-                            usuario.setTiposuario("usuario");
-                            //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
-                            usuario.setId(identificadorUsuario);
-                            usuario.salvar();
-                            dialog.dismiss();
-                            Intent it = new Intent( LoginActivity.this, MainActivity.class);
-                            startActivity(it);
-                            finish();
-
-
-                        } else {
-                            dialog.dismiss();
-                            Toast.makeText(LoginActivity.this,
-                                    "Tente Novamente", Toast.LENGTH_LONG).show();
-                            // If sign in fails, display a message to the user.
-                          /* Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                           */
-                        }
-
-                        // ...
-                    }
-                });
-    }
-
 
 
 }

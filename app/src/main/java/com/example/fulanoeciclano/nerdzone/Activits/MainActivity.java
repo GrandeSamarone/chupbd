@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
@@ -47,6 +49,12 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Topico.Detalhe_topico;
 import com.example.fulanoeciclano.nerdzone.Topico.ListaTopicos;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -105,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements
     private SwipeRefreshLayout swipe;
     SharedPreferences sPreferences = null;
     private FirebaseAuth AuthUI;
+    private FirebaseAuth mAuth;
+    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleSignInClient;
 
 
     @Override
@@ -223,13 +234,13 @@ public class MainActivity extends AppCompatActivity implements
                 assert perfil != null;
 
                 String capa = perfil.getCapa();
-                Glide.with(MainActivity.this)
+                Glide.with(getApplicationContext())
                         .load(capa)
                         .into(capadrawer );
 
                 String icone = perfil.getFoto();
                 IconeUsuario(icone);
-                Glide.with(MainActivity.this)
+                Glide.with(getApplicationContext())
                         .load(icone)
                         .into(img_drawer );
 
@@ -450,7 +461,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        Glide.with(MainActivity.this)
+        Glide.with(getApplicationContext())
                 .load(url)
                 .into(img_toolbar);
     }
@@ -622,10 +633,9 @@ public class MainActivity extends AppCompatActivity implements
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int wich) {
-                            FirebaseAuth.getInstance().signOut();
-                            Intent it = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(it);
-                            finish();
+                            sendToLogin();
+
+
                         }
 
                     });
@@ -646,6 +656,26 @@ public class MainActivity extends AppCompatActivity implements
         DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void sendToLogin() { //funtion
+        GoogleSignInClient mGoogleSignInClient ;
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(getBaseContext(), gso);
+        mGoogleSignInClient.signOut().addOnCompleteListener(MainActivity.this,
+                new OnCompleteListener<Void>() {  //signout Google
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseAuth.getInstance().signOut(); //signout firebase
+                        Intent setupIntent = new Intent(getBaseContext(), LoginActivity.class);
+                        Toast.makeText(getBaseContext(), "Desconectado", Toast.LENGTH_LONG).show(); //if u want to show some text
+                        setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(setupIntent);
+                        finish();
+                    }
+                });
     }
 
 
