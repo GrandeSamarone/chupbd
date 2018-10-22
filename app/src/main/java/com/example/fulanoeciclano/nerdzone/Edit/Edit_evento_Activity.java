@@ -28,8 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Activits.Minhas_Publicacoes;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
+import com.example.fulanoeciclano.nerdzone.Activits.Minhas_Publicacoes;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Date.DatePickFragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -45,7 +45,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -306,37 +305,33 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                     progressDialog.show();
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(Edit_evento_Activity.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
-                        }
-                        //caso o carregamento no firebase de tudo certo
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(Edit_evento_Activity.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
+                            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(Edit_evento_Activity.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
 
-                            Uri url = taskSnapshot.getDownloadUrl();
-                            // SalvarPost(url);
-                            urlimg = url.toString();
+                                    urlimg = uri.toString();
 
-                            if(urlimg!=null){
-                                eventos.setCapaevento(urlimg);
-                            }
-                            Glide.with(Edit_evento_Activity.this)
-                                    .load(url)
-                                    .into(imgevento);
+                                    if(urlimg!=null){
+                                        eventos.setCapaevento(urlimg);
+                                    }
+                                    Glide.with(Edit_evento_Activity.this)
+                                            .load(uri)
+                                            .into(imgevento);
+                                    progressDialog.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(Edit_evento_Activity.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
 
-                        }
-
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            progressDialog.setMessage("Carregando... "/* + (int) progress + "%"*/);
+                                }
+                            });
                         }
                     });
 

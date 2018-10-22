@@ -163,51 +163,10 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
-                            Usuario usuariologado= UsuarioFirebase.getDadosUsuarioLogado();
 
-                            identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
 
-                            database_perfil.child(identificadorUsuario).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if(dataSnapshot.exists()){
-                                        Intent its = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(its);
-                                        finish();
-                                        Toast.makeText(LoginActivity.this, "ja tinha"+identificadorUsuario, Toast.LENGTH_SHORT).show();
-
-                                    }else{
-                                         Toast.makeText(LoginActivity.this, "Novo", Toast.LENGTH_SHORT).show();
-                                        usuario = new Usuario();
-                                        usuario.setId(identificadorUsuario);
-                                        usuario.setNome(user.getDisplayName());
-                                        usuario.setFoto(String.valueOf(user.getPhotoUrl()));
-                                        usuario.setCapa("");
-                                        usuario.setSeguidores(usuario.getSeguidores());
-                                        usuario.setSeguindo(usuario.getSeguindo());
-                                        usuario.setContos(usuario.getContos());
-                                        usuario.setTopicos(usuario.getTopicos());
-                                        usuario.setArts(usuario.getArts());
-                                        usuario.setComercio(usuario.getComercio());
-                                        usuario.setEvento(usuario.getEvento());
-                                        usuario.setTipoconta(user.getEmail());
-                                        usuario.setTiposuario("usuario");
-                                        //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
-                                        usuario.setId(identificadorUsuario);
-                                        usuario.salvar();
-                                        dialog.dismiss();
-                                        Intent it = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(it);
-                                        finish();
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+                            //Veirica se a conta existe no Database
+                            VerificandoCadastro();
 
                         } else {
                             dialog.dismiss();
@@ -224,6 +183,50 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    public void VerificandoCadastro(){
+        identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        FirebaseUser user = auth.getCurrentUser();
+        database_perfil.child(identificadorUsuario)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            Intent its = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(its);
+                            finish();
+
+                        }else{
+                            usuario = new Usuario();
+                            usuario.setId(identificadorUsuario);
+                            usuario.setNome(user.getDisplayName());
+                            usuario.setFoto(String.valueOf(user.getPhotoUrl()));
+                            usuario.setCapa("");
+                            usuario.setSeguidores(usuario.getSeguidores());
+                            usuario.setSeguindo(usuario.getSeguindo());
+                            usuario.setContos(usuario.getContos());
+                            usuario.setTopicos(usuario.getTopicos());
+                            usuario.setArts(usuario.getArts());
+                            usuario.setComercio(usuario.getComercio());
+                            usuario.setEvento(usuario.getEvento());
+                            usuario.setTipoconta(user.getEmail());
+                            usuario.setTiposuario("usuario");
+                            //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
+                            usuario.setId(identificadorUsuario);
+                            usuario.salvar();
+                            dialog.dismiss();
+                            Intent it = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(it);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
 
     public void Verificar(){
 

@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +44,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -200,29 +198,28 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri firebaseUrl = taskSnapshot.getDownloadUrl();
-                String urlConvertida = firebaseUrl.toString();
+                taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String urlConvertida =uri.toString();
 
-                listaURLFotos.add(urlConvertida);
+                        listaURLFotos.add(urlConvertida);
 
-                if(totalfotos==listaURLFotos.size()){
-                    comercio.setFotos(listaURLFotos);
-                    comercio.salvar(seguidoresSnapshot);
-                    dialog.dismiss();
-                    finish();
-                }
+                        if(totalfotos==listaURLFotos.size()){
+                            comercio.setFotos(listaURLFotos);
+                            comercio.salvar(seguidoresSnapshot);
+                            dialog.dismiss();
+                            finish();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        dialog.dismiss();
+                        Toast.makeText(Cadastrar_Novo_MercadoActivity.this, "Erro ao cadastrar", Toast.LENGTH_SHORT).show();
 
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Cadastrar_Novo_MercadoActivity.this, "Falha ao fazer upload", Toast.LENGTH_SHORT).show();
-                Log.i("INFO","falha ao fazer upload:"+e.getMessage());
+                    }
+                });
             }
         });
     }
@@ -284,7 +281,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         String endereco = campoendereco.getText().toString();
         String autor = usuarioLogado.getNome();
         final Calendar calendartempo = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y");// MM'/'dd'/'y;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y",java.util.Locale.getDefault());// MM'/'dd'/'y;
         String data = simpleDateFormat.format(calendartempo.getTime());
 
 

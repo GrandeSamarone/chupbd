@@ -83,7 +83,7 @@ public class Novo_Conto extends AppCompatActivity {
         String titulo = titulo_conto.getText().toString();
         String mensagem = mensagem_conto.getText().toString();
         final Calendar calendartempo = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y");// MM'/'dd'/'y;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y",java.util.Locale.getDefault());// MM'/'dd'/'y;
         String data = simpleDateFormat.format(calendartempo.getTime());
 
         conto.setIdauthor(perfil.getId());

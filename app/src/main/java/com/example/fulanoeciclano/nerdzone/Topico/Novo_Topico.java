@@ -39,7 +39,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -243,31 +242,26 @@ public class Novo_Topico extends AppCompatActivity {
                     ;
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            dialog.dismiss();
-                            Toast.makeText(Novo_Topico.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
-                        }
-                        //caso o carregamento no firebase de tudo certo
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    dialog.dismiss();
 
-                            dialog.dismiss();
-                            url = taskSnapshot.getDownloadUrl();
+                                    Glide.with(getApplicationContext())
+                                            .load(uri)
+                                            .into(img_topico);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    dialog.dismiss();
+                                    Toast.makeText(Novo_Topico.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
 
-                            Glide.with(getApplicationContext())
-                                    .load(url)
-                                    .into(img_topico);
-
-
-                        }
-
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                }
+                            });
                         }
                     });
 
@@ -283,7 +277,7 @@ public class Novo_Topico extends AppCompatActivity {
         String titulo = titulo_topico.getText().toString();
         String mensagem = mensagem_topico.getText().toString();
         final Calendar calendartempo = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y");// MM'/'dd'/'y;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd'-'MM'-'y",java.util.Locale.getDefault());// MM'/'dd'/'y;
         String data = simpleDateFormat.format(calendartempo.getTime());
 
         topico.setIdauthor(perfil.getId());

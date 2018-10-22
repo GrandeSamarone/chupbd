@@ -49,7 +49,6 @@
             android:name=".Icons.PageIcon"
             android:label="@string/title_activity_page_icon1"
             android:theme="@style/AppTheme">
-            />
         </activity>
         <activity
             android:name=".Activits.MinhaConta"
@@ -85,7 +84,6 @@
         <activity android:name=".Topico.Detalhe_topico" />
         <activity android:name=".Conto.ListaConto" />
         <activity android:name=".Conto.Novo_Conto" />
-        <activity android:name=".Coleçoes.Lista_Colecoes" />
         <activity android:name=".Seguidores.MinhaConta.MeusSeguidores" />
         <activity android:name=".Seguidores.Perfil.SeguidoresPerfil" />
         <activity android:name=".Abrir_Imagem.AbrirImagem" />

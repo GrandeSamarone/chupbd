@@ -45,7 +45,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -347,35 +346,30 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
             dialog.show();
             UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
             //caso de errado
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                     dialog.dismiss();
-                    Toast.makeText(Cadastrar_Novo_Evento.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
-                }
-                //caso o carregamento no firebase de tudo certo
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            dialog.dismiss();
+                            eventos.setCapaevento(String.valueOf(uri));
+                            // SalvarPost(url);
+                            urlimg = uri.toString();
+                            eventos.salvar(seguidoresSnapshot);
+                            Toast.makeText(Cadastrar_Novo_Evento.this, "Evento Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
+                            Intent it = new Intent( Cadastrar_Novo_Evento.this,Evento_Lista.class);
+                            startActivity(it);
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            dialog.dismiss();
+                            Toast.makeText(Cadastrar_Novo_Evento.this, "Erro ao Criar Evento", Toast.LENGTH_SHORT).show();
 
-                       dialog.dismiss();
-                    Uri url = taskSnapshot.getDownloadUrl();
-                    eventos.setCapaevento(String.valueOf(url));
-                    // SalvarPost(url);
-                    urlimg = url.toString();
-
-                    eventos.salvar(seguidoresSnapshot);
-                    Toast.makeText(Cadastrar_Novo_Evento.this, "Evento Criado Com Sucesso!", Toast.LENGTH_SHORT).show();
-                    Intent it = new Intent( Cadastrar_Novo_Evento.this,Evento_Lista.class);
-                    startActivity(it);
-                    finish();
-
-                }
-
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        }
+                    });
                 }
             });
 

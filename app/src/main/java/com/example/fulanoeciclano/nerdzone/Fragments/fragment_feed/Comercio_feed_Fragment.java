@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Fragments.fragment_feed;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,10 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_Comercio_Feed;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
 import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Feed_Comercio;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -22,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,6 +61,31 @@ public class Comercio_feed_Fragment extends Fragment {
         recyclerMercado.setLayoutManager(layoutManager);
         recyclerMercado.setHasFixedSize(true);
         recyclerMercado.setAdapter(adapter_mercado);
+
+        recyclerMercado.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
+                recyclerMercado, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                List<Comercio> listComercioAtualizado = adapter_mercado.getmercados();
+
+                if (listComercioAtualizado.size() > 0) {
+                    Comercio mercadoselecionado = listComercioAtualizado.get(position);
+                    Intent it = new Intent(getActivity(), Detalhe_Mercado.class);
+                    it.putExtra("mercadoelecionado", mercadoselecionado);
+                    startActivity(it);
+                }
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
         RecuperarFeed();
     return view;
     }

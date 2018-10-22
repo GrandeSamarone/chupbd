@@ -294,7 +294,7 @@ public class ChatActivity extends AppCompatActivity  {
         String textoMensagem =editMensagem.getText().toString();
 
         final Calendar calendartempo = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("kk:mm   dd'/'MM'/'y");// MM'/'dd'/'y;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("kk:mm   dd'/'MM'/'y",java.util.Locale.getDefault());// MM'/'dd'/'y;
 
         String tempoMensagem = simpleDateFormat.format(calendartempo.getTime());
         Usuario usuarioRemetentes= UsuarioFirebase.getDadosUsuarioLogado();

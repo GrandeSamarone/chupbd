@@ -50,7 +50,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -454,36 +453,32 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                     progressDialog.setCancelable(false);
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(MinhaConta.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
-                        }
-                        //caso o carregamento no firebase de tudo certo
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(MinhaConta.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
+                            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(MinhaConta.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
 
-                            Uri url = taskSnapshot.getDownloadUrl();
-                            atualizaFotoUsuario(url);
+                                    atualizaFotoUsuario(uri);
 
-                            Glide.with(getApplicationContext())
-                                    .load(url)
-                                    .into(circleImageViewperfil);
+                                    Glide.with(getApplicationContext())
+                                            .load(uri)
+                                            .into(circleImageViewperfil);
 
-                        }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(MinhaConta.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
 
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            progressDialog.setMessage("Carregando... "/* + (int) progress + "%"*/);
+                                }
+                            });
                         }
                     });
-
                 }else if(capa!=null){
                     //Recuperar dados da imagem  para o  Firebase
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -504,33 +499,30 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
 
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(MinhaConta.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
-                        }
-                        //caso o carregamento no firebase de tudo certo
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(MinhaConta.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
 
-                            Toast.makeText(MinhaConta.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
+                                    atualizaCapaUsuario(uri);
 
-                            Uri url = taskSnapshot.getDownloadUrl();
-                            atualizaCapaUsuario(url);
+                                    Glide.with(MinhaConta.this)
+                                            .load(uri)
+                                            .into(capa_perfil);
+                                    progressDialog.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(MinhaConta.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
 
-                            Glide.with(MinhaConta.this)
-                                    .load(url)
-                                    .into(capa_perfil);
-                            progressDialog.dismiss();
-                        }
-
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                            progressDialog.setMessage("Carregando... "/* + (int) progress + "%"*/);
+                                }
+                            });
                         }
                     });
 
