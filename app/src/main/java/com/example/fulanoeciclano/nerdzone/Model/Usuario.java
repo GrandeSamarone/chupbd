@@ -23,14 +23,14 @@ public class Usuario implements Serializable {
     private String foto;
     private String Capa;
     private String tiposuario;
-    private int seguidores = 0;
-    private int seguindo = 0;
-    private int topicos=0;
-    private int contos=0;
-    private int livros=0;
-    private int arts = 0;
-    private int comercio = 0;
-    private int evento = 0;
+    private int seguidores;
+    private int seguindo;
+    private int topicos;
+    private int contos;
+    private int livros;
+    private int arts;
+    private int comercio;
+    private int evento;
 
     public Usuario() {
     }

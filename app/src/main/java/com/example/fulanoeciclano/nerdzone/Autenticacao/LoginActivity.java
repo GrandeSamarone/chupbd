@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -31,6 +32,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private SharedPreferences sPreferences = null;
     private String identificadorUsuario;
+    DatabaseReference usuarioLogadoRef,database_perfil;
+    Usuario usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +57,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
+
         user =auth.getCurrentUser();
+        database_perfil = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         // Check if user is signed in (non-null) and update UI accordingly.
 
         botaologin = findViewById(R.id.sign_in_button);
@@ -154,41 +163,51 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
-
                             FirebaseUser user = auth.getCurrentUser();
+                            Usuario usuariologado= UsuarioFirebase.getDadosUsuarioLogado();
 
                             identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
 
-                            usuario = new Usuario();
-                            Log.i("sdsd",identificadorUsuario+"ID"+user.getUid());
-                            if( !user.getUid().isEmpty()){
-                                Intent it = new Intent( LoginActivity.this, MainActivity.class);
-                                startActivity(it);
-                                Toast.makeText(LoginActivity.this, "é aqui", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }else {
-                                usuario.setNome(user.getDisplayName());
-                                usuario.setFoto(String.valueOf(user.getPhotoUrl()));
-                                usuario.setCapa("");
-                                usuario.setSeguidores(usuario.getSeguidores());
-                                usuario.setSeguindo(usuario.getSeguindo());
-                                usuario.setContos(usuario.getContos());
-                                usuario.setTopicos(usuario.getTopicos());
-                                usuario.setArts(usuario.getArts());
-                                usuario.setComercio(usuario.getComercio());
-                                usuario.setEvento(usuario.getEvento());
-                                usuario.setTipoconta(user.getEmail());
-                                usuario.setTiposuario("usuario");
-                                //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
-                                usuario.setId(identificadorUsuario);
-                                usuario.salvar();
-                                dialog.dismiss();
-                                Intent it = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(it);
-                                finish();
-                            }
+                            database_perfil.child(identificadorUsuario).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists()){
+                                        Intent its = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(its);
+                                        finish();
+                                        Toast.makeText(LoginActivity.this, "ja tinha"+identificadorUsuario, Toast.LENGTH_SHORT).show();
 
+                                    }else{
+                                         Toast.makeText(LoginActivity.this, "Novo", Toast.LENGTH_SHORT).show();
+                                        usuario = new Usuario();
+                                        usuario.setId(identificadorUsuario);
+                                        usuario.setNome(user.getDisplayName());
+                                        usuario.setFoto(String.valueOf(user.getPhotoUrl()));
+                                        usuario.setCapa("");
+                                        usuario.setSeguidores(usuario.getSeguidores());
+                                        usuario.setSeguindo(usuario.getSeguindo());
+                                        usuario.setContos(usuario.getContos());
+                                        usuario.setTopicos(usuario.getTopicos());
+                                        usuario.setArts(usuario.getArts());
+                                        usuario.setComercio(usuario.getComercio());
+                                        usuario.setEvento(usuario.getEvento());
+                                        usuario.setTipoconta(user.getEmail());
+                                        usuario.setTiposuario("usuario");
+                                        //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
+                                        usuario.setId(identificadorUsuario);
+                                        usuario.salvar();
+                                        dialog.dismiss();
+                                        Intent it = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(it);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
                         } else {
                             dialog.dismiss();
