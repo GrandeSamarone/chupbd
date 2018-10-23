@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.example.fulanoeciclano.nerdzone"
+        applicationId "com.wegeek.fulanoeciclano.marlos"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1

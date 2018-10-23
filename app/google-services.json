@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:234664656893:android:53c74333face31f6",
         "android_client_info": {
-          "package_name": "com.example.fulanoeciclano.nerdzone"
+          "package_name": "com.wegeek.fulanoeciclano.marlos"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "234664656893-udsp68psec3vk9nnjhmt0q6dh2hu6cse.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.fulanoeciclano.nerdzone",
+            "package_name": "com.wegeek.fulanoeciclano.marlos",
             "certificate_hash": "47830f9f4e8b621667ed6ac25a3cf965dbee377b"
           }
         },
