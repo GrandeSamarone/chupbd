@@ -8,14 +8,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:234664656893:android:53c74333face31f6",
+        "mobilesdk_app_id": "1:234664656893:android:038d5496c754aea7",
         "android_client_info": {
           "package_name": "com.wegeek.fulanoeciclano.marlos"
         }
       },
       "oauth_client": [
         {
-          "client_id": "234664656893-udsp68psec3vk9nnjhmt0q6dh2hu6cse.apps.googleusercontent.com",
+          "client_id": "234664656893-fjce573mqdclid8upfucucrd34als2do.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wegeek.fulanoeciclano.marlos",
