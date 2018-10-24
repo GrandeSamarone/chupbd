@@ -70,6 +70,8 @@
     <string name="Seguidores">Seguidores</string>
     <string name="topico_name">TÓPICO</string>
     <string name="conto_name">CONTO</string>
+    <string name="politica_de_privacidade">Política de Privacidade</string>
+    <string name="politicaa_privacidade">Política de privacidade</string>
 
     <string-array name="estados">
         <item>Estado</item>

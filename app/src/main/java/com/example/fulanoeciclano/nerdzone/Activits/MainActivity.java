@@ -46,6 +46,7 @@ import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
+import com.example.fulanoeciclano.nerdzone.Politica_Privacidade.Politica_PrivacidadeActivity;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Topico.Detalhe_topico;
 import com.example.fulanoeciclano.nerdzone.Topico.ListaTopicos;
@@ -78,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView recyclerViewListaGibiMercado;
     private RecyclerView recyclerViewListaTopico;
     private RecyclerView recyclerViewListaConto;
-    private RecyclerView recyclerViewListaGibiOutros;
     private RecyclerView recyclerVieweventos;
     private AdapterMercado adapterMercado;
     private EventoAdapterPagInicial adapterEvento;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements
     private ChildEventListener valueEventListenerMercado;
     private ChildEventListener valueEventListenerEvento;
     private ChildEventListener valueEventListenerTopico;
-    private ChildEventListener valueEventListenerOutros,ChildEventListenerperfil;
+    private ChildEventListener ChildEventListenerperfil;
     private TextView maiseventoTxt,maiscomercioTxt,maistopicoTxt;
 
     private Toolbar toolbar;
@@ -123,10 +123,47 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
+            //Configuraçoes Originais
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
+        //Recycle
+        recyclerViewListaConto = findViewById(R.id.RecycleViewConto);
+        recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
+        recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
+        recyclerViewListaTopico = findViewById(R.id.RecycleViewTopicos);
+
+        GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
+        Database_Conto = ConfiguracaoFirebase.getFirebaseDatabase().child("conto");
+        Database_Topico = ConfiguracaoFirebase.getDatabase().getReference().child("topico");
+        GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
+
+        //Configurar recycleView Evento
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerVieweventos.setLayoutManager(layoutManager);
+        recyclerVieweventos.setHasFixedSize(true);
+        recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerVieweventos,  R.layout.header_evento));
+        adapterEvento = new EventoAdapterPagInicial(ListaEvento,MainActivity.this);
+        recyclerVieweventos.setAdapter(adapterEvento);
+        //Configurar recycleView Mercado
+        LinearLayoutManager layoutManagerMarvel = new LinearLayoutManager
+                (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
+        recyclerViewListaGibiMercado.setHasFixedSize(true);
+        recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerViewListaGibiMercado,  R.layout.header_evento));
+        adapterMercado=new AdapterMercado(listaGibiComercio,MainActivity.this);
+        recyclerViewListaGibiMercado.setAdapter(adapterMercado);
+        //Configurar recycleView TOpico
+        LinearLayoutManager layoutManagertopico = new LinearLayoutManager(
+                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerViewListaTopico.setLayoutManager(layoutManagertopico);
+        recyclerViewListaTopico.setHasFixedSize(true);
+        recyclerViewListaTopico.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerViewListaTopico,  R.layout.header_evento));
+        adapterTopico = new TopicoAdapterPagInicial(ListaTopico,MainActivity.this);
+        recyclerViewListaTopico.setAdapter(adapterTopico);
+
 
 
         //Verifica se é a primeira vez da instalacao
@@ -356,49 +393,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void Recycleview(){
-        //Recycle
-        recyclerViewListaConto = findViewById(R.id.RecycleViewConto);
-        recyclerViewListaGibiOutros = findViewById(R.id.RecycleViewGibiOutros);
-        recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
-        recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
-        recyclerViewListaTopico = findViewById(R.id.RecycleViewTopicos);
 
-        GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
-        Database_Conto = ConfiguracaoFirebase.getFirebaseDatabase().child("conto");
-        Database_Topico = ConfiguracaoFirebase.getDatabase().getReference().child("topico");
-        GibiEventos = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
-
-        //Configurar Adapter
-        adapterMercado=new AdapterMercado(listaGibiComercio,MainActivity.this);
-        adapterEvento = new EventoAdapterPagInicial(ListaEvento,MainActivity.this);
-        adapterTopico = new TopicoAdapterPagInicial(ListaTopico,MainActivity.this);
-
-        //Configurar recycleView Evento
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerVieweventos.setLayoutManager(layoutManager);
-        recyclerVieweventos.setHasFixedSize(true);
-        recyclerVieweventos.setAdapter(adapterEvento);
-        recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerVieweventos,  R.layout.header_evento));
-
-        //Configurar recycleView Mercado
-        RecyclerView.LayoutManager layoutManagerMarvel = new LinearLayoutManager
-                (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
-        recyclerViewListaGibiMercado.setHasFixedSize(true);
-        recyclerViewListaGibiMercado.setAdapter(adapterMercado);
-        recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewListaGibiMercado,  R.layout.header_evento));
-
-        //Configurar recycleView TOpico
-        RecyclerView.LayoutManager layoutManagertopico = new LinearLayoutManager(
-                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
-        recyclerViewListaTopico.setLayoutManager(layoutManagertopico);
-        recyclerViewListaTopico.setHasFixedSize(true);
-        recyclerViewListaTopico.setAdapter(adapterTopico);
-        recyclerViewListaTopico.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewListaTopico,  R.layout.header_evento));
         recyclerViewListaTopico.addOnItemTouchListener(new RecyclerItemClickListener(this,
 
                 recyclerViewListaTopico, new RecyclerItemClickListener.OnItemClickListener() {
@@ -476,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements
             systemBarTintManager.setStatusBarTintEnabled(true);
             systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
         }
-        if (Build.VERSION.SDK_INT >= 19) {
+        if (Build.VERSION.SDK_INT <= 19) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
@@ -619,7 +614,10 @@ public class MainActivity extends AppCompatActivity implements
         }else if (id == R.id.evento_menu) {
             Intent it = new Intent(MainActivity.this,Evento_Lista.class);
             startActivity(it);
-        }else if (id == R.id.topico_menu) {
+        }else if (id == R.id.minha_privacidade_dmenu) {
+            Intent it = new Intent(MainActivity.this,Politica_PrivacidadeActivity.class);
+            startActivity(it);
+        } else if (id == R.id.topico_menu) {
             Intent it = new Intent(MainActivity.this,ListaTopicos.class);
             startActivity(it);
         } else if (id == R.id.conto_menu) {

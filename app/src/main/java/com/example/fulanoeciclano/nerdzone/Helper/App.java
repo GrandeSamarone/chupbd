@@ -1,10 +1,10 @@
 package com.example.fulanoeciclano.nerdzone.Helper;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.example.fulanoeciclano.nerdzone.BuildConfig;
@@ -27,7 +27,7 @@ import static android.app.UiModeManager.MODE_NIGHT_AUTO;
  * Created by fulanoeciclano on 19/05/2018.
  */
 
-public class App extends Application {
+public class App extends MultiDexApplication {
     private FirebaseDatabase data;
     private Context c;
 

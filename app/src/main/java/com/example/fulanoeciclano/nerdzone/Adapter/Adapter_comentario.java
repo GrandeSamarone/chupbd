@@ -77,6 +77,7 @@ public class Adapter_comentario extends RecyclerView.Adapter<Adapter_comentario.
 
                             Intent it = new Intent(context, Perfil.class);
                             it.putExtra("id",user.getId());
+                            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(it);
                         }
                     });
@@ -85,6 +86,7 @@ public class Adapter_comentario extends RecyclerView.Adapter<Adapter_comentario.
                         public void onClick(View v) {
                             Intent it = new Intent(context, Perfil.class);
                             it.putExtra("id",user.getId());
+                            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(it);
                         }
                     });

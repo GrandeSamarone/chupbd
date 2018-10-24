@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -18,12 +19,12 @@ import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
+import com.example.fulanoeciclano.nerdzone.Politica_Privacidade.Politica_PrivacidadeActivity;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,7 +44,8 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseUser user;
-    private SignInButton botaologin;
+    private TextView textoprivacidade;
+    private com.shobhitpuri.custombuttons.GoogleSignInButton botaologin;
     private Usuario usuario;
     private AlertDialog dialog;
     private SharedPreferences sPreferences = null;
@@ -56,8 +58,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        auth = FirebaseAuth.getInstance();
 
+
+        //Configuracoes Originais
+        textoprivacidade = findViewById(R.id.textView);
+        textoprivacidade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(LoginActivity.this, Politica_PrivacidadeActivity.class);
+                startActivity(it);
+            }
+        });
+        auth = FirebaseAuth.getInstance();
         user =auth.getCurrentUser();
         database_perfil = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         // Check if user is signed in (non-null) and update UI accordingly.

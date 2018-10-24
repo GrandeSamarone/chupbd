@@ -61,6 +61,9 @@
         <item android:id="@+id/minha_conta_dmenu"
                 android:title="@string/drawer_Suporte"
                 android:icon="@drawable/ic_support"/>
+        <item android:id="@+id/minha_privacidade_dmenu"
+            android:title="@string/politica_de_privacidade"
+            android:icon="@drawable/ic_privacidade"/>
 
             <item android:id="@+id/menu_sair"
                 android:title="@string/drawer_Sair"

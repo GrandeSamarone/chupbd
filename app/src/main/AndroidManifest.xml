@@ -48,8 +48,7 @@
         <activity
             android:name=".Icons.PageIcon"
             android:label="@string/title_activity_page_icon1"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".Activits.MinhaConta"
             android:label="@string/title_activity_minha_conta"
@@ -90,7 +89,8 @@
         <activity android:name=".MinhasColecoes.Minhas_Colecoes" />
         <activity android:name=".Feed.FeedActivity" />
         <activity android:name=".FanArts.Lista_Arts" />
-        <activity android:name=".FanArts.Nova_Arts"></activity>
+        <activity android:name=".FanArts.Nova_Arts" />
+        <activity android:name=".Politica_Privacidade.Politica_PrivacidadeActivity"></activity>
     </application>
 
 </manifest>

@@ -62,7 +62,7 @@
                 app:srcCompat="@drawable/ic_emotion_chat" />
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatButton
+        <Button
             android:id="@+id/fabenviar"
             android:onClick="EnviarMensagem"
             android:layout_width="40dp"

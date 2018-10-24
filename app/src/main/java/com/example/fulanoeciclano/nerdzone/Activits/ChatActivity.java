@@ -58,8 +58,8 @@ import me.relex.photodraweeview.PhotoDraweeView;
 import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindowFlag;
 
 public class ChatActivity extends AppCompatActivity  {
-    private TextView textViewNome;
 
+    private TextView textViewNome;
     private CircleImageView circleImageViewFoto;
     private Toolbar toolbarDialog;
     private Usuario usuariodestinatario;
