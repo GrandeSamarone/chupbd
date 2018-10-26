@@ -90,7 +90,7 @@
 
             </RelativeLayout>
 
-            <TextView
+            <com.vanniktech.emoji.EmojiTextView
                 android:layout_marginTop="8dp"
                 android:id="@+id/nomeusuario_perfil"
                 android:layout_width="match_parent"
@@ -102,7 +102,7 @@
                 android:textSize="@dimen/nome_perfil"
                 android:textStyle="bold"
                 android:textAlignment="center"/>
-            <TextView
+            <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/fraserapida_perfil"
                 android:layout_marginBottom="8dp"
                 android:textAlignment="center"

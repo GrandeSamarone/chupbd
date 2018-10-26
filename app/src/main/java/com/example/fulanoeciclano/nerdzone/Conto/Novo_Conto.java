@@ -28,7 +28,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.text.SimpleDateFormat;
@@ -44,7 +43,7 @@ public class Novo_Conto extends AppCompatActivity {
     private DatabaseReference databaseusuario,databasetopico,SeguidoresRef;
     private DataSnapshot seguidoresSnapshot;
     private FirebaseUser usuario;
-    private ChildEventListener ChildEventListenerperfil;
+    private ChildEventListener ChildEventListenerperfil,ChildEventListenerSeguidores;
     private EditText titulo_conto,mensagem_conto;
     private Conto conto = new Conto();
     private Usuario perfil;
@@ -87,6 +86,7 @@ public class Novo_Conto extends AppCompatActivity {
         String data = simpleDateFormat.format(calendartempo.getTime());
 
         conto.setIdauthor(perfil.getId());
+
         conto.setTitulo(titulo);
         conto.setMensagem(mensagem);
         conto.setData(data);
@@ -96,7 +96,10 @@ public class Novo_Conto extends AppCompatActivity {
     }
     public void validarDadosConto() {
         conto = configurarConto();
-
+        if (TextUtils.isEmpty(conto.getTitulo())) {
+            titulo_conto.setError(padrao);
+            return;
+        }
 
         if (TextUtils.isEmpty(conto.getMensagem())) {
             mensagem_conto.setError(padrao);
@@ -151,10 +154,24 @@ public class Novo_Conto extends AppCompatActivity {
 
         //Recuperar Seguidores
         DatabaseReference seguidoresref =SeguidoresRef.child(id);
-        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ChildEventListenerSeguidores=seguidoresref.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-              seguidoresSnapshot=dataSnapshot;
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                seguidoresSnapshot=dataSnapshot;
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
 

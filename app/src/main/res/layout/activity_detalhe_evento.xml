@@ -122,7 +122,7 @@
                     android:background="@drawable/fundo_user"
                 android:layout_alignParentLeft="true"
                   />
-                <TextView
+                <com.vanniktech.emoji.EmojiTextView
                     android:layout_toRightOf="@+id/icone_author"
                     android:textColor="@color/primary_dark"
                     android:textSize="14sp"

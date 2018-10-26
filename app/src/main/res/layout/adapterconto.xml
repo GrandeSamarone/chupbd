@@ -14,13 +14,21 @@
         android:padding="10dp">
 
         <TextView
+            android:id="@+id/conto_titulo"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/pretoescrita"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_below="@+id/conto_titulo"
             android:id="@+id/conto_mensagem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textColor="@color/pretoescrita"
             android:textSize="16sp"
-            tools:text="topico" />
+           />
         <TextView
             android:layout_below="@+id/conto_mensagem"
             android:layout_alignParentRight="true"

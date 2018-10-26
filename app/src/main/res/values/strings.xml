@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeGeek</string>
+    <string name="app_name">WeGeek teste</string>
     <string name="buscar_usuario">Ei %1$s, nemhum Usuario Foi encontrado.</string>
     <string name="title_activity_cadastrar_icon_nome_">Cadastrar_icon_nome_Activity</string>
 

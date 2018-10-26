@@ -1,7 +1,9 @@
 package com.example.fulanoeciclano.nerdzone.Autenticacao;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,7 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
+         //fundo
+        TrocarFundos_status_bar();
 
         //Configuracoes Originais
         textoprivacidade = findViewById(R.id.textView);
@@ -108,12 +114,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-    }
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         LayoutInflater layoutInflater = LayoutInflater.from(LoginActivity.this);
@@ -126,6 +126,11 @@ public class LoginActivity extends AppCompatActivity {
                 .into(imageViewgif);
         builder.setView(view);
         dialog = builder.create();
+    }
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+
 
         dialog.show();
     }
@@ -146,12 +151,50 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Erro, Verifique sua Conexão com a internet e tente Novamente.", Toast.LENGTH_LONG).show();
                 Log.i("sdoaskaok", String.valueOf(e));
 
-                dialog.dismiss();
+
                 // ...
             }
         }
     }
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_login);
+        }
+        if (Build.VERSION.SDK_INT <= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_login);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_login);
+        }
+    }
 
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
       //  Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -203,11 +246,13 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()){
+                            dialog.dismiss();
                             Intent its = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(its);
                             finish();
 
                         }else{
+                            dialog.dismiss();
                             usuario = new Usuario();
                             usuario.setId(identificadorUsuario);
                             usuario.setNome(user.getDisplayName());
@@ -225,7 +270,7 @@ public class LoginActivity extends AppCompatActivity {
                             //   String  identificadorUsuario = Base64Custom.codificarBase64(usuario.getNome());
                             usuario.setId(identificadorUsuario);
                             usuario.salvar();
-                            dialog.dismiss();
+
                             Intent it = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(it);
                             finish();

@@ -35,8 +35,8 @@ public class Politica_PrivacidadeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TrocarFundos_status_bar();
-    init();
 
+        init();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -78,6 +78,11 @@ public class Politica_PrivacidadeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        init();
+    }
 
     //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {

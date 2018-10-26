@@ -43,7 +43,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -95,6 +94,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
     private String[] pegandoUrl;
     private FirebaseUser usuario;
     private ChildEventListener ChildEventListenerperfil;
+    private ChildEventListener ChildEventListenerSeguidores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +158,7 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         TrocarFundos_status_bar();
 
         CarregarDados_do_Usuario();
+        CarregarSeguidores();
     }
 
 
@@ -233,7 +234,6 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
                 assert perfil != null;
 
                 id_do_usuario = perfil.getId();
-                CarregarSeguidores(id_do_usuario);
                 String icone = perfil.getFoto();
                 IconeUsuario(icone);
 
@@ -253,20 +253,26 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         });
     }
 
-    private void CarregarSeguidores(String id){
-
+    private void CarregarSeguidores(){
+        String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
         //Recuperar Seguidores
-        DatabaseReference seguidoresref =SeguidoresRef.child(id);
-        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference seguidoresref =SeguidoresRef.child(usuariologado);
+        ChildEventListenerSeguidores=seguidoresref.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 seguidoresSnapshot=dataSnapshot;
-
             }
-
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }

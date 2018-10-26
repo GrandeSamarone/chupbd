@@ -54,8 +54,9 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
     @Override
     public void onBindViewHolder(@NonNull MyviewHolder holder, int position) {
         final Conto conto = listaconto.get(position);
-        holder.conto.setText(conto.getMensagem());
 
+        holder.conto.setText(conto.getMensagem());
+        holder.nome_conto.setText(conto.getTitulo());
 
         DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("usuarios")
@@ -204,7 +205,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
 
-        private TextView conto,nome,n_curtida,txt_add_colecao,author;
+        private TextView conto,nome_conto,n_curtida,txt_add_colecao,author;
         private CircleImageView imgperfil;
         private SparkButton botaocurtir,botao_add_colecao;
         public MyviewHolder(View itemView) {
@@ -213,7 +214,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
             conto = itemView.findViewById(R.id.conto_mensagem);
             txt_add_colecao = itemView.findViewById(R.id.txt_add_colecao);
             n_curtida = itemView.findViewById(R.id.conto_num_curit);
-           // nome = itemView.findViewById(R.id.conto_author);
+            nome_conto = itemView.findViewById(R.id.conto_titulo);
           //  imgperfil = itemView.findViewById(R.id.conto_foto_autor);
             botaocurtir = itemView.findViewById(R.id.botaocurtirconto);
             botao_add_colecao = itemView.findViewById(R.id.botao_add_a_colecao);

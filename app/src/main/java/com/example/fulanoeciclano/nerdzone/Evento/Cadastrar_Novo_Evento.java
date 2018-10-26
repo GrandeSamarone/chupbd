@@ -40,11 +40,11 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -96,6 +96,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
 
 
     private FloatingActionButton botaoSalvar;
+    private ChildEventListener ChildEventListenerSeguidores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,24 +214,30 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
 
 
     }
-
     private void CarregarSeguidores(){
         String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
         //Recuperar Seguidores
         DatabaseReference seguidoresref =SeguidoresRef.child(usuariologado);
-        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ChildEventListenerSeguidores=seguidoresref.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 seguidoresSnapshot=dataSnapshot;
-
             }
-
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
+
 
 
 

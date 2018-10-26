@@ -38,7 +38,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -71,6 +70,7 @@ public class Novo_Topico extends AppCompatActivity {
     private StorageReference storageReference;
     private Dialog dialog;
     private   Uri url;
+    private ChildEventListener ChildEventListenerSeguidores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,16 +159,22 @@ public class Novo_Topico extends AppCompatActivity {
 
         //Recuperar Seguidores
         DatabaseReference seguidoresref =SeguidoresRef.child(id);
-        seguidoresref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ChildEventListenerSeguidores=seguidoresref.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 seguidoresSnapshot=dataSnapshot;
-
             }
-
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }

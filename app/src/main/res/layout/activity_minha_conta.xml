@@ -89,11 +89,21 @@
               />
 
       </RelativeLayout>
-
-            <TextView
+<RelativeLayout
+   android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+         <LinearLayout
+             android:id="@+id/line_nome"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal">
+            <com.vanniktech.emoji.EmojiTextView
+                android:gravity="right"
+                android:layout_weight="1"
                 android:layout_marginTop="8dp"
                 android:id="@+id/nomeusuario_perfil"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Marlos trinidad"
                 android:textColor="@color/preto"
@@ -101,20 +111,26 @@
                 android:letterSpacing="0.1"
                 android:textSize="@dimen/nome_perfil"
                 android:textStyle="bold"
-                android:textAlignment="center"/>
-            <TextView
+                />
+    <ImageView
+        android:layout_weight="1"
+        android:id="@+id/botao_edit"
+        android:layout_width="24sp"
+        android:layout_height="24sp"
+
+        android:src="@drawable/ic_edit"/>
+         </LinearLayout>
+            <com.vanniktech.emoji.EmojiTextView
                 android:id="@+id/fraserapida_perfil"
-                android:layout_marginBottom="8dp"
                 android:textAlignment="center"
-                android:layout_below="@+id/nomeusuario"
+                android:layout_below="@+id/line_nome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Onde os Fracos nao tem vez."
                 android:fontFamily="sans-serif"
                 android:textSize="@dimen/frase_perfil"
                 android:textStyle="italic"
                 android:textColor="@color/cinzasecunradrio"/>
-
+</RelativeLayout>
         </LinearLayout>
 
 

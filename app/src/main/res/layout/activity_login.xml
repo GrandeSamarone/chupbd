@@ -5,8 +5,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-
-    android:background="#FFF">
+    android:fitsSystemWindows="true"
+    android:background="@drawable/fundopaglogin">
 
 
     <com.shobhitpuri.custombuttons.GoogleSignInButton

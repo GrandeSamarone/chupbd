@@ -38,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.vanniktech.emoji.EmojiTextView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -47,7 +48,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Perfil extends AppCompatActivity implements Main, View.OnClickListener {
 
-    private TextView nome,fraserapida,n_seguidores,n_topicos,n_contos,n_arts;
+    private TextView n_seguidores,n_topicos,n_contos,n_arts;
+    private EmojiTextView nome,fraserapida;
     private CircleImageView imgperfil;
     private ProgressBar progressBar;
     private SimpleDraweeView capausuario;
@@ -71,7 +73,6 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
         id_usuariologado =  UsuarioFirebase.getIdentificadorUsuario();
     database_perfil = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
     seguidores_ref = ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
-     nome = findViewById(R.id.nomeusuario_perfil);
      btn_conto_click=findViewById(R.id.conto_click_perfil);
      btn_conto_click.setOnClickListener(this);
      btn_topico_click = findViewById(R.id.topico_click_perfil);
@@ -80,6 +81,7 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
      btn_fanats_click.setOnClickListener(this);
      btn_seguidor_click = findViewById(R.id.seguidores_click_perfil);
      btn_seguidor_click.setOnClickListener(this);
+        nome = findViewById(R.id.nomeusuario_perfil);
      n_contos=findViewById(R.id.num_contos_perfil);
      n_topicos=findViewById(R.id.num_topicos_perfil);
      n_arts=findViewById(R.id.num_fantars_perfil);
@@ -207,6 +209,7 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
 
                         progressBar.setVisibility(View.VISIBLE);
                          nome.setText(usuarioselecionado.getNome());
+                         fraserapida.setText(usuarioselecionado.getFrase());
                         n_topicos.setText(String.valueOf(usuarioselecionado.getTopicos()));
                         n_contos.setText(String.valueOf(usuarioselecionado.getContos()));
                         n_arts.setText(String.valueOf(usuarioselecionado.getArts()));
@@ -236,6 +239,9 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                         usuarioselecionado = dataSnapshot.getValue(Usuario.class );
                         assert usuarioselecionado != null;
+                        n_topicos.setText(String.valueOf(usuarioselecionado.getTopicos()));
+                        n_contos.setText(String.valueOf(usuarioselecionado.getContos()));
+                        n_arts.setText(String.valueOf(usuarioselecionado.getArts()));
                         n_seguidores.setText(String.valueOf(usuarioselecionado.getSeguidores()));
                     }
                     @Override

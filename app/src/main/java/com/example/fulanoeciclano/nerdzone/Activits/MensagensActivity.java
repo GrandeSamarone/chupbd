@@ -47,7 +47,7 @@ public class MensagensActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mensagens);
-        toolbar =findViewById(R.id.toolbarsecundario);
+        toolbar =findViewById(R.id.toolbarsecundario_sem_foto);
         toolbar.setTitle("Caixa de Mensagens");
         setSupportActionBar(toolbar);
         recyclerViewConversas= findViewById(R.id.recyclerviewConversas);

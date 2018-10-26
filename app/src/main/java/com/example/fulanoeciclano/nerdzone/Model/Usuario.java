@@ -68,6 +68,7 @@ public class Usuario implements Serializable {
     public Map<String,Object> ConverterparaMap(){
         HashMap<String,Object> usuarioMap = new HashMap<>();
         usuarioMap.put("nome",getNome());
+        usuarioMap.put("frase",getFrase());
         usuarioMap.put("foto",getFoto());
 
         return usuarioMap;
