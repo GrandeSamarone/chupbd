@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -40,6 +39,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
+import com.vanniktech.emoji.EmojiTextView;
 import com.vanniktech.emoji.google.GoogleEmojiProvider;
 import com.vanniktech.emoji.listeners.OnEmojiBackspaceClickListener;
 import com.vanniktech.emoji.listeners.OnEmojiPopupDismissListener;
@@ -59,7 +59,7 @@ import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindo
 
 public class ChatActivity extends AppCompatActivity  {
 
-    private TextView textViewNome;
+    private EmojiTextView textViewNome;
     private CircleImageView circleImageViewFoto;
     private Toolbar toolbarDialog;
     private Usuario usuariodestinatario;

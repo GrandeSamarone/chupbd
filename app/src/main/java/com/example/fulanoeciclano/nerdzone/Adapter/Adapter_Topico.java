@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.vanniktech.emoji.EmojiTextView;
 import com.varunest.sparkbutton.SparkButton;
 import com.varunest.sparkbutton.SparkEventListener;
 
@@ -192,7 +193,8 @@ holder.click.setOnClickListener(new View.OnClickListener() {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView titulo,mensagem,autor,num_curtida,total_comentario;
+        private TextView  titulo,mensagem,num_curtida,total_comentario;
+        private EmojiTextView autor;
         private CircleImageView foto_autor;
         private LinearLayout click;
         private RelativeLayout clicktambem;

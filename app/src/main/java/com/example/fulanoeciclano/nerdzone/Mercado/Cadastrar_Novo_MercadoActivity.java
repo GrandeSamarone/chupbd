@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -257,26 +259,19 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
         String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
         //Recuperar Seguidores
         DatabaseReference seguidoresref =SeguidoresRef.child(usuariologado);
-        ChildEventListenerSeguidores=seguidoresref.addChildEventListener(new ChildEventListener() {
+        seguidoresref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 seguidoresSnapshot=dataSnapshot;
+                Log.i("asdsds", String.valueOf(seguidoresSnapshot));
             }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
-
     private Comercio configurarMercado(){
         String estado = campoLocal.getSelectedItem().toString();
         String loja = campoloja.getSelectedItem().toString();

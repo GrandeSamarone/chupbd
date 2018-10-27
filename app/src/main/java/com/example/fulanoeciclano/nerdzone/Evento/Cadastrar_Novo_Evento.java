@@ -30,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Date.DatePickFragment;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -39,12 +38,12 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -106,7 +105,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
         final Calendar calendar12 = Calendar.getInstance();
         Log.i("dataa", String.valueOf(calendar12.getTime()));
         //Configuraçoes
-        toolbar = findViewById(R.id.toolbarsecundario);
+        toolbar = findViewById(R.id.toolbarsecundario_sem_foto);
         toolbar.setTitle("Criar Evento");
         setSupportActionBar(toolbar);
 
@@ -135,7 +134,6 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
 
 
         TrocarFundos_status_bar();
-        IconeUsuario();
         CarregarDadosSpinner();
         CarregarSeguidores();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -218,26 +216,19 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
         String usuariologado = UsuarioFirebase.getIdentificadorUsuario();
         //Recuperar Seguidores
         DatabaseReference seguidoresref =SeguidoresRef.child(usuariologado);
-        ChildEventListenerSeguidores=seguidoresref.addChildEventListener(new ChildEventListener() {
+        seguidoresref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 seguidoresSnapshot=dataSnapshot;
+                Log.i("asdsds", String.valueOf(seguidoresSnapshot));
             }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
-
 
 
 
@@ -422,23 +413,7 @@ public class Cadastrar_Novo_Evento extends AppCompatActivity implements DatePick
         }
     }
 
-    private void IconeUsuario() {
-        //Imagem do icone do usuario
-        icone = findViewById(R.id.icone_user_toolbar);
-        icone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(Cadastrar_Novo_Evento.this, MinhaConta.class);
-                startActivity(it);
-            }
-        });
-        FirebaseUser UsuarioAtual = UsuarioFirebase.getUsuarioAtual();
-        String mPhotoUrl = UsuarioAtual.getPhotoUrl().toString();
 
-        Glide.with(Cadastrar_Novo_Evento.this)
-                .load(mPhotoUrl)
-                .into(icone);
-    }
 
     //carregar spinner
     private void CarregarDadosSpinner() {

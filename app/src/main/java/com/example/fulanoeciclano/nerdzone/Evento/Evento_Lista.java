@@ -118,6 +118,7 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                         R.color.accent);
 
         //Configuracoes Basicas
+        icone = findViewById(R.id.icone_user_toolbar);
         recyclerEvento = findViewById(R.id.lista_evento);
         mDatabaseevento = ConfiguracaoFirebase.getFirebaseDatabase().child("evento");
 
@@ -311,8 +312,18 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
                 assert perfil != null;
 
 
-                String icone = perfil.getFoto();
-                IconeUsuario(icone);
+                String iconeurl = perfil.getFoto();
+                icone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(Evento_Lista.this, MinhaConta.class);
+                        startActivity(it);
+
+                    }
+                });
+                Glide.with(Evento_Lista.this)
+                        .load(iconeurl)
+                        .into(icone);
 
             }
             @Override
@@ -329,23 +340,6 @@ public class Evento_Lista extends AppCompatActivity  implements SwipeRefreshLayo
 
             }
         });
-    }
-    private void IconeUsuario(String url) {
-        //Imagem do icone do usuario
-        icone = findViewById(R.id.icone_user_toolbar);
-        icone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(Evento_Lista.this, MinhaConta.class);
-                startActivity(it);
-
-            }
-        });
-
-
-        Glide.with(Evento_Lista.this)
-                .load(url)
-                .into(icone);
     }
 
     @Override

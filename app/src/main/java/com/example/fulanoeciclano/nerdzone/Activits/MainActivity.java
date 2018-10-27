@@ -36,6 +36,7 @@ import com.example.fulanoeciclano.nerdzone.Autenticacao.LoginActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
+import com.example.fulanoeciclano.nerdzone.FanArts.Lista_Arts;
 import com.example.fulanoeciclano.nerdzone.Feed.FeedActivity;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements
     private ChildEventListener valueEventListenerTopico;
     private ChildEventListener valueEventListenerContos;
     private ChildEventListener ChildEventListenerperfil;
-    private TextView maiseventoTxt,maiscomercioTxt,maistopicoTxt;
+    private TextView maiseventoTxt,maiscomercioTxt,maistopicoTxt,maiscontoTxt,maisfanartsTxt;
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
@@ -313,7 +314,6 @@ public class MainActivity extends AppCompatActivity implements
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -616,6 +616,22 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(it);
             }
         });
+        maiscontoTxt = findViewById(R.id.maisconto);
+        maiscontoTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this,ListaConto.class);
+                startActivity(it);
+            }
+        });
+        maisfanartsTxt = findViewById(R.id.maisfanart);
+        maisfanartsTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this,Lista_Arts.class);
+                startActivity(it);
+            }
+        });
 
     }
 
@@ -655,7 +671,10 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.conto_menu) {
             Intent it = new Intent(MainActivity.this,ListaConto.class);
             startActivity(it);
-        } else if (id == R.id.menu_sair) {
+        }else if (id == R.id.fanarts_menu) {
+            Intent it = new Intent(MainActivity.this,Lista_Arts.class);
+            startActivity(it);
+        }else if (id == R.id.menu_sair) {
             AlertDialog.Builder msgbox = new AlertDialog.Builder(MainActivity.this);
             //configurando o titulo
             msgbox.setTitle("Deseja Sair?");

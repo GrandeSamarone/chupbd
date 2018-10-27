@@ -103,6 +103,7 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         }
 
         //Configuraçoes iniciais
+        icone = findViewById(R.id.icone_user_toolbar);
        linearerro=findViewById(R.id.linearinformacoeserro_mercado);
         linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
@@ -457,48 +458,38 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
                 assert perfil != null;
 
 
-                String icone = perfil.getFoto();
-                IconeUsuario(icone);
+                String iconeurl = perfil.getFoto();
+                icone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(MercadoActivity.this, MinhaConta.class);
+                        startActivity(it);
+
+                    }
+                });
+
+                Glide.with(MercadoActivity.this)
+                        .load(iconeurl)
+                        .into(icone);
+
 
             }
-
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
     }
-    private void IconeUsuario(String url ) {
-        //Imagem do icone do usuario
-        icone = findViewById(R.id.icone_user_toolbar);
-        icone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(MercadoActivity.this, MinhaConta.class);
-                startActivity(it);
 
-            }
-        });
-
-        Glide.with(MercadoActivity.this)
-                .load(url)
-                .into(icone);
-    }
     private void Dialog_Primeiravez() {
         LayoutInflater li = getLayoutInflater();
         View view = li.inflate(R.layout.dialog_informar_click_foto, null);

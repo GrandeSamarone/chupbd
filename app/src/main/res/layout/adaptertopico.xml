@@ -28,7 +28,7 @@ android:id="@+id/ico"
         fresco:overlayImage="@drawable/oval"
        />
 
-    <TextView
+    <com.vanniktech.emoji.EmojiTextView
         android:id="@+id/topico_autor"
         style="@style/Base.TextAppearance.AppCompat.Small"
         android:layout_width="wrap_content"

@@ -51,7 +51,7 @@
             android:icon="@drawable/ic_topico"/>
 
 
-        <item android:id="@+id/desenhos_menu"
+        <item android:id="@+id/fanarts_menu"
             android:title="@string/drawer_galeria"
             android:icon="@drawable/ic_galerias"/>
     </group>
