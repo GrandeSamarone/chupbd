@@ -7,10 +7,11 @@ import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FanArts {
+public class FanArts implements Serializable {
 
 private String id;
 private String idauthor;

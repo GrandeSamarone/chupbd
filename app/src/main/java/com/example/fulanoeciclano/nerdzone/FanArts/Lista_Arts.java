@@ -8,22 +8,26 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.AdapterView;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_FanArts;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.FanArts;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
-import com.example.fulanoeciclano.nerdzone.quiltview.QuiltView;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -49,7 +53,6 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
     private RecyclerView recyclerView_lista_arts;
     private ArrayList<FanArts> ListaFanarts = new ArrayList<>();
     private ChildEventListener valueEventListenerFanarts;
-    private QuiltView quiltView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,13 +72,13 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
                // RecuperarTopicos();
                 CarregarDados_do_Usuario();
                 TrocarFundos_status_bar();
+                RecuperarArts();
             }
         });
         refresh.setColorSchemeResources
                 (R.color.colorPrimaryDark, R.color.amareloclaro,
                         R.color.accent);
         //Configuraçoes Basicas
-        recyclerView_lista_arts = findViewById(R.id.recycleview_fanarts);
         botaoMaisArts=findViewById(R.id.buton_nova_fanarts);
         botaoMaisArts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,20 +89,38 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
             }
         });
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
-        database_fanarts = ConfiguracaoFirebase.getDatabase().getReference().child("fanarts");
-        //adapter
-     //   adapter_fanArts = new Adapter_FanArts(Lista_Arts,this);
+        database_fanarts = ConfiguracaoFirebase.getDatabase().getReference().child("arts");
 
-        //Adapter
-     /*   recyclerView_lista_arts.setLayoutManager(new QuiltView(getApplicationContext(),true));
+        recyclerView_lista_arts = findViewById(R.id.recycleview_fanarts);
+        adapter_fanArts  = new Adapter_FanArts(ListaFanarts,this);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager
+                (2, LinearLayoutManager.VERTICAL);
+
+        recyclerView_lista_arts.setLayoutManager(staggeredGridLayoutManager);
         recyclerView_lista_arts.setHasFixedSize(true);
         recyclerView_lista_arts.setAdapter(adapter_fanArts);
-  quiltView = (QuiltView) findViewById(R.id.quilt);
-        quiltView.setChildPadding(5);
-        addTestQuilts(200);
 
 
-*/
+        recyclerView_lista_arts.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
+                recyclerView_lista_arts, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                FanArts arteselecionada = ListaFanarts.get(position);
+                Intent it = new Intent(Lista_Arts.this,Detalhe_FarArts_Activity.class);
+                it.putExtra("arteselecionada",arteselecionada);
+                startActivity(it);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
 
 
 
@@ -107,24 +128,45 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
 
     }
 
-    public void addTestQuilts(int num){
-        ArrayList<ImageView> images = new ArrayList<ImageView>();
-        for(int i = 0; i < num; i++){
-            ImageView image = new ImageView(this.getApplicationContext());
-            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            if(i % 2 == 0)
-                image.setImageResource(R.drawable.mayer);
-            else
-                image.setImageResource(R.drawable.mayer1);
-            images.add(image);
-        }
-        quiltView.addPatchImages(images);
-    }
+
 
     @Override
     public void onRefresh() {
-
+    RecuperarArts();
     }
+
+
+    private void RecuperarArts(){
+        ListaFanarts.clear();
+        valueEventListenerFanarts = database_fanarts.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                FanArts fanArts = dataSnapshot.getValue(FanArts.class);
+                ListaFanarts.add(0,fanArts);
+                adapter_fanArts.notifyDataSetChanged();
+                refresh.setRefreshing(false);
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
 
 
     private void TrocarFundos_status_bar(){
@@ -167,6 +209,23 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
         win.setAttributes(winParams);
     }
 
+    public boolean  onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menufiltro:
+                //abrirConfiguracoes();
+                break;
+            case android.R.id.home:  //ID do seu botão (gerado automaticamente pelo android, usando como está, deve funcionar
+                startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    finishAffinity();
+                } else {
+                    finish();
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void CarregarDados_do_Usuario(){
         usuario = UsuarioFirebase.getUsuarioAtual();
         String email = usuario.getEmail();
@@ -175,8 +234,6 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Usuario perfil = dataSnapshot.getValue(Usuario.class );
                 assert perfil != null;
-
-
                 String iconeurl = perfil.getFoto();
 
                 Glide.with(Lista_Arts.this)
@@ -190,7 +247,6 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
                         startActivity(it);
                     }
                 });
-
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {

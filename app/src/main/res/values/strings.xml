@@ -72,6 +72,7 @@
     <string name="conto_name">CONTO</string>
     <string name="politica_de_privacidade">Política de Privacidade</string>
     <string name="politicaa_privacidade">Política de privacidade</string>
+    <string name="txt_visualizacoes">Visualizações</string>
 
     <string-array name="estados">
         <item>Estado</item>

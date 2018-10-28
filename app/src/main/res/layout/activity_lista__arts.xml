@@ -10,6 +10,7 @@
     xmlns:quilt="http://schemas.android.com/apk/res-auto"
     tools:context=".FanArts.Lista_Arts">
 <LinearLayout
+    android:background="@color/background"
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,7 +23,6 @@
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycleview_fanarts"
-            android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"

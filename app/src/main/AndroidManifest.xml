@@ -4,7 +4,7 @@
     package="com.example.fulanoeciclano.nerdzone">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -42,7 +42,7 @@
         <activity
             android:name=".Icons.PageIcon"
             android:label="@string/title_activity_page_icon1"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Activits.MinhaConta"
             android:label="@string/title_activity_minha_conta"
@@ -84,7 +84,8 @@
         <activity android:name=".Feed.FeedActivity" />
         <activity android:name=".FanArts.Lista_Arts" />
         <activity android:name=".FanArts.Nova_Arts" />
-        <activity android:name=".Politica_Privacidade.Politica_PrivacidadeActivity"></activity>
+        <activity android:name=".Politica_Privacidade.Politica_PrivacidadeActivity" />
+        <activity android:name=".FanArts.Detalhe_FarArts_Activity"></activity>
     </application>
 
 </manifest>
