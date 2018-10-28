@@ -24,7 +24,7 @@
         android:layout_width="150sp"
         android:layout_height="250sp"
         android:layout_gravity="center"
-        android:background="@drawable/fundo_user"/>
+        android:background="@drawable/gradiente_icone"/>
 
 
 

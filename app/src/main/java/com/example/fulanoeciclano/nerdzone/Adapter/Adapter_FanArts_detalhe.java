@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.FanArts;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -25,6 +27,7 @@ public class Adapter_FanArts_detalhe extends RecyclerView.Adapter<Adapter_FanArt
 
 private List<FanArts> listarts;
 private Context context;
+Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
 
 public Adapter_FanArts_detalhe(List<FanArts> arts,Context  context){
         this.listarts=arts;

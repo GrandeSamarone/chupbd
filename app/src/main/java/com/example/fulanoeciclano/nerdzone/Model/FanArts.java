@@ -55,7 +55,7 @@ public void Salvar(DataSnapshot seguidoressnapshot){
                 .child("arts");
         anuncioref.child(getId()).setValue(this);
     }
-    public  void AdicioneiConto(){
+    public  void AdicioneiFanArts(){
         String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("adicionei-arts");

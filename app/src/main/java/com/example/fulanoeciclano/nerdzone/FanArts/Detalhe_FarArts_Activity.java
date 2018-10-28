@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem;
@@ -28,6 +29,8 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.FanArts;
+import com.example.fulanoeciclano.nerdzone.Model.FanArtsColecao;
+import com.example.fulanoeciclano.nerdzone.Model.FanArtsLike;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
@@ -35,7 +38,10 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.varunest.sparkbutton.SparkButton;
+import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.ArrayList;
 
@@ -45,9 +51,10 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
 
 
     private String id;
+    private SparkButton botaocurtir,botao_add_colecao;
     private ProgressBar progressBar;
     private ImageView arteimagem;
-    private TextView legenda_arte,Nome_usuario,texto_toolbar;
+    private TextView legenda_arte,Nome_usuario,texto_toolbar,n_curtida,n_colecao;
     private CircleImageView iconeUsuario;
     private ChildEventListener ChildEventListeneruser,ChildEventListenerDetalhe;
     private String usuarioLogado;
@@ -67,6 +74,9 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Configuracoes Iniciais
+        botaocurtir = findViewById(R.id.botaocurtirart);
+        botao_add_colecao = findViewById(R.id.botao_add_a_colecao);
+        botao_add_colecao = findViewById(R.id.botao_add_a_colecao);
         click = findViewById(R.id.layoutclick);
         texto_toolbar = findViewById(R.id.texto_Toolbar_art);
         progressBar = findViewById(R.id.progressoart);
@@ -75,15 +85,18 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
           legenda_arte = findViewById(R.id.legendaart);
           arteimagem = findViewById(R.id.fanArts_detalhe_img);
+          n_curtida = findViewById(R.id.num_like_fanart);
+          n_colecao = findViewById(R.id.num_colecao_fanart);
           Nome_usuario = findViewById(R.id.author_art);
           iconeUsuario = findViewById(R.id.icone_author_art);
 
         recyclerViewartedetalhe = findViewById(R.id.recycler_detahle_fanarts);
         adapter_fanArts_detalhe  = new Adapter_FanArts_detalhe(ListaFanarts_detalhe,this);
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager
-                (1, LinearLayoutManager.HORIZONTAL);
-
-        recyclerViewartedetalhe.setLayoutManager(staggeredGridLayoutManager);
+        LinearLayoutManager layoutManagertopico = new LinearLayoutManager(
+                Detalhe_FarArts_Activity.this, LinearLayoutManager.HORIZONTAL,false);
+          layoutManagertopico.setReverseLayout(true);
+          layoutManagertopico.setStackFromEnd(true);
+        recyclerViewartedetalhe.setLayoutManager(layoutManagertopico);
         recyclerViewartedetalhe.setHasFixedSize(true);
         recyclerViewartedetalhe.setAdapter(adapter_fanArts_detalhe);
 
@@ -128,9 +141,10 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 FanArts fanArts = dataSnapshot.getValue(FanArts.class);
-
+               addbotao_like_colecao(fanArts);
                 legenda_arte.setText(fanArts.getLegenda());
                 texto_toolbar.setText(fanArts.getLegenda());
+               n_curtida.setText(String.valueOf(fanArts.getLikecount()));
                 CarregarDados_do_Criador_do_Comercio(fanArts.getIdauthor());
 
                 String foto =fanArts.getArtfoto();
@@ -260,7 +274,128 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
                 });
     }
 
+    private void addbotao_like_colecao(FanArts fanarts){
+        Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
+        DatabaseReference topicoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("fanarts-likes")
+                .child(fanarts.getId());
+        topicoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int QtdLikes = 0;
+                if(dataSnapshot.hasChild("qtdlikes")){
+                    FanArtsLike fanArtsLike = dataSnapshot.getValue(FanArtsLike.class);
+                    QtdLikes = fanArtsLike.getQtdlikes();
+                }
+                //Verifica se já foi clicado
+                if( dataSnapshot.hasChild(usuariologado.getId()) ){
+                    botaocurtir.setChecked(true);
+                }else {
+                    botaocurtir.setChecked(false);
+                }
 
+                //Montar objeto postagem curtida
+                FanArtsLike fanArtsLike = new FanArtsLike();
+                fanArtsLike.setFanArts(fanarts);
+                fanArtsLike.setUsuario(usuariologado);
+                fanArtsLike.setQtdlikes(QtdLikes);
+                //adicionar evento para curtir foto
+               botaocurtir.setEventListener(new SparkEventListener() {
+                    @Override
+                    public void onEvent(ImageView button, boolean buttonState) {
+                        if(buttonState){
+                            fanArtsLike.Salvar();
+
+                          n_curtida.setText(String.valueOf(fanArtsLike.getQtdlikes()));
+                        }else{
+                            fanArtsLike.removerlike();
+                           n_curtida.setText(String.valueOf(fanArtsLike.getQtdlikes()));
+                        }
+                    }
+                    @Override
+                    public void onEventAnimationEnd(ImageView button, boolean buttonState) {
+                    }
+                    @Override
+                    public void onEventAnimationStart(ImageView button, boolean buttonState) {
+                    }
+                });
+               n_curtida.setText(String.valueOf(fanArtsLike.getQtdlikes()));
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        DatabaseReference conto_add_colecao= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("fanarts-colecao")
+                .child(fanarts.getId());
+        conto_add_colecao.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int QtdAdd = 0;
+                if (dataSnapshot.hasChild("qtdadd")) {
+                    FanArtsColecao fanArtsColecao = dataSnapshot.getValue(FanArtsColecao.class);
+                    QtdAdd = fanArtsColecao.getQtdadd();
+                }
+
+
+
+                if (dataSnapshot.hasChild(usuariologado.getId())) {
+                   botao_add_colecao.setChecked(true);
+
+                } else {
+                  botao_add_colecao.setChecked(false);
+
+
+                }
+
+                //Montar objeto postagem curtida
+                FanArtsColecao colecao = new FanArtsColecao();
+                colecao.setFanArts(fanarts);
+                colecao.setUsuario(usuariologado);
+                colecao.setQtdadd(QtdAdd);
+
+                //adicionar evento para curtir foto
+               botao_add_colecao.setEventListener(new SparkEventListener() {
+                    @Override
+                    public void onEvent(ImageView button, boolean buttonState) {
+                        if (buttonState) {
+                            colecao.Salvar();
+                            fanarts.AdicioneiFanArts();
+                            n_colecao.setText(String.valueOf(colecao.getQtdadd()));
+                            Toast toast = Toast.makeText(Detalhe_FarArts_Activity.this,
+                                    "Adicionado as coleções com sucesso", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                            toast.show();
+                        } else {
+                            colecao.removerfanarts();
+                            n_colecao.setText(String.valueOf(colecao.getQtdadd()));
+                            Toast toast = Toast.makeText(Detalhe_FarArts_Activity.this,
+                                    "Removido com sucesso", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                            toast.show();
+                        }
+                    }
+
+                    @Override
+                    public void onEventAnimationEnd(ImageView button, boolean buttonState) {
+                    }
+
+                    @Override
+                    public void onEventAnimationStart(ImageView button, boolean buttonState) {
+                    }
+                });
+                n_colecao.setText(String.valueOf(colecao.getQtdadd()));
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
     private void TrocarFundos_status_bar(){
         //mudando a cor do statusbar
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {

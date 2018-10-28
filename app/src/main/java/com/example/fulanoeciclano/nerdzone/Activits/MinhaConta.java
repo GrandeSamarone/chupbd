@@ -194,7 +194,7 @@ public class MinhaConta extends AppCompatActivity implements Main, View.OnClickL
                 Escolher_Foto_Perfil();
                 break;
             case R.id.perfil_button_back_perfil:
-                startActivity(new Intent(this, MainActivity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
+              //  startActivity(new Intent(this, MainActivity.class));  //O efeito ao ser pressionado do botão (no caso abre a activity)
                 finish();
                 break;
             case R.id.topico_click:

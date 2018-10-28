@@ -99,6 +99,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                     QtdLikes = contoLike.getQtdlikes();
                 }
                 //Verifica se já foi clicado
+                Log.i("asasas",usuariologado.getId());
                 if( dataSnapshot.hasChild( usuariologado.getId() ) ){
                     holder.botaocurtir.setChecked(true);
                 }else {
@@ -152,6 +153,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                     QtdAdd = conto_colecao.getQtdadd();
                 }
                 //Verifica se já foi clicado
+                Log.i("asasas",usuariologado.getId());
                 if (dataSnapshot.hasChild(usuariologado.getId())) {
                     holder.botao_add_colecao.setChecked(true);
                    holder.txt_add_colecao.setText(R.string.adicionado_colecao);
