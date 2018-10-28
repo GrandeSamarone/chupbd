@@ -129,9 +129,6 @@ public class DetalheEvento extends AppCompatActivity {
         recyclerViewcomentarios.setAdapter(adapter);
 
 
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.background));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.branco));
-
         //emotion
         root_view=findViewById(R.id.root_view);
         emojiPopup = EmojiPopup.Builder.fromRootView(root_view).build(edit_chat_emoji);
@@ -160,6 +157,13 @@ public class DetalheEvento extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 eventoselecionado = dataSnapshot.getValue(Evento.class );
                 assert eventoselecionado != null;
+
+
+
+                collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
+                collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparente));
+                collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.background));
+
 
 
                 Uri uri = Uri.parse(eventoselecionado.getCapaevento());

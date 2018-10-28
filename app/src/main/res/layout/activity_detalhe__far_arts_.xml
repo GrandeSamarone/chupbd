@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,51 +6,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    xmlns:cardview="http://schemas.android.com/tools"
     android:background="@color/background"
     >
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbarlayout"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapseLayoutart"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_detalhe_art"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/gradiente_toolbar"
+        android:theme="@style/Theme.AppCompat">
+        <TextView
+            android:id="@+id/texto_Toolbar_art"
+            android:textSize="14sp"
             android:layout_width="match_parent"
-            app:expandedTitleTextAppearance="@android:color/transparent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:background="@color/pretoescrita"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-
-            >
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/fanArts_detalhe_img"
+            android:layout_height="wrap_content" />
+    </android.support.v7.widget.Toolbar>
+        <FrameLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/frame"
+            android:layout_below="@+id/toolbar_detalhe_art">
+            <View android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/toolbar_sombra"/>
+        </FrameLayout>
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_below="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="300dp">
+
+    <ImageView
+        android:id="@+id/fanArts_detalhe_img"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="300sp"
         android:background="@drawable/gradiente_icone" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarlayout_detahle_arte"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                >
-            </android.support.v7.widget.Toolbar>
+<ProgressBar
+    android:id="@+id/progressoart"
+    android:indeterminateTint="@color/background"
+    android:layout_below="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:foregroundGravity="center"/>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </RelativeLayout>
 
 
         <RelativeLayout
+            android:layout_below="@+id/relative"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_width="match_parent"
@@ -120,10 +125,7 @@
                     android:textSize="16sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-                <View android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@drawable/toolbar_sombra"/>
-                <android.support.v7.widget.RecyclerView
+                  <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_detahle_fanarts"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
@@ -131,9 +133,9 @@
         </RelativeLayout>
 
 
-    </android.support.v4.widget.NestedScrollView>
 
 
 
 
-</android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>
