@@ -1,6 +1,7 @@
 package com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MinhasPublicacoes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Edit.EditarContosActivity;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Conto;
 import com.example.fulanoeciclano.nerdzone.Model.ContoLike;
@@ -93,8 +95,6 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
                     Conto_colecao conto_colecao = dataSnapshot.getValue(Conto_colecao.class);
                     QtdAdd = conto_colecao.getQtdadd();
                 }
-
-
                 //Montar objeto postagem curtida
                 Conto_colecao colecao = new Conto_colecao();
                 colecao.setConto(conto);
@@ -124,6 +124,15 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
             }
         });
 
+    holder.editar.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent it = new Intent(context , EditarContosActivity.class);
+            it.putExtra("id_conto",conto.getUid());
+            context.startActivity(it);
+        }
+    });
+
     }
 
     @Override
@@ -133,7 +142,7 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
       private ImageView colecao,curtir;
-        private TextView conto,n_curtida,n_add_colecao,txt_add_colecao;
+        private TextView conto,n_curtida,n_add_colecao,editar,deletar;
         public MyviewHolder(View itemView) {
             super(itemView);
 
@@ -142,6 +151,8 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
            curtir=itemView.findViewById(R.id.botaocurtirconto);
             n_curtida = itemView.findViewById(R.id.meus_conto_num_curt);
             n_add_colecao = itemView.findViewById(R.id.meus_conto_num_colecao);
+            editar = itemView.findViewById(R.id.editarconto);
+            deletar = itemView.findViewById(R.id.excluirconto);
 
             //  imgperfil = itemView.findViewById(R.id.conto_foto_autor);
 

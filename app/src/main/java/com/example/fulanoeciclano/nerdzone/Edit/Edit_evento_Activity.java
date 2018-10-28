@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -302,6 +303,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                     //Progress
                     final ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setTitle("Aguarde..");
+                    progressDialog.setMessage("Carregando");
                     progressDialog.show();
                     UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                     //caso de errado
@@ -312,8 +314,10 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     progressDialog.dismiss();
-                                    Toast.makeText(Edit_evento_Activity.this, "Imagem Carregada com Sucesso", Toast.LENGTH_SHORT).show();
-
+                                    Toast toast = Toast.makeText(Edit_evento_Activity.this,
+                                            "Imagem carregada com sucesso!", Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                                    toast.show();
                                     urlimg = uri.toString();
 
                                     if(urlimg!=null){
@@ -328,8 +332,10 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
                                     progressDialog.dismiss();
-                                    Toast.makeText(Edit_evento_Activity.this, "Erro ao carregar a imagem", Toast.LENGTH_SHORT).show();
-
+                                    Toast toast = Toast.makeText(Edit_evento_Activity.this,
+                                            "Erro ao carregar a Imagem", Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                                    toast.show();
                                 }
                             });
                         }
@@ -391,8 +397,12 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                         Intent it = new Intent(Edit_evento_Activity.this, Minhas_Publicacoes.class);
                         startActivity(it);
                         finish();
-                        Toast.makeText(Edit_evento_Activity.this, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
-                    }
+                        Toast toast = Toast.makeText(Edit_evento_Activity.this,
+                                "Atualizado com sucesso!", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                        toast.show();
+
+                          }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -400,8 +410,10 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                         Intent it = new Intent(Edit_evento_Activity.this, Minhas_Publicacoes.class);
                         startActivity(it);
                         finish();
-                        Toast.makeText(Edit_evento_Activity.this, "Erro ao Atualizar, Tente Novamente.", Toast.LENGTH_SHORT).show();
-
+                        Toast toast = Toast.makeText(Edit_evento_Activity.this,
+                                "Erro , tente novamente", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                        toast.show();
                     }
                 });
 

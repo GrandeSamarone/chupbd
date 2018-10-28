@@ -1,9 +1,12 @@
 package com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MinhasPublicacoes;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fulanoeciclano.nerdzone.Activits.Minhas_Publicacoes;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Edit.Edit_Topico_Activity;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.TopicoLike;
@@ -32,6 +37,8 @@ public class Adapter_Meus_Topicos extends RecyclerView.Adapter<Adapter_Meus_Topi
     private List<Topico> listatopicos;
     private Context context;
     Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
+    private  String identificadorUsuario =  UsuarioFirebase.getIdentificadorUsuario();
+    private Usuario user;
     public Adapter_Meus_Topicos(List<Topico> topico, Context c){
         this.context=c;
         this.listatopicos = topico;
@@ -131,6 +138,86 @@ holder.comentario_img.setOnClickListener(new View.OnClickListener() {
             Toast.makeText(context, "Total de curtida em sua publicação", Toast.LENGTH_SHORT).show();
         }
     });
+
+
+
+
+        DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("usuarios")
+                .child(identificadorUsuario);
+        eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(Usuario.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+        holder.EditarTopico.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent it = new Intent(context, Edit_Topico_Activity.class);
+            it.putExtra("id_topico",topico.getUid());
+            context.startActivity(it);
+        }
+    });
+
+        holder.ExcluirTopico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+
+                AlertDialog.Builder msgbox = new AlertDialog.Builder(context);
+                //configurando o titulo
+                msgbox.setTitle("Excluir");
+                // configurando a mensagem
+                msgbox.setMessage("Deseja Realmente excluir o Tópico "+topico.getTitulo()+" ?");
+                // Botao negativo
+
+                msgbox.setPositiveButton("Sim",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int wich) {
+                                topico.remover();
+                                int qtdTopicos = user.getTopicos() - 1;
+                                user.setTopicos(qtdTopicos);
+                                user.atualizarQtdTopicos();
+                                Intent it = new Intent(context, Minhas_Publicacoes.class);
+                                context.startActivity(it);
+                                Toast toast = Toast.makeText(context, "Deletado com sucesso!", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                                toast.show();  }
+
+                        });
+
+
+                msgbox.setNegativeButton("Não",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int wich) {
+
+                            }
+                        });
+                msgbox.show();
+            }
+        });
     }
 
 
@@ -146,10 +233,13 @@ holder.comentario_img.setOnClickListener(new View.OnClickListener() {
 
         private TextView titulo,num_curtida,total_comentario;
         private LinearLayout click;
+        private TextView EditarTopico,ExcluirTopico;
         private ImageView comentario_img,topico_img;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            ExcluirTopico = itemView.findViewById(R.id.excluirtopico);
+            EditarTopico = itemView.findViewById(R.id.editartopico);
             comentario_img = itemView.findViewById(R.id.img_comentario);
             topico_img = itemView.findViewById(R.id.botaocurtirtopico);
             titulo = itemView.findViewById(R.id.meus_topico_titulo);

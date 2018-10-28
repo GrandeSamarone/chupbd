@@ -87,7 +87,9 @@
         <activity android:name=".FanArts.Nova_Arts" />
         <activity android:name=".Politica_Privacidade.Politica_PrivacidadeActivity" />
         <activity android:name=".FanArts.Detalhe_FarArts_Activity" />
-        <activity android:name=".FanArts.Editar_Fan_arts_Activity"></activity>
+        <activity android:name=".FanArts.Editar_Fan_arts_Activity" />
+        <activity android:name=".Edit.Edit_Topico_Activity" />
+        <activity android:name=".Edit.EditarContosActivity"></activity>
     </application>
 
 </manifest>
