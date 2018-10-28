@@ -89,7 +89,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
             <com.varunest.sparkbutton.SparkButton
-
                 android:id="@+id/botao_add_a_colecao"
                 android:layout_width="24dp"
                 android:layout_height="24dp"

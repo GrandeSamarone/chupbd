@@ -80,6 +80,7 @@
         <activity android:name=".Seguidores.MinhaConta.MeusSeguidores" />
         <activity android:name=".Seguidores.Perfil.SeguidoresPerfil" />
         <activity android:name=".Abrir_Imagem.AbrirImagem" />
+        <activity android:name=".Abrir_Imagem.AbrirImagem_Art" />
         <activity android:name=".MinhasColecoes.Minhas_Colecoes" />
         <activity android:name=".Feed.FeedActivity" />
         <activity android:name=".FanArts.Lista_Arts" />

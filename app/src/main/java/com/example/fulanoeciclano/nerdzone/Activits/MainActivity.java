@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.AdapterMercado;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.Adapter_Conto_pag_inicial;
+import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.Adapter_FanArtsInicial;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.EventoAdapterPagInicial;
 import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.TopicoAdapterPagInicial;
 import com.example.fulanoeciclano.nerdzone.Autenticacao.LoginActivity;
@@ -47,6 +48,7 @@ import com.example.fulanoeciclano.nerdzone.MinhasColecoes.Minhas_Colecoes;
 import com.example.fulanoeciclano.nerdzone.Model.Comercio;
 import com.example.fulanoeciclano.nerdzone.Model.Conto;
 import com.example.fulanoeciclano.nerdzone.Model.Evento;
+import com.example.fulanoeciclano.nerdzone.Model.FanArts;
 import com.example.fulanoeciclano.nerdzone.Model.Topico;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.Politica_Privacidade.Politica_PrivacidadeActivity;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private RecyclerView recyclerViewListaGibiMercado;
+    private RecyclerView recyclerViewArts;
     private RecyclerView recyclerViewListaTopico;
     private RecyclerView recyclerViewListaConto;
     private RecyclerView recyclerVieweventos;
@@ -85,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements
     private AdapterMercado adapterMercado;
     private EventoAdapterPagInicial adapterEvento;
     private TopicoAdapterPagInicial adapterTopico;
+    private Adapter_FanArtsInicial adapterArte;
     private List<Comercio> listaGibiComercio = new ArrayList<>();
+    private List<FanArts> listaArt = new ArrayList<>();
     private ArrayList<Topico> ListaTopico = new ArrayList<>();
     private ArrayList<Evento> ListaEvento = new ArrayList<>();
     private ArrayList<Conto> ListaContos = new ArrayList<>();
@@ -94,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements
     private DatabaseReference Database_Topico;
     private DatabaseReference Database_Conto;
     private DatabaseReference GibiEventos;
+    private DatabaseReference Database_Art;
+    private ChildEventListener valueEventListenerArt;
     private ChildEventListener valueEventListenerMercado;
     private ChildEventListener valueEventListenerEvento;
     private ChildEventListener valueEventListenerTopico;
@@ -130,7 +137,9 @@ public class MainActivity extends AppCompatActivity implements
         recyclerViewListaGibiMercado = findViewById(R.id.RecycleViewMercado);
         recyclerVieweventos = findViewById(R.id.RecycleViewEventos);
         recyclerViewListaTopico = findViewById(R.id.RecycleViewTopicos);
+        recyclerViewArts = findViewById(R.id.RecycleViewFanArts);
 
+        Database_Art = ConfiguracaoFirebase.getFirebaseDatabase().child("arts");
         GibiMercado = ConfiguracaoFirebase.getFirebaseDatabase().child("comercio");
         Database_Conto = ConfiguracaoFirebase.getFirebaseDatabase().child("conto");
         Database_Topico = ConfiguracaoFirebase.getDatabase().getReference().child("topico");
@@ -173,7 +182,14 @@ public class MainActivity extends AppCompatActivity implements
         adapterTopico = new TopicoAdapterPagInicial(ListaTopico,MainActivity.this);
         recyclerViewListaTopico.setAdapter(adapterTopico);
 
-
+        LinearLayoutManager layoutManagerArt = new LinearLayoutManager(
+                MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        recyclerViewArts.setLayoutManager(layoutManagerArt);
+        recyclerViewArts.setHasFixedSize(true);
+        recyclerViewArts.addItemDecoration(new HeaderDecoration(MainActivity.this,
+                recyclerViewArts,  R.layout.header_evento));
+        adapterArte = new Adapter_FanArtsInicial(listaArt,MainActivity.this);
+        recyclerViewArts.setAdapter(adapterArte);
 
         //Verifica se é a primeira vez da instalacao
         sPreferences = getSharedPreferences("firstRun", MODE_PRIVATE);
@@ -213,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements
         swipe.post(new Runnable() {
             @Override
             public void run() {
+                RecuperarArt();
                  RecuperarConto();
                 RecuperarMercado();
                 RecuperarEvento();
@@ -237,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-
+        RecuperarArt();
         RecuperarMercado();
         RecuperarEvento();
         RecuperarConto();
@@ -253,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements
         GibiMercado.removeEventListener(valueEventListenerMercado);
         Database_Topico.removeEventListener(valueEventListenerTopico);
         Database_Conto.removeEventListener(valueEventListenerContos);
+        Database_Art.removeEventListener(valueEventListenerArt);
     }
 
     private void CarregarDados_do_Usuario(){
@@ -423,6 +441,35 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         });
+    }
+
+
+    public void RecuperarArt(){
+        listaArt.clear();
+
+        valueEventListenerArt =Database_Art.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    FanArts fanArts = dataSnapshot.getValue(FanArts.class);
+                    listaArt.add(0, fanArts);
+
+                    adapterArte.notifyDataSetChanged();
+                    swipe.setRefreshing(false);
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
     }
 
     private void Recycleview(){

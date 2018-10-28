@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,10 +51,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Detalhe_FarArts_Activity extends AppCompatActivity {
 
-    private FanArts arteselecionada;
+
+    private String id;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private SimpleDraweeView arteimagem;
     private TextView legenda_arte,Nome_usuario;
-    private CircleImageView iconeUsuario,icone;
+    private CircleImageView iconeUsuario;
     private ChildEventListener ChildEventListeneruser,ChildEventListenerDetalhe;
     private String usuarioLogado;
     private Adapter_FanArts adapter_fanArts_detalhe;
@@ -68,57 +71,18 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe__far_arts_);
-        toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Detalhe");
+        toolbar = findViewById(R.id.toolbarlayout_detahle_arte);
         setSupportActionBar(toolbar);
         //Configuracoes Iniciais
         click = findViewById(R.id.layoutclick);
+        collapsingToolbarLayout = findViewById(R.id.collapseLayoutart);
         usuarioLogado = UsuarioFirebase.getIdentificadorUsuario();
-         arteselecionada = (FanArts) getIntent().getSerializableExtra("arteselecionada");
         databaseart = ConfiguracaoFirebase.getDatabase().getReference().child("arts");
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
           legenda_arte = findViewById(R.id.legendaart);
           arteimagem = findViewById(R.id.fanArts_detalhe_img);
           Nome_usuario = findViewById(R.id.author_art);
           iconeUsuario = findViewById(R.id.icone_author_art);
-           icone = findViewById(R.id.icone_user_toolbar);
-         if(arteselecionada!=null){
-
-             legenda_arte.setText(arteselecionada.getLegenda());
-             CarregarDados_do_Criador_do_Comercio(arteselecionada.getIdauthor());
-
-             Uri uri = Uri.parse(arteselecionada.getArtfoto());
-             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                     .setLocalThumbnailPreviewsEnabled(true)
-                     .setProgressiveRenderingEnabled(true)
-                     .build();
-
-             DraweeController controller = Fresco.newDraweeControllerBuilder()
-                     .setImageRequest(request)
-                     .build();
-             arteimagem.setController(controller);
-
-             GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(this.getResources());
-             GenericDraweeHierarchy hierarchy = builder
-                     .setProgressBarImage(new CircleProgressDrawable())
-                     //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
-                     .build();
-             arteimagem.setHierarchy(hierarchy);
-
-             arteimagem.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View v) {
-                     Intent it = new Intent(Detalhe_FarArts_Activity.this, AbrirImagem.class);
-                     it.putExtra("id_foto",arteselecionada.getArtfoto());
-                     it.putExtra("nome_foto",  arteselecionada.getLegenda());
-                     startActivity(it);
-                 }
-             });
-
-         }
-
-
-
 
         recyclerViewartedetalhe = findViewById(R.id.recycler_detahle_fanarts);
         adapter_fanArts_detalhe  = new Adapter_FanArts(ListaFanarts_detalhe,this);
@@ -136,7 +100,7 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 FanArts arteselecionada = ListaFanarts_detalhe.get(position);
                 Intent it = new Intent(Detalhe_FarArts_Activity.this,Detalhe_FarArts_Activity.class);
-                it.putExtra("arteselecionada",arteselecionada);
+                it.putExtra("id",arteselecionada.getId());
                 startActivity(it);
             }
 
@@ -150,16 +114,85 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
 
             }
         }));
-
-
+        id = getIntent().getStringExtra("id");
+        RecuperarArts(id);
 
         TrocarFundos_status_bar();
-        RecuperarArts();
+        RecuperarArtsRecycle();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
-    private void RecuperarArts(){
+
+
+
+
+    private void RecuperarArts(String idart){
+        ListaFanarts_detalhe.clear();
+        ChildEventListenerDetalhe = databaseart.orderByChild("id").equalTo(idart).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                FanArts fanArts = dataSnapshot.getValue(FanArts.class);
+                legenda_arte.setText(fanArts.getLegenda());
+                collapsingToolbarLayout.setTitle(fanArts.getLegenda());
+                collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparente));
+                collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.background));
+                CarregarDados_do_Criador_do_Comercio(fanArts.getIdauthor());
+
+                Uri uri = Uri.parse(fanArts.getArtfoto());
+                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                        .setLocalThumbnailPreviewsEnabled(true)
+                        .setProgressiveRenderingEnabled(true)
+                        .build();
+
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .build();
+                arteimagem.setController(controller);
+
+                GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getApplication().getResources());
+                GenericDraweeHierarchy hierarchy = builder
+                        .setProgressBarImage(new CircleProgressDrawable())
+                        //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                        .build();
+                arteimagem.setHierarchy(hierarchy);
+
+                arteimagem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(Detalhe_FarArts_Activity.this, AbrirImagem.class);
+                        it.putExtra("id_foto",fanArts.getArtfoto());
+                        it.putExtra("id",fanArts.getId());
+                        it.putExtra("nome_foto",  fanArts.getLegenda());
+                        startActivity(it);
+                    }
+                });
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+
+
+    private void RecuperarArtsRecycle(){
         ListaFanarts_detalhe.clear();
         ChildEventListenerDetalhe = databaseart.addChildEventListener(new ChildEventListener() {
             @Override
@@ -185,6 +218,9 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
 
             }
         });
+
+
+
     }
 
 
@@ -201,18 +237,6 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
                         Usuario user = dataSnapshot.getValue(Usuario.class);
 
                         assert user != null;
-
-                        Glide.with(Detalhe_FarArts_Activity.this)
-                                .load(user.getFoto())
-                                .into(icone);
-
-                        icone.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent it = new Intent(Detalhe_FarArts_Activity.this, MinhaConta.class);
-                                startActivity(it);
-                            }
-                        });
 
                         Nome_usuario.setText(user.getNome());
                         Glide.with(getApplicationContext())

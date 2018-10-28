@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 
 import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem_Art;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Adapter.Adapter_FanArts;
@@ -106,8 +107,10 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
             @Override
             public void onItemClick(View view, int position) {
                 FanArts arteselecionada = ListaFanarts.get(position);
-                Intent it = new Intent(Lista_Arts.this,Detalhe_FarArts_Activity.class);
-                it.putExtra("arteselecionada",arteselecionada);
+                Intent it = new Intent(Lista_Arts.this, AbrirImagem_Art.class);
+                it.putExtra("id_foto",arteselecionada.getArtfoto());
+                it.putExtra("id",arteselecionada.getId());
+                it.putExtra("nome_foto",arteselecionada.getLegenda());
                 startActivity(it);
             }
 
