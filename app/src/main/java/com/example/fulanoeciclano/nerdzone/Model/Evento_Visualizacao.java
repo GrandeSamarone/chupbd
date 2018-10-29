@@ -68,7 +68,7 @@ public class Evento_Visualizacao {
         DatabaseReference firebaseRef_evento = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference VisuRef_evento=firebaseRef_evento
                 .child("meusevento")
-                .child(usuariologado)
+                .child(evento.getIdUsuario())
                 .child(evento.getUid())
                 .child("quantVisualizacao");
 

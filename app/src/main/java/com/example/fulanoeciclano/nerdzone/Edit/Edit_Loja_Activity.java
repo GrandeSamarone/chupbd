@@ -14,6 +14,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,7 +99,7 @@ private String id_do_usuario;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit__loja_);
 
-        toolbar = findViewById(R.id.toolbarsecundario);
+        toolbar = findViewById(R.id.toolbarsecundario_sem_foto);
         toolbar.setTitle(R.string.editar_comercio);
         setSupportActionBar(toolbar);
 
@@ -127,6 +129,7 @@ private String id_do_usuario;
         meuDatabaseMercado = ConfiguracaoFirebase.getDatabase().getReference().child("meuscomercio");
         databaseconta = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        Log.i("sdsdsd",identificadorUsuario);
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         botaosalvar = findViewById(R.id.botaosalvarmercado_edit);
         botaosalvar.setOnClickListener(new View.OnClickListener() {
@@ -148,13 +151,13 @@ private String id_do_usuario;
 
         TrocarFundos_status_bar();
 
-        CarregarDados_do_Usuario();
         CarregarDados_do_Mercado();
     }
 
     private void CarregarDados_do_Mercado(){
 
         ids=getIntent().getStringExtra("id_do_mercado");
+        Log.i("adsdasd",ids);
         estado= getIntent().getStringExtra("UF_do_mercado");
         categoria= getIntent().getStringExtra("CAT_do_mercado");
         ChildEventListenerevento=mDatabaseMercado.child(estado).child(categoria).orderByChild("idMercado")
@@ -163,7 +166,7 @@ private String id_do_usuario;
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         comercios = dataSnapshot.getValue(Comercio.class );
                         assert comercios != null;
-
+                        Log.i("adsdasd",comercios.getIdMercado());
                            campotitulo.setText(comercios.getTitulo());
 
                            campofraserapida.setText(comercios.getFraserapida());
@@ -280,46 +283,8 @@ private String id_do_usuario;
             }
         });
     }
-    private void CarregarDados_do_Usuario(){
-        usuario = UsuarioFirebase.getUsuarioAtual();
-        String email = usuario.getEmail();
-        ChildEventListenerperfil=databaseconta.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Usuario perfil = dataSnapshot.getValue(Usuario.class );
-                assert perfil != null;
 
-                id_do_usuario = perfil.getId();
-                String icone = perfil.getFoto();
-                IconeUsuario(icone);
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
     public void validarDados() {
-
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setCancelable(false);
                     LayoutInflater layoutInflater = LayoutInflater.from(Edit_Loja_Activity.this);
@@ -334,7 +299,11 @@ private String id_do_usuario;
                     dialog = builder.create();
                     dialog.show();
                     Comercio c = new Comercio();
+             c.setIdMercado(comercios.getIdMercado());
             c.setEstado(comercios.getEstado());
+            c.setQuantVisualizacao(comercios.getQuantVisualizacao());
+            c.setFotos(comercios.getFotos());
+            c.setNumRatings(comercios.getNumRatings());
             c.setAutor(comercios.getAutor());
             c.setIdAutor(comercios.getIdAutor());
             c.setCategoria(comercios.getCategoria());
@@ -355,15 +324,16 @@ private String id_do_usuario;
                         }
                     });
 
-                    meuDatabaseMercado.child(idUsuario).child(ids).setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    meuDatabaseMercado.child(identificadorUsuario).child(comercios.getIdMercado()).setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             dialog.dismiss();
                             Intent it = new Intent(Edit_Loja_Activity.this, Minhas_Publicacoes.class);
                             startActivity(it);
                             finish();
-                            Toast.makeText(Edit_Loja_Activity.this, "Atualizado com sucesso", Toast.LENGTH_SHORT).show();
-                        }
+                            Toast toast = Toast.makeText(Edit_Loja_Activity.this, "Atualizado com sucesso!", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                            toast.show();   }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
@@ -371,8 +341,10 @@ private String id_do_usuario;
                             Intent it = new Intent(Edit_Loja_Activity.this, Minhas_Publicacoes.class);
                             startActivity(it);
                             finish();
-                            Toast.makeText(Edit_Loja_Activity.this, "Erro ao Atualizar, Tente Novamente.", Toast.LENGTH_SHORT).show();
-
+                            Toast toast = Toast.makeText(Edit_Loja_Activity.this, "Erro,tente novamente " +
+                                    "mais tarde", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                            toast.show();
                         }
                     });
     }
@@ -385,7 +357,10 @@ private String id_do_usuario;
 
         switch (v.getId()){
             case  R.id.imageLojaCadastro1_edit:
-                EscolherImagem(1);
+                Toast toast = Toast.makeText(this, "Imagens selecionadas nao podem ser " +
+                        "alterada no momento.", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
                 break;
             case  R.id.imageLojaCadastro2_edit:
                 EscolherImagem(2);

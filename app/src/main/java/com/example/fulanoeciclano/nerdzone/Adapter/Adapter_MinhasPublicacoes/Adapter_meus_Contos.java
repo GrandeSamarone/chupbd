@@ -1,10 +1,13 @@
 package com.example.fulanoeciclano.nerdzone.Adapter.Adapter_MinhasPublicacoes;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fulanoeciclano.nerdzone.Activits.Minhas_Publicacoes;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Edit.EditarContosActivity;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -32,7 +36,8 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
     private List<Conto> listaconto;
     private Context context;
     Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
-
+    private  String identificadorUsuario =  UsuarioFirebase.getIdentificadorUsuario();
+    private Usuario user;
     public Adapter_meus_Contos(List<Conto> conto,Context c){
         this.listaconto=conto;
         this.context=c;
@@ -111,7 +116,27 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
 
             }
         });
-     holder.colecao.setOnClickListener(new View.OnClickListener() {
+
+
+        DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("usuarios")
+                .child(identificadorUsuario);
+        eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(Usuario.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+        holder.colecao.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
         Toast.makeText(context, "Total de pessoas que adicionaram sua publicação em suas coleções", Toast.LENGTH_LONG).show();
@@ -133,6 +158,45 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
         }
     });
 
+        holder.deletar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder msgbox = new AlertDialog.Builder(context);
+                //configurando o titulo
+                msgbox.setTitle("Excluir");
+                // configurando a mensagem
+                msgbox.setMessage("Deseja Realmente excluir o Tópico "+conto.getTitulo()+" ?");
+                // Botao negativo
+
+                msgbox.setPositiveButton("Sim",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int wich) {
+                                conto.remover();
+                                int qtdContos=user.getContos()-1;
+                                user.setContos(qtdContos);
+                                user.atualizarQtdContos();
+                                Intent it = new Intent(context, Minhas_Publicacoes.class);
+                                context.startActivity(it);
+                                Toast toast = Toast.makeText(context, "Deletado com sucesso!", Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                                toast.show();  }
+
+                        });
+
+
+                msgbox.setNegativeButton("Não",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int wich) {
+
+                            }
+                        });
+                msgbox.show();
+            }
+        });
+
     }
 
     @Override
@@ -141,8 +205,10 @@ public class Adapter_meus_Contos extends RecyclerView.Adapter<Adapter_meus_Conto
     }
 
     public class MyviewHolder extends RecyclerView.ViewHolder {
+
       private ImageView colecao,curtir;
         private TextView conto,n_curtida,n_add_colecao,editar,deletar;
+
         public MyviewHolder(View itemView) {
             super(itemView);
 

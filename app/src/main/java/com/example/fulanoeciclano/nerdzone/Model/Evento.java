@@ -77,7 +77,7 @@ public class Evento implements Serializable {
                 .child(getUid());
 
         anuncioref.removeValue();
-
+        removerEventoLike();
         removerEventoPublico();
         deletar_img_eventos();
     }
@@ -86,6 +86,14 @@ public class Evento implements Serializable {
         DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("evento")
                 .child(getEstado())
+                .child(getUid());
+        anuncioref.removeValue();
+
+    }
+
+    public void removerEventoLike(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("evento-likes")
                 .child(getUid());
 
         anuncioref.removeValue();

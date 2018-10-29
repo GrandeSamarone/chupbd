@@ -6,6 +6,7 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -65,7 +66,52 @@ public void Salvar(DataSnapshot seguidoressnapshot){
         salvarArtPublico();
     }
 
+    public void remover(){
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("minhasarts")
+                .child(identificadorUsuario)
+                .child(getId());
 
+        anuncioref.removeValue();
+        removerfanartPublico();
+        deletar_img_fanarts();
+        removerfanartcolecao();
+        removerfanartlike();
+    }
+
+    public void removerfanartPublico(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                    .child("arts")
+                .child(getId());
+
+        anuncioref.removeValue();
+
+    }
+    public void removerfanartcolecao(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("fanarts-colecao")
+                .child(getId());
+        anuncioref.removeValue();
+    }
+    public void removerfanartlike(){
+        DatabaseReference anuncioref = ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("fanarts-likes")
+                .child(getId());
+
+        anuncioref.removeValue();
+
+    }
+
+    public void deletar_img_fanarts(){
+        String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        StorageReference storageReference = ConfiguracaoFirebase.getFirebaseStorage()
+                .child("imagens")
+                .child("arts")
+                .child(identificadorUsuario);
+
+        storageReference.delete();
+    }
     public String getId() {
         return id;
     }
