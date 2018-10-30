@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:cardview="http://schemas.android.com/tools"
+    android:background="@color/background">
+
+    <android.support.v7.widget.CardView
+
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/background"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        cardview:cardCornerRadius="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="4dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/icone_user_feed"
+                android:layout_width="24sp"
+                android:layout_height="24sp"
+                android:background="@drawable/fundo_user"/>
+            <com.vanniktech.emoji.EmojiTextView
+                android:text="nome"
+                android:layout_toRightOf="@+id/icone_user_feed"
+                android:textColor="@color/pretoescrita"
+                android:textSize="16sp"
+                android:id="@+id/author_art_feed"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left" />
+            <android.support.v7.widget.CardView
+                android:layout_below="@+id/icone_user_feed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/imgart_feed"
+                    android:layout_width="150dp"
+                    android:layout_height="180sp"
+                    android:scaleType="center"
+                    android:src="@drawable/gradiente_icone" />
+            </android.support.v7.widget.CardView>
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/progressBarfanarts"
+        style="?android:attr/progressBarStyle"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView" />
+</android.support.constraint.ConstraintLayout>

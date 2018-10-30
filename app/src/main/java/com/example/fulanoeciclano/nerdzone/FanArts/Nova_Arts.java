@@ -79,6 +79,10 @@ public class Nova_Arts extends AppCompatActivity{
     private String[] permissoes = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE};
     private ChildEventListener ChildEventListenerSeguidores;
+    private FirebaseUser usuario;
+    private ChildEventListener ChildEventListenerperfil;
+    private DatabaseReference databaseusuario;
+    private Usuario perfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,7 @@ public class Nova_Arts extends AppCompatActivity{
         //Configuracoes Originais
         fanArts = new FanArts();
         database = FirebaseDatabase.getInstance().getReference();
+        databaseusuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         SeguidoresRef = ConfiguracaoFirebase.getDatabase().getReference().child("seguidores");
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
@@ -119,6 +124,7 @@ public class Nova_Arts extends AppCompatActivity{
 
         TrocarFundos_status_bar();
         CarregarSeguidores();
+        CarregarDados_do_Usuario();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -159,6 +165,7 @@ public class Nova_Arts extends AppCompatActivity{
         });
     }
 
+
 private FanArts configurarArts(){
       final String legenda_art = campodesc.getText().toString();
       final String id = identificadorUsuario;
@@ -183,7 +190,9 @@ public void validardados(){
             toast.show();
         }
         fanArts.Salvar(seguidoresSnapshot);
-
+    int qtdArt = perfil.getArts() + 1;
+    perfil.setArts(qtdArt);
+    perfil.atualizarQtdFanArts();
     Toast toast = Toast.makeText(Nova_Arts.this, "Postado  com sucesso!", Toast.LENGTH_SHORT);
     toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
     toast.show();
@@ -191,6 +200,36 @@ public void validardados(){
     startActivity(it);
     finish();
 }
+
+
+    private void CarregarDados_do_Usuario(){
+        usuario = UsuarioFirebase.getUsuarioAtual();
+        String email = usuario.getEmail();
+        ChildEventListenerperfil=databaseusuario.orderByChild("tipoconta")
+                .equalTo(email).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        perfil = dataSnapshot.getValue(Usuario.class );
+                        assert perfil != null;
+                        String icone = perfil.getFoto();
+
+
+
+                    }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
 
 
 

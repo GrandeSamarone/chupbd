@@ -16,8 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Activits.Minhas_Publicacoes;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.FanArts.Detalhe_FarArts_Activity;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.FanArts;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -26,6 +29,10 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -33,7 +40,8 @@ public class Adapter_Minhas_arts extends RecyclerView.Adapter<Adapter_Minhas_art
 
     private Context context;
     private List<FanArts> fanArtsList;
-
+    private  String identificadorUsuario =  UsuarioFirebase.getIdentificadorUsuario();
+    private Usuario user;
     public Adapter_Minhas_arts(Context c,List<FanArts> fanArts){
         this.context=c;
         this.fanArtsList=fanArts;
@@ -79,6 +87,27 @@ public class Adapter_Minhas_arts extends RecyclerView.Adapter<Adapter_Minhas_art
 
 */
 
+
+
+
+        DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
+                .child("usuarios")
+                .child(identificadorUsuario);
+        eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(Usuario.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
             holder.icone_art.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,6 +133,9 @@ public class Adapter_Minhas_arts extends RecyclerView.Adapter<Adapter_Minhas_art
                             @Override
                             public void onClick(DialogInterface dialog, int wich) {
                                 fanArts.remover();
+                                int qtdArt = user.getArts() - 1;
+                                user.setArts(qtdArt);
+                                user.atualizarQtdFanArts();
                                 Intent it = new Intent(context, Minhas_Publicacoes.class);
                                 context.startActivity(it);
                                 Toast toast = Toast.makeText(context, "Deletado com sucesso!", Toast.LENGTH_SHORT);
