@@ -46,24 +46,26 @@ public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) 
 public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 final FanArts fanArts = listarts.get(position);
 
-    Uri uri = Uri.parse(fanArts.getArtfoto());
-    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-            .setLocalThumbnailPreviewsEnabled(true)
-            .setProgressiveRenderingEnabled(true)
-            .build();
 
-    DraweeController controller = Fresco.newDraweeControllerBuilder()
-            .setImageRequest(request)
-            .build();
-    holder.img.setController(controller);
+String url = fanArts.getArtfoto();
+if(url!=null){
+     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
+             .setLocalThumbnailPreviewsEnabled(true)
+             .setProgressiveRenderingEnabled(true)
+             .build();
 
-    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
-    GenericDraweeHierarchy hierarchy = builder
-            .setProgressBarImage(new CircleProgressDrawable())
-            //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
-            .build();
-    holder.img.setHierarchy(hierarchy);
+     DraweeController controller = Fresco.newDraweeControllerBuilder()
+             .setImageRequest(request)
+             .build();
+     holder.img.setController(controller);
 
+     GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
+     GenericDraweeHierarchy hierarchy = builder
+             .setProgressBarImage(new CircleProgressDrawable())
+             //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+             .build();
+     holder.img.setHierarchy(hierarchy);
+ }
 
         }
 

@@ -188,7 +188,7 @@ public class ChatActivity extends AppCompatActivity  {
                         Intent it = new Intent(ChatActivity.this, Perfil.class);
                         it.putExtra("id",perfil.getId());
                         startActivity(it);
-                        finish();
+
                     }
                 });
                      textViewNome.setText(perfil.getNome());
@@ -199,29 +199,24 @@ public class ChatActivity extends AppCompatActivity  {
                              Intent it = new Intent(ChatActivity.this, Perfil.class);
                              it.putExtra("id",perfil.getId());
                              startActivity(it);
-                             finish();
+
                          }
                      });
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
-
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
@@ -380,9 +375,10 @@ public class ChatActivity extends AppCompatActivity  {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Mensagem mensagem = dataSnapshot.getValue( Mensagem.class );
+                int initialSize  = mensagens.size();
                 mensagens.add( mensagem );
                 recyclemensagens.scrollToPosition(mensagens.size()-1);
-                adapter.notifyItemInserted(mensagens.size()-1);
+                adapter.notifyItemRangeChanged(initialSize,mensagens.size()-1);
 
             }
 

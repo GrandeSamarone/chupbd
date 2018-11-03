@@ -52,7 +52,7 @@ public class FanArtsColecao {
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeQuantRef=firebaseRefs
                 .child("minhasarts")
-                .child(identificadorUsuario)
+                .child(fanArts.getIdauthor())
                 .child(fanArts.getId())
                 .child("quantcolecao");
 

@@ -1,0 +1,57 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
+    android:layout_marginBottom="4dp"
+    android:elevation="4dp"
+    cardview:cardCornerRadius="4dp"
+    android:clickable="true"
+    android:backgroundTint="@color/background_cardview"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+       >
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/capacategoria"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+       />
+
+            <TextView
+                android:id="@+id/texttitulo_categoria"
+                style="@style/AppTheme.Subheader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/capacategoria"
+                android:text="titulo"
+                android:textAlignment="center"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="-2dp"
+                android:layout_toRightOf="@+id/capacategoria"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+
+            <TextView
+                android:text="UM BELO DIA"
+                android:textAlignment="center"
+                android:id="@+id/text_desc_categoria"
+                style="@style/AppTheme.Body1"
+                android:ellipsize="end"
+                android:lines="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/texttitulo_categoria"
+                android:layout_below="@+id/texttitulo_categoria"
+                android:textColor="@color/cinzasecunradrio" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

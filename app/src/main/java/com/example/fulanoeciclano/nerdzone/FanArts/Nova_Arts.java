@@ -184,22 +184,24 @@ public void validardados(){
         campodesc.setError(padrao);
     return;
     }
-        if(imagemart==null){
+    if(fanArts.getArtfoto()==null){
             Toast toast = Toast.makeText(Nova_Arts.this, "Imagem Obrigatorio", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
             toast.show();
-        }
+        }else{
         fanArts.Salvar(seguidoresSnapshot);
-    int qtdArt = perfil.getArts() + 1;
-    perfil.setArts(qtdArt);
-    perfil.atualizarQtdFanArts();
-    Toast toast = Toast.makeText(Nova_Arts.this, "Postado  com sucesso!", Toast.LENGTH_SHORT);
-    toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-    toast.show();
-    Intent it = new Intent( Nova_Arts.this,Lista_Arts.class);
-    startActivity(it);
-    finish();
-}
+        int qtdArt = perfil.getArts() + 1;
+        perfil.setArts(qtdArt);
+        perfil.atualizarQtdFanArts();
+        Toast toast = Toast.makeText(Nova_Arts.this, "Postado  com sucesso!", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+        toast.show();
+        Intent it = new Intent( Nova_Arts.this,Lista_Arts.class);
+        startActivity(it);
+        finish();
+    }
+    }
+
 
 
     private void CarregarDados_do_Usuario(){

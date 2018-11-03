@@ -7,8 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -61,6 +64,8 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
     private String id_do_usuario;
     private String id_usuariologado;
     private Usuario usuarioLogado,usuarioselecionado;
+    private android.support.v7.app.AlertDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,40 +205,57 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
         }
     }
     private void CarregarDados_do_Usuario(){
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        LayoutInflater layoutInflater = LayoutInflater.from(Perfil.this);
+        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+        Glide.with(getApplicationContext())
+                .asGif()
+                .load(R.drawable.gif_self)
+                .into(imageViewgif);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
         ChildEventListenerperfil=database_perfil.orderByChild("id")
                 .equalTo(id_do_usuario).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         usuarioselecionado = dataSnapshot.getValue(Usuario.class );
                         assert usuarioselecionado != null;
+                        if(usuarioselecionado!=null) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            nome.setText(usuarioselecionado.getNome());
+                            fraserapida.setText(usuarioselecionado.getFrase());
+                            n_topicos.setText(String.valueOf(usuarioselecionado.getTopicos()));
+                            n_contos.setText(String.valueOf(usuarioselecionado.getContos()));
+                            n_arts.setText(String.valueOf(usuarioselecionado.getArts()));
+                            n_seguidores.setText(String.valueOf(usuarioselecionado.getSeguidores()));
 
-                        progressBar.setVisibility(View.VISIBLE);
-                         nome.setText(usuarioselecionado.getNome());
-                         fraserapida.setText(usuarioselecionado.getFrase());
-                        n_topicos.setText(String.valueOf(usuarioselecionado.getTopicos()));
-                        n_contos.setText(String.valueOf(usuarioselecionado.getContos()));
-                        n_arts.setText(String.valueOf(usuarioselecionado.getArts()));
-                         n_seguidores.setText(String.valueOf(usuarioselecionado.getSeguidores()));
+                            Uri capa = Uri.parse(usuarioselecionado.getCapa());
+                            if (capa == null) {
+                                capausuario.setBackgroundResource(R.drawable.gradiente_toolbar);
+                            } else {
+                                DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                                        .setUri(capa)
+                                        .build();
+                                capausuario.setController(controllerOne);
+                                progressBar.setVisibility(View.GONE);
+                            }
 
-                        Uri  capa = Uri.parse(usuarioselecionado.getCapa());
-                             if(capa==null){
-                                 capausuario.setBackgroundResource(R.drawable.gradiente_toolbar);
-                             }else {
-                                 DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                                         .setUri(capa)
-                                         .build();
-                                 capausuario.setController(controllerOne);
-                                 progressBar.setVisibility(View.GONE);
-                             }
-
-                        String fotoperfil = usuarioselecionado.getFoto();
-                        Glide.with(Perfil.this)
-                                .load(fotoperfil)
-                                .into(imgperfil);
+                            String fotoperfil = usuarioselecionado.getFoto();
+                            Glide.with(Perfil.this)
+                                    .load(fotoperfil)
+                                    .into(imgperfil);
 
 
-                        //EventBUS
-                        EventBus.getDefault().postSticky(usuarioselecionado.getId());
+                            //EventBUS
+                            EventBus.getDefault().postSticky(usuarioselecionado.getId());
+                            dialog.dismiss();
+                        }else{
+
+                        }
                     }
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -278,6 +300,7 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
         });
     }
     public void VerificaSegueUsuarioAmigo(){
+
         DatabaseReference seguidor_ref=seguidores_ref
                 .child(usuarioselecionado.getId())
                 .child(id_usuariologado);
@@ -365,8 +388,9 @@ private void SalvarSeguidor(Usuario ulogado,Usuario uamigo){
             RemoverSeguidor(usuarioLogado,usuarioselecionado);
         }
     });
-    Toast.makeText(this, "Agora você verá tudo que o "+uamigo.getNome()+"Postar", Toast.LENGTH_SHORT).show();
-
+    Toast toast = Toast.makeText(this, "Agora você verá tudo que o "+uamigo.getNome()+" Postar", Toast.LENGTH_SHORT);
+    toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+    toast.show();
     //Incrementar seguidores do amigo
     int seguidores = uamigo.getSeguidores() + 1;
     HashMap<String, Object> dadosSeguidores = new HashMap<>();

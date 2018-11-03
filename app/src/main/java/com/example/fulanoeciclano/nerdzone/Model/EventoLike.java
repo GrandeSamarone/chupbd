@@ -77,7 +77,7 @@ public class EventoLike {
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeQuantRef=firebaseRefs
                 .child("meusevento")
-                .child(usuariologado)
+                .child(evento.getIdUsuario())
                 .child(evento.getUid())
                 .child("curtirCount");
 

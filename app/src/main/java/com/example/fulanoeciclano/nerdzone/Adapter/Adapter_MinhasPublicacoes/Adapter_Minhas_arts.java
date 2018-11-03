@@ -64,60 +64,52 @@ public class Adapter_Minhas_arts extends RecyclerView.Adapter<Adapter_Minhas_art
      holder.n_add_colecao.setText(String.valueOf(fanArts.getQuantcolecao()));
      holder.n_curtida.setText(String.valueOf(fanArts.getLikecount()));
 
-        Uri uri = Uri.parse(fanArts.getArtfoto());
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setProgressiveRenderingEnabled(true)
-                .build();
-        RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
-        holder.icone_art.setHierarchy(new GenericDraweeHierarchyBuilder(context.getResources())
-                .setRoundingParams(roundingParams)
-                .build());
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setTapToRetryEnabled(true)
+      String uri = fanArts.getArtfoto();
 
-                .setImageRequest(request)
-                .setOldController(holder.icone_art.getController())
+      if(uri!=null) {
+          ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
+                  .setProgressiveRenderingEnabled(true)
+                  .build();
+          RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
+          holder.icone_art.setHierarchy(new GenericDraweeHierarchyBuilder(context.getResources())
+                  .setRoundingParams(roundingParams)
+                  .build());
+          DraweeController controller = Fresco.newDraweeControllerBuilder()
+                  .setTapToRetryEnabled(true)
 
-                .build();
-            /*mSimpleDraweeView.setController(controller);
-            DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
+                  .setImageRequest(request)
+                  .setOldController(holder.icone_art.getController())
 
-*/
+                  .build();
 
 
+          DatabaseReference eventoscurtidas = ConfiguracaoFirebase.getFirebaseDatabase()
+                  .child("usuarios")
+                  .child(identificadorUsuario);
+          eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
+              @Override
+              public void onDataChange(DataSnapshot dataSnapshot) {
+                  user = dataSnapshot.getValue(Usuario.class);
+
+              }
+
+              @Override
+              public void onCancelled(DatabaseError databaseError) {
+
+              }
+          });
 
 
-        DatabaseReference eventoscurtidas= ConfiguracaoFirebase.getFirebaseDatabase()
-                .child("usuarios")
-                .child(identificadorUsuario);
-        eventoscurtidas.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(Usuario.class);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-            holder.icone_art.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it =new Intent(context, Detalhe_FarArts_Activity.class);
-                    it.putExtra("id",fanArts.getId());
-                    context.startActivity(it);
-                }
-            });
-        holder.icone_art.setController(controller);
-
+          holder.icone_art.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  Intent it = new Intent(context, Detalhe_FarArts_Activity.class);
+                  it.putExtra("id", fanArts.getId());
+                  context.startActivity(it);
+              }
+          });
+          holder.icone_art.setController(controller);
+      }
         holder.deletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

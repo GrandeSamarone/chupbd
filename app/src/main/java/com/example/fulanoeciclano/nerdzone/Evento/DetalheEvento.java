@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,7 +50,6 @@ import com.vanniktech.emoji.listeners.OnSoftKeyboardCloseListener;
 import com.vanniktech.emoji.listeners.OnSoftKeyboardOpenListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -73,13 +74,14 @@ public class DetalheEvento extends AppCompatActivity {
     private static RecyclerView recyclerViewcomentarios;
     private String usuarioLogado;
     private Adapter_comentario adapter;
-    private List<Comentario> listcomentario = new ArrayList<>();
+    private ArrayList<Comentario> listcomentario = new ArrayList<>();
     private DatabaseReference database_evento,database_usuario;
     private com.google.firebase.database.ChildEventListener ChildEventListenerevento;
     private View root_view;
     private EmojiPopup emojiPopup;
     private ChildEventListener ChildEventListeneruser;
     private String ids;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +150,19 @@ public class DetalheEvento extends AppCompatActivity {
     }
 
     private void CarregarDados_do_Evento(){
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        LayoutInflater layoutInflater = LayoutInflater.from(DetalheEvento.this);
+        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
 
+        Glide.with(getApplicationContext())
+                .asGif()
+                .load(R.drawable.gif_self)
+                .into(imageViewgif);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
          ids=getIntent().getStringExtra("id_do_evento");
         String estado= getIntent().getStringExtra("UR_do_evento");
         ChildEventListenerevento=database_evento    .child(estado).orderByChild("uid")
@@ -157,45 +171,51 @@ public class DetalheEvento extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 eventoselecionado = dataSnapshot.getValue(Evento.class );
                 assert eventoselecionado != null;
+                     if(eventoselecionado!=null) {
 
 
-
-                collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
-                collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparente));
-                collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.background));
-
+                         collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
+                         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparente));
+                         collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.background));
 
 
-                Uri uri = Uri.parse(eventoselecionado.getCapaevento());
+                         Uri uri = Uri.parse(eventoselecionado.getCapaevento());
 
-                DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
-                        .setUri(uri)
-                        .setAutoPlayAnimations(true)
-                        .build();
+                         DraweeController controllerOne = Fresco.newDraweeControllerBuilder()
+                                 .setUri(uri)
+                                 .setAutoPlayAnimations(true)
+                                 .build();
 
-                eventobanner.setController(controllerOne);
-                progressBar.setVisibility(View.GONE);
+                         eventobanner.setController(controllerOne);
+                         progressBar.setVisibility(View.GONE);
 
 
-                eventobanner.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent it = new Intent(DetalheEvento.this, AbrirImagem.class);
-                        it.putExtra("id_foto",eventoselecionado.getCapaevento());
-                        it.putExtra("nome_foto",  eventoselecionado.getTitulo());
-                        startActivity(it);
-                    }
-                });
+                         eventobanner.setOnClickListener(new View.OnClickListener() {
+                             @Override
+                             public void onClick(View v) {
+                                 Intent it = new Intent(DetalheEvento.this, AbrirImagem.class);
+                                 it.putExtra("id_foto", eventoselecionado.getCapaevento());
+                                 it.putExtra("nome_foto", eventoselecionado.getTitulo());
+                                 startActivity(it);
+                             }
+                         });
 
-                mensagem_evento.setText(eventoselecionado.getMensagem());
-                quant_visu_evento.setText(String.valueOf(eventoselecionado.getQuantVisualizacao()));
-                Author_evento_View.setText(eventoselecionado.getAuthor());
-               titutoevento.setText(eventoselecionado.getTitulo());
-                collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
-                CarregarDados_do_Criador_do_Evento(eventoselecionado.getIdUsuario());
+                         mensagem_evento.setText(eventoselecionado.getMensagem());
+                         quant_visu_evento.setText(String.valueOf(eventoselecionado.getQuantVisualizacao()));
+                         Author_evento_View.setText(eventoselecionado.getAuthor());
+                         titutoevento.setText(eventoselecionado.getTitulo());
+                         collapsingToolbarLayout.setTitle(eventoselecionado.getTitulo());
+                         CarregarDados_do_Criador_do_Evento(eventoselecionado.getIdUsuario());
 
-                ContaQuatAcesso(eventoselecionado);
-
+                         ContaQuatAcesso(eventoselecionado);
+                         dialog.dismiss();
+                     }else{
+                         dialog.dismiss();
+                         Toast.makeText(DetalheEvento.this, "Selecione um Evento", Toast.LENGTH_SHORT).show();
+                         Intent it = new Intent(DetalheEvento.this,Evento_Lista.class);
+                         startActivity(it);
+                         finish();
+                     }
 
             }
             @Override
@@ -310,6 +330,7 @@ public class DetalheEvento extends AppCompatActivity {
                 Comentario comentario = dataSnapshot.getValue(Comentario.class);
                 listcomentario.add(comentario);
 
+
                 recyclerViewcomentarios.scrollToPosition(listcomentario.size()-1);
                 adapter.notifyItemInserted(listcomentario.size()-1);
             }
@@ -419,7 +440,9 @@ public class DetalheEvento extends AppCompatActivity {
 
             case android.R.id.home:
 
-                    finish();
+                Intent it = new Intent(DetalheEvento.this,Evento_Lista.class);
+                startActivity(it);
+                finish();
 
 
                 break;

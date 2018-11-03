@@ -34,7 +34,7 @@ public class MensagensAdapter extends RecyclerView.Adapter<MensagensAdapter.MyVi
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item=null;
         if(viewType==TIPO_REMETENTE){
-          item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_mensagem_remetente,parent,false);
+          item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_mensagem_remetentes,parent,false);
 
         }else if(viewType==TIPO_DESTINATARIO){
             item = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_mensagem_destinatario,parent,false);

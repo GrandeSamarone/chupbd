@@ -46,25 +46,26 @@ public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) 
 public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 final FanArts fanArts = listarts.get(position);
 
+         String artfoto= fanArts.getArtfoto();
+         if(artfoto!=null) {
+             Uri uri = Uri.parse(fanArts.getArtfoto());
+             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                     .setLocalThumbnailPreviewsEnabled(true)
+                     .setProgressiveRenderingEnabled(true)
+                     .build();
 
-        Uri uri = Uri.parse(fanArts.getArtfoto());
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setLocalThumbnailPreviewsEnabled(true)
-                .setProgressiveRenderingEnabled(true)
-                .build();
+             DraweeController controller = Fresco.newDraweeControllerBuilder()
+                     .setImageRequest(request)
+                     .build();
+             holder.img.setController(controller);
 
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setImageRequest(request)
-                .build();
-        holder.img.setController(controller);
-
-        GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
-        GenericDraweeHierarchy hierarchy = builder
-                .setProgressBarImage(new CircleProgressDrawable())
-                //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
-                .build();
-        holder.img.setHierarchy(hierarchy);
-
+             GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(context.getResources());
+             GenericDraweeHierarchy hierarchy = builder
+                     .setProgressBarImage(new CircleProgressDrawable())
+                     //  .setPlaceholderImage(context.getResources().getDrawable(R.drawable.carregando))
+                     .build();
+             holder.img.setHierarchy(hierarchy);
+         }
 
   holder.card.setOnClickListener(new View.OnClickListener() {
       @Override

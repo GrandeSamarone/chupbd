@@ -1,7 +1,6 @@
 package com.example.fulanoeciclano.nerdzone.Seguidores.MinhaConta;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
 import com.example.fulanoeciclano.nerdzone.Adapter.ContatosAdapter;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
@@ -208,12 +206,10 @@ public class MeusSeguidores extends AppCompatActivity {
 
             case android.R.id.home:
                 // NavUtils.navigateUpFromSameTask(this);
-                startActivity(new Intent(this, MainActivity.class)); //O efeito ao ser pressionado do botão (no caso abre a activity)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    finishAffinity();
-                }else{
+
+
                     finish();
-                }
+
                 break;
 
 

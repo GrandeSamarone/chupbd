@@ -60,7 +60,7 @@ public class Conto_colecao {
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeQuantRef=firebaseRefs
                 .child("meusconto")
-                .child(identificadorUsuario)
+                .child(conto.getIdauthor())
                 .child(conto.getUid())
                 .child("quantcolecao");
 

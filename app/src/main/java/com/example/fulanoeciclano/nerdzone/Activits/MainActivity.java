@@ -36,9 +36,9 @@ import com.example.fulanoeciclano.nerdzone.Adapter.AdapterPagInicial.TopicoAdapt
 import com.example.fulanoeciclano.nerdzone.Autenticacao.LoginActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
+import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.FanArts.Lista_Arts;
-import com.example.fulanoeciclano.nerdzone.Feed.FeedActivity;
 import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
@@ -55,6 +55,7 @@ import com.example.fulanoeciclano.nerdzone.Politica_Privacidade.Politica_Privaci
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Topico.Detalhe_topico;
 import com.example.fulanoeciclano.nerdzone.Topico.ListaTopicos;
+import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -451,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     FanArts fanArts = dataSnapshot.getValue(FanArts.class);
-                    listaArt.add(0, fanArts);
+                    listaArt.add(fanArts);
 
                     adapterArte.notifyDataSetChanged();
                     swipe.setRefreshing(false);
@@ -508,6 +509,29 @@ public class MainActivity extends AppCompatActivity implements
                 Intent it = new Intent(MainActivity.this,Detalhe_Mercado.class);
                 it.putExtra("mercadoelecionado",mercadoselecionado);
                 startActivity(it);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
+
+        recyclerVieweventos.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(),
+                recyclerVieweventos, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Evento eventoselecionado = ListaEvento.get(position);
+                Intent it = new Intent(MainActivity.this,DetalheEvento.class);
+                it.putExtra("id_do_evento",eventoselecionado.getUid());
+                it.putExtra("UR_do_evento",eventoselecionado.getEstado());
+                startActivity(it);
+
             }
 
             @Override
@@ -689,7 +713,7 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.feed_menu) {
-            Intent it = new Intent(MainActivity.this,FeedActivity.class);
+            Intent it = new Intent(MainActivity.this,Tela_Inicial_Votacao_Activity.class);
             startActivity(it);
         }else if (id == R.id.minhascolecoes_menu) {
             Intent it = new Intent(MainActivity.this,Minhas_Colecoes.class);

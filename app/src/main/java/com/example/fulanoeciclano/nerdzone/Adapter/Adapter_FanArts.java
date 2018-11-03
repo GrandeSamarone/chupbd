@@ -3,7 +3,6 @@ package com.example.fulanoeciclano.nerdzone.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,18 +37,20 @@ public class Adapter_FanArts extends RecyclerView.Adapter<Adapter_FanArts.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final FanArts fanArts = listarts.get(position);
-          Log.i("assdas",fanArts.getArtfoto());
-      holder.progresso.getIndeterminateDrawable().setColorFilter(0xFF0000FF,
-              android.graphics.PorterDuff.Mode.MULTIPLY);
+        if(fanArts.getArtfoto()!=null) {
+            holder.progresso.getIndeterminateDrawable().setColorFilter(0xFF0000FF,
+                    android.graphics.PorterDuff.Mode.MULTIPLY);
 
-        RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.icon_foto_fanarts);
-        Glide.with(context)
-                .load(fanArts.getArtfoto())
-                .apply(requestOptions)
-                .into(holder.img);
-               holder.progresso.setVisibility(View.GONE);
+            RequestOptions requestOptions = new RequestOptions()
+                    .placeholder(R.drawable.icon_foto_fanarts);
+            Glide.with(context)
+                    .load(fanArts.getArtfoto())
+                    .apply(requestOptions)
+                    .into(holder.img);
+            holder.progresso.setVisibility(View.GONE);
+        }else{
 
+        }
 
    }
 

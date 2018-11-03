@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -64,6 +66,7 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
     private ArrayList<FanArts> ListaFanarts_detalhe = new ArrayList<>();
     private RecyclerView recyclerViewartedetalhe;
     private DatabaseReference databaseart,database,database_usuario;
+    private AlertDialog dialog;
 
 
     @Override
@@ -136,32 +139,56 @@ public class Detalhe_FarArts_Activity extends AppCompatActivity {
 
 
     private void RecuperarArts(String idart){
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        LayoutInflater layoutInflater = LayoutInflater.from(Detalhe_FarArts_Activity.this);
+        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+        Glide.with(getApplicationContext())
+                .asGif()
+                .load(R.drawable.gif_self)
+                .into(imageViewgif);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
         ListaFanarts_detalhe.clear();
         ChildEventListenerDetalhe = databaseart.orderByChild("id").equalTo(idart).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 FanArts fanArts = dataSnapshot.getValue(FanArts.class);
-               addbotao_like_colecao(fanArts);
-                legenda_arte.setText(fanArts.getLegenda());
-                texto_toolbar.setText(fanArts.getLegenda());
-               n_curtida.setText(String.valueOf(fanArts.getLikecount()));
-                CarregarDados_do_Criador_do_Comercio(fanArts.getIdauthor());
+                if(fanArts!=null) {
 
-                String foto =fanArts.getArtfoto();
-                Glide.with(Detalhe_FarArts_Activity.this)
-                        .load(foto)
-                        .into(arteimagem );
-                      progressBar.setVisibility(View.GONE);
-                arteimagem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent it = new Intent(Detalhe_FarArts_Activity.this, AbrirImagem.class);
-                        it.putExtra("id_foto",fanArts.getArtfoto());
-                        it.putExtra("id",fanArts.getId());
-                        it.putExtra("nome_foto",  fanArts.getLegenda());
-                        startActivity(it);
-                    }
-                });
+
+                    addbotao_like_colecao(fanArts);
+                    legenda_arte.setText(fanArts.getLegenda());
+                    texto_toolbar.setText(fanArts.getLegenda());
+                    n_curtida.setText(String.valueOf(fanArts.getLikecount()));
+                    CarregarDados_do_Criador_do_Comercio(fanArts.getIdauthor());
+
+                    String foto = fanArts.getArtfoto();
+                    Glide.with(Detalhe_FarArts_Activity.this)
+                            .load(foto)
+                            .into(arteimagem);
+                    progressBar.setVisibility(View.GONE);
+                    dialog.dismiss();
+                    arteimagem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent it = new Intent(Detalhe_FarArts_Activity.this, AbrirImagem.class);
+                            it.putExtra("id_foto", fanArts.getArtfoto());
+                            it.putExtra("id", fanArts.getId());
+                            it.putExtra("nome_foto", fanArts.getLegenda());
+                            startActivity(it);
+                        }
+                    });
+                }else{
+                    dialog.dismiss();
+                    Toast.makeText(Detalhe_FarArts_Activity.this, "Selecione uma art", Toast.LENGTH_SHORT).show();
+                    Intent it = new Intent(Detalhe_FarArts_Activity.this,Lista_Arts.class);
+                    startActivity(it);
+                    finish();
+                }
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {

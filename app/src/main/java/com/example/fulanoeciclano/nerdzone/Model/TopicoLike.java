@@ -76,7 +76,7 @@ public class TopicoLike {
         DatabaseReference firebaseRefs = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference pLikeQuantRef=firebaseRefs
                 .child("meustopicos")
-                .child(idUsuario)
+                .child(topico.getIdauthor())
                 .child(topico.getUid())
                 .child("likecount");
 

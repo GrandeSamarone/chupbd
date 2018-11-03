@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Conto;
@@ -35,7 +36,7 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
     private List<Conto> listaconto;
     private Context context;
     Usuario usuariologado = UsuarioFirebase.getDadosUsuarioLogado();
-
+    String identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
     public Adapter_Conto(List<Conto> conto,Context c){
         this.listaconto=conto;
         this.context=c;
@@ -67,15 +68,27 @@ public class Adapter_Conto extends RecyclerView.Adapter<Adapter_Conto.MyviewHold
                 Usuario  user = dataSnapshot.getValue(Usuario.class);
 
             holder.author.setText(user.getNome());
-            holder.author.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(context, Perfil.class);
-                    it.putExtra("id", user.getId());
-                    context.startActivity(it);
-                }
-            });
+            Log.i("sdsd",user.getId()+"id "+identificadorUsuario);
+            if(!user.getId().equals(identificadorUsuario)) {
 
+                holder.author.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(context, Perfil.class);
+                        it.putExtra("id", user.getId());
+                        context.startActivity(it);
+                    }
+                });
+            }else{
+                holder.author.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(context, MinhaConta.class);
+                        it.putExtra("id", user.getId());
+                        context.startActivity(it);
+                    }
+                });
+            }
             /*Glide.with(context)
                         .load(user.getFoto())
                         .into(holder.imgperfil );*/
