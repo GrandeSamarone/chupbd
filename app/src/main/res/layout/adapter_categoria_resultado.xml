@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:barchart="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+       >
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/capacategoria__resultado"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+       />
+
+            <TextView
+                android:id="@+id/texttitulo_categoria_resultado"
+                style="@style/AppTheme.Subheader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/capacategoria__resultado"
+                android:text="titulo"
+                android:textColor="@color/pretoescrita"
+                android:textAlignment="center"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="-2dp"
+                android:layout_toRightOf="@+id/capacategoria__resultado"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+
+        <me.ithebk.barchart.BarChart
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/capacategoria__resultado"
+            android:layout_below="@+id/texttitulo_categoria_resultado"
+            android:id="@+id/resultado_grafico_horizontal"
+            barchart:bar_type="horizontal"
+            barchart:bar_width="30dp"
+            barchart:bar_color="@color/azul_votacao"
+            barchart:bar_text_color="#808080"
+            barchart:bar_text_size="14sp"
+            barchart:bar_show_auto_color="false"
+            barchart:bar_max_value="100"
+            barchart:bar_spaces = "0dp"
+            barchart:bar_show_value="true"
+            barchart:bar_show_animation="true"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+        <View
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_below="@+id/capacategoria__resultado"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/line_divider"
+            android:fitsSystemWindows="true" />
+    </RelativeLayout>
+</LinearLayout>

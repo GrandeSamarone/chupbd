@@ -133,7 +133,26 @@
         <activity android:name=".Votacao.Cadastro.youtuber.novo_youtuber_masc" />
         <activity android:name=".Votacao.Cadastro.youtuber.novo_youtuber_fem" />
         <activity android:name=".Votacao.Detalhe.detalhe_votacao_masc" />
-        <activity android:name=".Votacao.Detalhe.detalhe_votacao_fem"></activity>
+        <activity android:name=".Votacao.Detalhe.detalhe_votacao_fem" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_cosplay_masc" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_cosplay_fem" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_portal_noticia" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_livro_quadrinho" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_youtuber_masc" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_youtube_fem" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_reporter_masc" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_reporter_fem" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_cinema" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_canal_youtube" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_kpop_masc" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_kpop_fem" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_espaco_geek" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_Loja_virtual" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_escritor_roterista" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_escritora_roterista" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_empreendedor" />
+        <activity android:name=".Votacao.Detalhe.Detalhe_empreendedora" />
+        <activity android:name=".Votacao.Resultados.Resultado_digital_masc"></activity>
     </application>
 
 </manifest>

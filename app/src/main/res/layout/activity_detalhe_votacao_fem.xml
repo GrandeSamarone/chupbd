@@ -35,7 +35,7 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="230dp">
+                android:layout_height="280dp">
                 <com.synnapps.carouselview.CarouselView
                     android:id="@+id/carousel_foto_selecionada_categoria_fem"
                     android:layout_width="match_parent"

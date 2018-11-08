@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <ImageView
+        android:layout_margin="8dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/pressionartela"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+   <TextView
+       android:textSize="18dp"
+      android:layout_marginLeft="8dp"
+       android:layout_marginTop="8dp"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Quer votar novamente?"
+       />
+        <TextView
+            android:textSize="14dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toque no seu favorito."
+            />
+    </LinearLayout>
+
+</LinearLayout>
+
+
+            <Button
+                android:layout_gravity="right"
+                android:id="@+id/botaoentendi"
+              android:theme="@style/botaopadrao"
+                android:layout_marginRight="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ENTENDI"/>
+
+</LinearLayout>

@@ -30,7 +30,7 @@ import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_cosplay_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.cosplay.novo_cosplay_masc;
-import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.detalhe_votacao_fem;
+import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_cosplay_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_cosplay_masc;
 import com.google.firebase.auth.FirebaseAuth;
@@ -136,7 +136,7 @@ public class Lista_cosplay_masc extends AppCompatActivity implements SwipeRefres
 
                 if (listCategoriaAtualizado.size() > 0) {
                     Categoria_cosplay_masc categoriaselecionada = listCategoriaAtualizado.get(position);
-                    Intent it = new Intent(Lista_cosplay_masc.this,detalhe_votacao_fem.class);
+                    Intent it = new Intent(Lista_cosplay_masc.this,Detalhe_cosplay_masc.class);
                     it.putExtra("categoria_selecionada", categoriaselecionada);
                     startActivity(it);
                 }

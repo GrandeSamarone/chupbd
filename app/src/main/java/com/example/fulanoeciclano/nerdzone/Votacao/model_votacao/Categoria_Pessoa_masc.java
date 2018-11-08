@@ -4,6 +4,7 @@ import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 public class Categoria_Pessoa_masc implements Serializable {
@@ -13,6 +14,7 @@ public class Categoria_Pessoa_masc implements Serializable {
     private String descricao;
     private String contato;
     private String data;
+    private int votos=0;
     private List<String> fotos;
 
     public Categoria_Pessoa_masc() {
@@ -27,6 +29,13 @@ public class Categoria_Pessoa_masc implements Serializable {
                .child("categorias");
         anuncioref.child("digital_influence_masc")
                 .child(getId()).setValue(this);
+    }
+    public void atualizarQtdVotos(){
+        DatabaseReference usuariosref =  ConfiguracaoFirebase.getDatabase().getReference()
+                .child("votacao").child("categorias").child("digital_influence_masc").child(getId());
+        HashMap<String,Object> dados = new HashMap<>();
+        dados.put("votos",getVotos());
+        usuariosref.updateChildren(dados);
     }
 
     public String getId() {
@@ -83,5 +92,13 @@ public class Categoria_Pessoa_masc implements Serializable {
 
     public void setIdauthor(String idauthor) {
         this.idauthor = idauthor;
+    }
+
+    public int getVotos() {
+        return votos;
+    }
+
+    public void setVotos(int votos) {
+        this.votos = votos;
     }
 }

@@ -35,7 +35,7 @@
             android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp">
+        android:layout_height="280dp">
                 <com.synnapps.carouselview.CarouselView
                     android:id="@+id/carousel_foto_selecionada_categoria"
                     android:layout_width="match_parent"
@@ -148,7 +148,7 @@
 
                 <Button
                     android:layout_marginTop="8dp"
-                    android:id="@+id/botaosalvar_digital_influence"
+                    android:id="@+id/botaovotar_digital_influence"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="VOTAR"

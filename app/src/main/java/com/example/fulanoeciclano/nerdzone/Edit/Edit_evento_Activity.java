@@ -380,7 +380,8 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
                 evento.setDatafim(data_fim.getText().toString());
                 evento.setDatainicio(data_inicio.getText().toString());
                 evento.setCapaevento(imgcapa);
-                mDatabaseEvento.child(evento.getEstado()).child(evento.getUid()).setValue(evento).addOnCompleteListener(new OnCompleteListener<Void>() {
+                mDatabaseEvento.child(evento.getEstado()).child(evento.getUid()).setValue(evento)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                            }

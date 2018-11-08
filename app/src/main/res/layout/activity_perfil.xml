@@ -80,12 +80,13 @@
                 android:layout_marginTop="60dp"
                 android:id="@+id/relativeimgperfil"
                 android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_height="100dp"
+                android:background="@drawable/fundoicon">
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/circleImageViewFotoPerfilusuario"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/fundo_user"
+                    android:padding="4dp"
                     />
 
             </RelativeLayout>

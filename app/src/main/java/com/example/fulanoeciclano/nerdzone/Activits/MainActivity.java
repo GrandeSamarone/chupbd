@@ -39,7 +39,6 @@ import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.FanArts.Lista_Arts;
-import com.example.fulanoeciclano.nerdzone.Helper.HeaderDecoration;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
@@ -151,8 +150,6 @@ public class MainActivity extends AppCompatActivity implements
                 MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerViewListaConto.setLayoutManager(layoutManagerConto);
         recyclerViewListaConto.setHasFixedSize(true);
-        recyclerViewListaConto.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewListaConto,  R.layout.header_evento));
         adapterConto = new Adapter_Conto_pag_inicial(ListaContos,MainActivity.this);
         recyclerViewListaConto.setAdapter(adapterConto);
 
@@ -160,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements
                 MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerVieweventos.setLayoutManager(layoutManager);
         recyclerVieweventos.setHasFixedSize(true);
-        recyclerVieweventos.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerVieweventos,  R.layout.header_evento));
         adapterEvento = new EventoAdapterPagInicial(ListaEvento,MainActivity.this);
         recyclerVieweventos.setAdapter(adapterEvento);
         //Configurar recycleView Mercado
@@ -169,8 +164,6 @@ public class MainActivity extends AppCompatActivity implements
                 (MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerViewListaGibiMercado.setLayoutManager(layoutManagerMarvel);
         recyclerViewListaGibiMercado.setHasFixedSize(true);
-        recyclerViewListaGibiMercado.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewListaGibiMercado,  R.layout.header_evento));
         adapterMercado=new AdapterMercado(listaGibiComercio,MainActivity.this);
         recyclerViewListaGibiMercado.setAdapter(adapterMercado);
         //Configurar recycleView TOpico
@@ -178,8 +171,6 @@ public class MainActivity extends AppCompatActivity implements
                 MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerViewListaTopico.setLayoutManager(layoutManagertopico);
         recyclerViewListaTopico.setHasFixedSize(true);
-        recyclerViewListaTopico.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewListaTopico,  R.layout.header_evento));
         adapterTopico = new TopicoAdapterPagInicial(ListaTopico,MainActivity.this);
         recyclerViewListaTopico.setAdapter(adapterTopico);
 
@@ -187,8 +178,6 @@ public class MainActivity extends AppCompatActivity implements
                 MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerViewArts.setLayoutManager(layoutManagerArt);
         recyclerViewArts.setHasFixedSize(true);
-        recyclerViewArts.addItemDecoration(new HeaderDecoration(MainActivity.this,
-                recyclerViewArts,  R.layout.header_evento));
         adapterArte = new Adapter_FanArtsInicial(listaArt,MainActivity.this);
         recyclerViewArts.setAdapter(adapterArte);
 

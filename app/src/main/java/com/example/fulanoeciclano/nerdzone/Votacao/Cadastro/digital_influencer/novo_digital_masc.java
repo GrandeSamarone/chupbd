@@ -215,6 +215,7 @@ public class novo_digital_masc extends AppCompatActivity implements View.OnClick
 
 
         digital.setNome(titulo);
+        digital.setVotos(0);
         digital.setIdauthor(identificadorUsuario);
         digital.setContato(contato);
         digital.setDescricao(descricao);
