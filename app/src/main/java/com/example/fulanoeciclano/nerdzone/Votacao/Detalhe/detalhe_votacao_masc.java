@@ -3,6 +3,7 @@ package com.example.fulanoeciclano.nerdzone.Votacao.Detalhe;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -68,7 +71,7 @@ public class detalhe_votacao_masc extends AppCompatActivity {
     private ChildEventListener ChildEventListeneruser;
     private RelativeLayout click;
     private Toolbar toolbar;
-
+    private SharedPreferences preferences = null;
 
 
     @Override
@@ -92,6 +95,7 @@ public class detalhe_votacao_masc extends AppCompatActivity {
         descricao = findViewById(R.id.detalhe_selecionado_votacao_descricao);
         click = findViewById(R.id.click_layout);
         botaovotar=findViewById(R.id.botaovotar_digital_influence);
+
         botaovotar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +107,7 @@ public class detalhe_votacao_masc extends AppCompatActivity {
     categoriaselecionado = (Categoria_Pessoa_masc) getIntent().getSerializableExtra("categoria_selecionada");
 
     if(categoriaselecionado!=null){
+        botaovotar.setText(" VOTAR EM "+categoriaselecionado.getNome()+" ");
         toolbar_texto.setText(categoriaselecionado.getNome());
         titulo.setText(categoriaselecionado.getNome());
         descricao.setText(categoriaselecionado.getDescricao());
@@ -144,10 +149,38 @@ public class detalhe_votacao_masc extends AppCompatActivity {
         });
     }
 
-
+        preferences = getSharedPreferences("primeiravezdetalhevotacao", MODE_PRIVATE);
+        if (preferences.getBoolean("primeiravezdetalhevotacao", true)) {
+            preferences.edit().putBoolean("primeiravezdetalhevotacao", false).apply();
+            Dialog_informacao();
+        }
         TrocarFundos_status_bar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    private void Dialog_informacao() {
+        LayoutInflater li = getLayoutInflater();
+
+
+        View view = li.inflate(R.layout.dialog_informar_click_botao_votar, null);
+
+
+        view.findViewById(R.id.botaoentendi).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+
+
+                //desfaz o dialog_opcao_foto.
+                dialog.dismiss();
+            }
+        });
+
+
+        //Dialog de tela
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
     }
 
     private void ValidarVoto() {
@@ -172,9 +205,6 @@ public class detalhe_votacao_masc extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         dialog.dismiss();
-                        Toast toast = Toast.makeText(detalhe_votacao_masc.this, "Voto confirmado com sucesso!",Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-                        toast.show();
 
                           Intent it = new Intent(detalhe_votacao_masc.this, Resultado_digital_masc.class);
                         startActivity(it);
@@ -210,11 +240,6 @@ public class detalhe_votacao_masc extends AppCompatActivity {
                                 .into(perfil);
                         criador.setText(user.getNome());
 
-
-
-
-
-
                         if (!identificadorUsuario.equals(user.getId())) {
                             click.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -235,7 +260,6 @@ public class detalhe_votacao_masc extends AppCompatActivity {
                             });
                         }
                     }
-
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
@@ -243,19 +267,28 @@ public class detalhe_votacao_masc extends AppCompatActivity {
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
                     }
-
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
+    }
+
+
+    //botao Pesquisar
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_votar,menu);
+
+        //Botao Pesquisa
+
+
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     //Botao Voltar
@@ -266,10 +299,9 @@ public class detalhe_votacao_masc extends AppCompatActivity {
             case android.R.id.home:
 
                     finish();
-
-
-
                 break;
+            case R.id.menu_votar:
+                ValidarVoto();
 
             default:
                 break;

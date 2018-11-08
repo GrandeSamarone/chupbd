@@ -48,7 +48,6 @@
             barchart:bar_text_color="#808080"
             barchart:bar_text_size="14sp"
             barchart:bar_show_auto_color="false"
-            barchart:bar_max_value="100"
             barchart:bar_spaces = "0dp"
             barchart:bar_show_value="true"
             barchart:bar_show_animation="true"

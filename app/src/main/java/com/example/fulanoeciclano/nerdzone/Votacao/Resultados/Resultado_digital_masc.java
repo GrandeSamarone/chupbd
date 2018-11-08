@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
@@ -47,7 +49,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Resultado_digital_masc extends AppCompatActivity {
+public class Resultado_digital_masc extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private Toolbar toolbar;
     private FloatingActionButton novo_influencer;
     private FirebaseUser usuario;
@@ -74,6 +76,20 @@ public class Resultado_digital_masc extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarsecundario_sem_foto);
         toolbar.setTitle("Resultado");
         setSupportActionBar(toolbar);
+        refresh = findViewById(R.id.atualizar_resultado_digital_masc);
+        refresh.setOnRefreshListener(Resultado_digital_masc.this);
+
+        refresh.post(new Runnable() {
+            @Override
+            public void run() {
+                RecuperarResultado_digital_masc();
+
+            }
+        });
+        refresh.setColorSchemeResources
+                (R.color.colorPrimaryDark, R.color.amareloclaro,
+                        R.color.accent);
+
         mDatabase_digital = ConfiguracaoFirebase.getFirebaseDatabase()
                 .child("votacao").child("categorias").child("digital_influence_masc").orderByChild("votos");
         //recycleview
@@ -86,9 +102,6 @@ public class Resultado_digital_masc extends AppCompatActivity {
         adapter = new Adapter_resultado_digital_masc(this,lista_digital_influence);
 
         recyclerViewresultado.setAdapter(adapter);
-        RecuperarResultado_digital_masc();
-        TrocarFundos_status_bar();
-
         //Aplicar Evento click
         recyclerViewresultado.addOnItemTouchListener(new RecyclerItemClickListener(this,
                 recyclerViewresultado, new RecyclerItemClickListener.OnItemClickListener() {
@@ -115,15 +128,24 @@ public class Resultado_digital_masc extends AppCompatActivity {
 
             }
         }));
+
+
+getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TrocarFundos_status_bar();
         preferences = getSharedPreferences("primeiravezvotacao", MODE_PRIVATE);
         if (preferences.getBoolean("primeiravezvotacao", true)) {
             preferences.edit().putBoolean("primeiravezvotacao", false).apply();
             Dialog_informacao();
         } else {
-
+            Toast toast = Toast.makeText(Resultado_digital_masc.this, "Voto confirmado com sucesso!",Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+            toast.show();
         }
-
-getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     //botao Pesquisar
@@ -202,6 +224,7 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 Categoria_Pessoa_masc cat = dataSnapshot.getValue(Categoria_Pessoa_masc.class);
                 lista_digital_influence.add(cat);
                 adapter.notifyDataSetChanged();
+                refresh.setRefreshing(false);
             }
 
             @Override
@@ -290,4 +313,8 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dialog.show();
     }
 
+    @Override
+    public void onRefresh() {
+        RecuperarResultado_digital_masc();
+    }
 }

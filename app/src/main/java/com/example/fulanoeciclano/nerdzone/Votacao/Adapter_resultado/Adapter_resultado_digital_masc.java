@@ -56,7 +56,7 @@ public class Adapter_resultado_digital_masc extends RecyclerView.Adapter<Adapter
         if(categoria_pessoa.getNome()!=null){
             holder.titulo.setText(categoria_pessoa.getNome());
         }
-        holder.grafico.setBarMaxValue(100);
+        holder.grafico.setBarMaxValue(1000);
         BarChartModel barChartModel = new BarChartModel();
         barChartModel.setBarValue(categoria_pessoa.getVotos());
        // barChartModel.setBarColor(Color.parseColor("#9C27B0"));
