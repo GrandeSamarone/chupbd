@@ -205,7 +205,9 @@ public class detalhe_votacao_masc extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         dialog.dismiss();
-
+                        Toast toast = Toast.makeText(detalhe_votacao_masc.this, "Voto confirmado com sucesso!",Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                        toast.show();
                           Intent it = new Intent(detalhe_votacao_masc.this, Resultado_digital_masc.class);
                         startActivity(it);
                         finish();

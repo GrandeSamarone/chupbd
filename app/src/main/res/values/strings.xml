@@ -73,6 +73,7 @@
     <string name="politica_de_privacidade">Política de Privacidade</string>
     <string name="politicaa_privacidade">Política de privacidade</string>
     <string name="txt_visualizacoes">Visualizações</string>
+    <string name="seja_o_primeiro_anunciar_oque_quiser">Seja o Primeiro anunciar, oque quiser!</string>
 
     <string-array name="estados">
         <item>Estado</item>

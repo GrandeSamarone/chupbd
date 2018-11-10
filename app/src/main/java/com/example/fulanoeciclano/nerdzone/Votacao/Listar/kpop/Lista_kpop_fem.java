@@ -83,6 +83,7 @@ public class Lista_kpop_fem extends AppCompatActivity implements SwipeRefreshLay
         setSupportActionBar(toolbar);
 
         //Configuracoes Originais
+        linear_nada_cadastrado=findViewById(R.id.linear_nada_cadastrado_kpop_fem);
         novo_influencer = findViewById(R.id.buton_novo_kpop_fem);
         novo_influencer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +97,6 @@ public class Lista_kpop_fem extends AppCompatActivity implements SwipeRefreshLay
         //Configuraçoes iniciais
         icone = findViewById(R.id.icone_user_toolbar);
         linearerro=findViewById(R.id.linearinformacoeserro_mercado);
-        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         digital = new Categoria_kpop_fem();
@@ -177,14 +177,16 @@ public class Lista_kpop_fem extends AppCompatActivity implements SwipeRefreshLay
     }
 
     private void RecuperarLista_digital_fem(){
-
+       linear_nada_cadastrado.setVisibility(View.VISIBLE);
         lista_digital_influence.clear();
         valuedigitalListener = mDatabase_digital.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Categoria_kpop_fem cat = dataSnapshot.getValue(Categoria_kpop_fem.class);
                 lista_digital_influence.add(cat);
-
+                if(lista_digital_influence.size()>0){
+                    linear_nada_cadastrado.setVisibility(View.GONE);
+                }
                 adapter.notifyDataSetChanged();
                 refresh.setRefreshing(false);
             }

@@ -79,10 +79,11 @@ public class Lista_loja_vitural extends AppCompatActivity implements SwipeRefres
         setContentView(R.layout.activity_lista_loja_vitural);
 
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Lista Loja");
+        toolbar.setTitle("Loja Virtual");
         setSupportActionBar(toolbar);
 
         //Configuracoes Originais
+        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado_loja);
         novo_influencer = findViewById(R.id.buton_novo_loja_virtual);
         novo_influencer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +97,6 @@ public class Lista_loja_vitural extends AppCompatActivity implements SwipeRefres
         //Configuraçoes iniciais
         icone = findViewById(R.id.icone_user_toolbar);
         linearerro=findViewById(R.id.linearinformacoeserro_mercado);
-        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         digital = new Categoria_loja_virtual();
@@ -172,13 +172,16 @@ public class Lista_loja_vitural extends AppCompatActivity implements SwipeRefres
     }
 
     private void RecuperarLista_digital_fem(){
-
+        linear_nada_cadastrado.setVisibility(View.VISIBLE);
         lista_digital_influence.clear();
         valuedigitalListener = mDatabase_digital.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Categoria_loja_virtual cat = dataSnapshot.getValue(Categoria_loja_virtual.class);
                 lista_digital_influence.add(cat);
+                if(lista_digital_influence.size()>0){
+                    linear_nada_cadastrado.setVisibility(View.GONE);
+                }
 
                 adapter.notifyDataSetChanged();
                 refresh.setRefreshing(false);

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#1565c0</color>
     <color name="branco">#FFFFFF</color>
     <color name="brancochat">#efeded</color>
-    <color name="background">#f2f2f3</color>
+    <color name="background">#fcfcfc</color>
     <color name="transparente">#00000000</color>
     <color name="background_cardview">#fafafa</color>
     <color name="colorAccent">#fa2c28</color>

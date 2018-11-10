@@ -6,10 +6,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagemComercio;
@@ -28,7 +33,11 @@ import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.PerfilAmigos.Perfil;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.example.fulanoeciclano.nerdzone.Votacao.Resultados.Resultado_empreendedora;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_empreendedora;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +48,7 @@ import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -212,6 +222,18 @@ public class Detalhe_empreendedora extends AppCompatActivity {
                 });
     }
 
+    //botao Pesquisar
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_votar,menu);
+
+        //Botao Pesquisa
+
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
     //Botao Voltar
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -220,10 +242,9 @@ public class Detalhe_empreendedora extends AppCompatActivity {
             case android.R.id.home:
 
                 finish();
-
-
-
                 break;
+            case R.id.menu_votar:
+                ValidarVoto();
 
             default:
                 break;
@@ -232,6 +253,49 @@ public class Detalhe_empreendedora extends AppCompatActivity {
         return true;
     }
 
+
+    private void ValidarVoto() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        LayoutInflater layoutInflater = LayoutInflater.from(Detalhe_empreendedora.this);
+        final View view  = layoutInflater.inflate(R.layout.dialog_carregando_gif_comscroop,null);
+        ImageView imageViewgif = view.findViewById(R.id.gifimage);
+
+        Glide.with(this)
+                .asGif()
+                .load(R.drawable.gif_self)
+                .into(imageViewgif);
+        builder.setView(view);
+
+        dialog = builder.create();
+        dialog.show();
+        int qtdVotos=categoriaselecionado.getVotos()+1;
+        HashMap<String,Object> dados = new HashMap<>();
+        dados.put("votos",qtdVotos);
+        mDatabasecategoria.child(categoriaselecionado.getId()).updateChildren(dados).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                dialog.dismiss();
+                Toast toast = Toast.makeText(Detalhe_empreendedora.this, "Voto confirmado com sucesso!",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+                Intent it = new Intent(Detalhe_empreendedora.this, Resultado_empreendedora.class);
+                startActivity(it);
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                dialog.dismiss();
+                Toast toast = Toast.makeText(Detalhe_empreendedora.this, "Ocorreu um erro, tente novamente ou verifique sua conexão"
+                        ,Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+            }
+        });
+        //  categoriaselecionado.atualizarQtdVotos();
+
+    }
 
 
     private void TrocarFundos_status_bar(){

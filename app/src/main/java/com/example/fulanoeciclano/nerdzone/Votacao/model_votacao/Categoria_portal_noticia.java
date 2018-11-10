@@ -13,6 +13,7 @@ public class Categoria_portal_noticia implements Serializable {
     private String descricao;
     private String contato;
     private String data;
+    private int votos=0;
     private List<String> fotos;
 
     public Categoria_portal_noticia() {
@@ -83,6 +84,14 @@ public class Categoria_portal_noticia implements Serializable {
 
     public void setIdauthor(String idauthor) {
         this.idauthor = idauthor;
+    }
+
+    public int getVotos() {
+        return votos;
+    }
+
+    public void setVotos(int votos) {
+        this.votos = votos;
     }
 }
 

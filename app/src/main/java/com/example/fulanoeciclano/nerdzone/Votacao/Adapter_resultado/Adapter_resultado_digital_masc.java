@@ -4,12 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_Pessoa_masc;
@@ -41,6 +44,10 @@ public class Adapter_resultado_digital_masc extends RecyclerView.Adapter<Adapter
     public List<Categoria_Pessoa_masc> getcategoria(){
         return this.lista_digital;
     }
+
+    public Categoria_Pessoa_masc getItem(int position)
+    { return lista_digital.get(position);
+    }
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,6 +60,23 @@ public class Adapter_resultado_digital_masc extends RecyclerView.Adapter<Adapter
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Categoria_Pessoa_masc categoria_pessoa = lista_digital.get(position);
 
+        Log.i("ddsas", String.valueOf(holder.getAdapterPosition()));
+
+        if(position == lista_digital.size()-1){
+            Glide.with(context)
+                    .load(R.drawable.medal_1)
+                    .into(holder.img_posicao);
+        }
+        if(position == lista_digital.size()-2){
+            Glide.with(context)
+                    .load(R.drawable.medal_2)
+                    .into(holder.img_posicao);
+        }
+        if(position == lista_digital.size()-3) {
+            Glide.with(context)
+                    .load(R.drawable.medal_3)
+                    .into(holder.img_posicao);
+        }
         if(categoria_pessoa.getNome()!=null){
             holder.titulo.setText(categoria_pessoa.getNome());
         }
@@ -102,13 +126,16 @@ public class Adapter_resultado_digital_masc extends RecyclerView.Adapter<Adapter
         private SimpleDraweeView capa;
         private TextView titulo,descricao;
         private BarChart grafico;
+        private ImageView img_posicao;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
+            img_posicao = itemView.findViewById(R.id.img_posicao);
             grafico = itemView.findViewById(R.id.resultado_grafico_horizontal);
             capa= itemView.findViewById(R.id.capacategoria__resultado);
             titulo = itemView.findViewById(R.id.texttitulo_categoria_resultado);
         }
+
     }
 }

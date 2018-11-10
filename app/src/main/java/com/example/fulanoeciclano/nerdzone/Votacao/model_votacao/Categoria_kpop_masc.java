@@ -13,6 +13,7 @@ public class Categoria_kpop_masc implements Serializable {
     private String descricao;
     private String contato;
     private String data;
+    private int votos=0;
     private List<String> fotos;
 
     public Categoria_kpop_masc() {
@@ -83,6 +84,14 @@ public class Categoria_kpop_masc implements Serializable {
 
     public void setIdauthor(String idauthor) {
         this.idauthor = idauthor;
+    }
+
+    public int getVotos() {
+        return votos;
+    }
+
+    public void setVotos(int votos) {
+        this.votos = votos;
     }
 }
 

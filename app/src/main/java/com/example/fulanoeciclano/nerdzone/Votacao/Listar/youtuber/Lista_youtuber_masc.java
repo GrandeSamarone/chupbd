@@ -80,10 +80,11 @@ public class Lista_youtuber_masc extends AppCompatActivity implements SwipeRefre
         setContentView(R.layout.activity_lista_youtuber_masc);
 
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Youtuber masc");
+        toolbar.setTitle("Youtuber Masculino");
         setSupportActionBar(toolbar);
 
         //Configuracoes Originais
+        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado_youtube_masc);
         novo_influencer = findViewById(R.id.buton_novo_youtuber_masc);
         novo_influencer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +98,6 @@ public class Lista_youtuber_masc extends AppCompatActivity implements SwipeRefre
         //Configuraçoes iniciais
         icone = findViewById(R.id.icone_user_toolbar);
         linearerro=findViewById(R.id.linearinformacoeserro_mercado);
-        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         digital = new Categoria_youtuber_masc();
@@ -173,13 +173,16 @@ public class Lista_youtuber_masc extends AppCompatActivity implements SwipeRefre
     }
 
     private void RecuperarLista_digital_masc(){
-
+        linear_nada_cadastrado.setVisibility(View.VISIBLE);
         lista_digital_influence.clear();
         valuedigitalListener = mDatabase_digital.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Categoria_youtuber_masc cat = dataSnapshot.getValue(Categoria_youtuber_masc.class);
                 lista_digital_influence.add(cat);
+                if(lista_digital_influence.size()>0){
+                    linear_nada_cadastrado.setVisibility(View.GONE);
+                }
                 adapter.notifyDataSetChanged();
                 refresh.setRefreshing(false);
             }

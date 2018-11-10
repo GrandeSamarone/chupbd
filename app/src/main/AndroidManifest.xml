@@ -152,7 +152,26 @@
         <activity android:name=".Votacao.Detalhe.Detalhe_escritora_roterista" />
         <activity android:name=".Votacao.Detalhe.Detalhe_empreendedor" />
         <activity android:name=".Votacao.Detalhe.Detalhe_empreendedora" />
-        <activity android:name=".Votacao.Resultados.Resultado_digital_masc"></activity>
+        <activity android:name=".Votacao.Resultados.Resultado_digital_masc" />
+        <activity android:name=".Votacao.Resultados.Resultado_digital_fem" />
+        <activity android:name=".Votacao.Resultados.Resultado_cosplay_masc" />
+        <activity android:name=".Votacao.Resultados.Resultado_cosplay_fem" />
+        <activity android:name=".Votacao.Resultados.Resultado_portal_noticia" />
+        <activity android:name=".Votacao.Resultados.Resultado_livro_quadrinho" />
+        <activity android:name=".Votacao.Resultados.Resultado_youtuber_masc" />
+        <activity android:name=".Votacao.Resultados.Resultado_youtuber_fem" />
+        <activity android:name=".Votacao.Resultados.Resultado_reporter_masc" />
+        <activity android:name=".Votacao.Resultados.Resultado_reporter_fem" />
+        <activity android:name=".Votacao.Resultados.Resultado_cinema" />
+        <activity android:name=".Votacao.Resultados.Resultado_canal_youtube" />
+        <activity android:name=".Votacao.Resultados.Resultado_kpop_masc" />
+        <activity android:name=".Votacao.Resultados.Resultado_kpop_fem" />
+        <activity android:name=".Votacao.Resultados.Resultado_espaco_geek" />
+        <activity android:name=".Votacao.Resultados.Resultado_loja_virtual" />
+        <activity android:name=".Votacao.Resultados.Resultado_escritor_masc" />
+        <activity android:name=".Votacao.Resultados.Resultado_escritora_fem" />
+        <activity android:name=".Votacao.Resultados.Resultado_empreendedor" />
+        <activity android:name=".Votacao.Resultados.Resultado_empreendedora"></activity>
     </application>
 
 </manifest>

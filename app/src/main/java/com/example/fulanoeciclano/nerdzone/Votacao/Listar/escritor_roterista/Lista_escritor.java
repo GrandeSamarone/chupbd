@@ -81,10 +81,11 @@ public class Lista_escritor extends AppCompatActivity implements SwipeRefreshLay
         setContentView(R.layout.activity_lista_escritor);
 
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Escritor");
+        toolbar.setTitle("Escritor/Roterista");
         setSupportActionBar(toolbar);
 
         //Configuracoes Originais
+        linear_nada_cadastrado=findViewById(R.id.linear_nada_cadastrado_escritor);
         novo_influencer = findViewById(R.id.buton_novo_escritor);
         novo_influencer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +99,6 @@ public class Lista_escritor extends AppCompatActivity implements SwipeRefreshLay
         //Configuraçoes iniciais
         icone = findViewById(R.id.icone_user_toolbar);
         linearerro=findViewById(R.id.linearinformacoeserro_mercado);
-        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         digital = new Categoria_escritor_masc();
@@ -175,13 +175,17 @@ public class Lista_escritor extends AppCompatActivity implements SwipeRefreshLay
     }
 
     private void RecuperarLista_digital_fem(){
-
+      linear_nada_cadastrado.setVisibility(View.VISIBLE);
         lista_digital_influence.clear();
         valuedigitalListener = mDatabase_digital.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Categoria_escritor_masc cat = dataSnapshot.getValue(Categoria_escritor_masc.class);
                 lista_digital_influence.add(cat);
+                lista_digital_influence.add(cat);
+                if(lista_digital_influence.size()>0){
+                    linear_nada_cadastrado.setVisibility(View.GONE);
+                }
                 adapter.notifyDataSetChanged();
                 refresh.setRefreshing(false);
             }

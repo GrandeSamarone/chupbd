@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,18 +22,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_resultado.Adapter_resultado_digital_masc;
-import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.detalhe_votacao_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.digital_influencer.Lista_digital_masc;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_Pessoa_masc;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -45,7 +39,6 @@ import com.google.firebase.database.Query;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -73,8 +66,9 @@ public class Resultado_digital_masc extends AppCompatActivity implements SwipeRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultado_digital_masc);
+
         toolbar = findViewById(R.id.toolbarsecundario_sem_foto);
-        toolbar.setTitle("Resultado");
+        toolbar.setTitle("Resultado Final");
         setSupportActionBar(toolbar);
         refresh = findViewById(R.id.atualizar_resultado_digital_masc);
         refresh.setOnRefreshListener(Resultado_digital_masc.this);
@@ -94,7 +88,7 @@ public class Resultado_digital_masc extends AppCompatActivity implements SwipeRe
                 .child("votacao").child("categorias").child("digital_influence_masc").orderByChild("votos");
         //recycleview
         recyclerViewresultado = findViewById(R.id.resultado_digital_masc);
-        recyclerViewresultado.setHasFixedSize(true);
+        //recyclerViewresultado.setHasFixedSize(true);
         mManager = new LinearLayoutManager(this);
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
@@ -103,18 +97,21 @@ public class Resultado_digital_masc extends AppCompatActivity implements SwipeRe
 
         recyclerViewresultado.setAdapter(adapter);
         //Aplicar Evento click
-        recyclerViewresultado.addOnItemTouchListener(new RecyclerItemClickListener(this,
+
+
+
+   /*     recyclerViewresultado.addOnItemTouchListener(new RecyclerItemClickListener(this,
                 recyclerViewresultado, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 List<Categoria_Pessoa_masc> listCategoriaAtualizado = adapter.getcategoria();
-
                 if (listCategoriaAtualizado.size() > 0) {
                     Categoria_Pessoa_masc categoriaselecionada = listCategoriaAtualizado.get(position);
                     Intent it = new Intent(Resultado_digital_masc.this,detalhe_votacao_masc.class);
                     it.putExtra("categoria_selecionada", categoriaselecionada);
                     it.putExtra("link","digital_influence_masc");
                     startActivity(it);
+                    finish();
                 }
             }
 
@@ -128,9 +125,8 @@ public class Resultado_digital_masc extends AppCompatActivity implements SwipeRe
 
             }
         }));
+*/
 
-
-getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -140,11 +136,9 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         preferences = getSharedPreferences("primeiravezvotacao", MODE_PRIVATE);
         if (preferences.getBoolean("primeiravezvotacao", true)) {
             preferences.edit().putBoolean("primeiravezvotacao", false).apply();
-            Dialog_informacao();
+          //  Dialog_informacao();
         } else {
-            Toast toast = Toast.makeText(Resultado_digital_masc.this, "Voto confirmado com sucesso!",Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-            toast.show();
+
         }
     }
 
@@ -188,7 +182,7 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     private void tela_finalizar(){
         android.app.AlertDialog.Builder msgbox = new android.app.AlertDialog.Builder(Resultado_digital_masc.this);
         //configurando o titulo
-        msgbox.setTitle("Deseja realmente finalizar?");
+        msgbox.setTitle("Deseja finalizar?");
         // configurando a mensagem
       //  msgbox.setMessage("Deseja Realmente Sair? ");
         // Botao negativo
@@ -197,7 +191,7 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int wich) {
-                      Intent it = new Intent(Resultado_digital_masc.this, Tela_Inicial_Votacao_Activity.class);
+                      Intent it = new Intent(Resultado_digital_masc.this, Lista_digital_masc.class);
                       startActivity(it);
                       finish();
                     }
@@ -216,13 +210,13 @@ getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void RecuperarResultado_digital_masc(){
-
         lista_digital_influence.clear();
         valuedigitalListener = mDatabase_digital.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Categoria_Pessoa_masc cat = dataSnapshot.getValue(Categoria_Pessoa_masc.class);
                 lista_digital_influence.add(cat);
+               // Collections.reverse(lista_digital_influence);
                 adapter.notifyDataSetChanged();
                 refresh.setRefreshing(false);
             }

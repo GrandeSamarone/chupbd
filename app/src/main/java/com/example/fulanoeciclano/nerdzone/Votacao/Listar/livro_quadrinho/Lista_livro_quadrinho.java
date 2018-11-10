@@ -80,10 +80,11 @@ public class Lista_livro_quadrinho extends AppCompatActivity implements SwipeRef
         setContentView(R.layout.activity_lista_livro_quadrinho);
 
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Livro Quadrinho");
+        toolbar.setTitle("Livro/Quadrinho");
         setSupportActionBar(toolbar);
 
         //Configuracoes Originais
+        linear_nada_cadastrado=findViewById(R.id.linear_nada_cadastrado_livro);
         novo_influencer = findViewById(R.id.buton_novo_livro_quad);
         novo_influencer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +98,6 @@ public class Lista_livro_quadrinho extends AppCompatActivity implements SwipeRef
         //Configuraçoes iniciais
         icone = findViewById(R.id.icone_user_toolbar);
         linearerro=findViewById(R.id.linearinformacoeserro_mercado);
-        linear_nada_cadastrado = findViewById(R.id.linear_nada_cadastrado);
         errobusca = findViewById(R.id.textoerrobusca_mercado);
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         digital = new Categoria_pessoa_fem();
@@ -177,13 +177,16 @@ public class Lista_livro_quadrinho extends AppCompatActivity implements SwipeRef
     }
 
     private void RecuperarLista_digital_fem(){
-
+       linear_nada_cadastrado.setVisibility(View.VISIBLE);
         lista_digital_influence.clear();
         valuedigitalListener = mDatabase_digital.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Categoria_livro_quadrinho cat = dataSnapshot.getValue(Categoria_livro_quadrinho.class);
                 lista_digital_influence.add(cat);
+                if(lista_digital_influence.size()>0){
+                    linear_nada_cadastrado.setVisibility(View.GONE);
+                }
 
                 adapter.notifyDataSetChanged();
                 refresh.setRefreshing(false);

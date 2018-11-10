@@ -23,7 +23,7 @@
             <TextView
                 android:id="@+id/texttitulo_categoria_resultado"
                 style="@style/AppTheme.Subheader"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/capacategoria__resultado"
                 android:text="titulo"
@@ -36,7 +36,12 @@
                 android:ellipsize="end"
                 android:maxLines="1" />
 
-
+<ImageView
+    android:layout_marginRight="4dp"
+    android:layout_alignParentRight="true"
+    android:id="@+id/img_posicao"
+    android:layout_width="24sp"
+    android:layout_height="24sp" />
         <me.ithebk.barchart.BarChart
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@+id/capacategoria__resultado"

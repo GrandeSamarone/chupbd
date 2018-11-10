@@ -1,11 +1,22 @@
 package com.example.fulanoeciclano.nerdzone.Votacao;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
+import com.bumptech.glide.Glide;
+import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
+import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
+import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.canal_youtube.Lista_canal_youtube_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.cinema.Lista_cinema_Activity;
@@ -27,18 +38,38 @@ import com.example.fulanoeciclano.nerdzone.Votacao.Listar.reporter.Lista_reporte
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.reporter.Lista_reporter_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.youtuber.Lista_youtuber_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.youtuber.Lista_youtuber_masc;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.fulanoeciclano.nerdzone.Activits.MainActivity.setWindowFlag;
 
 public class Tela_Inicial_Votacao_Activity extends AppCompatActivity implements View.OnClickListener {
 
     private CardView digit_masc,digital_fem,cosplay_masc,cosplay_fem,portal_noticia,livro_quadrinho,
     youtuber_masc,youtuber_fem,repoter_masc,reporter_fem,cinema,canal_youtube,kpop_masc,kpop_fem,
     espaco_geek,loja_virtual,escritor_masc,escritora_fem,empreendedor_masc,empreendedora_fem;
-
+ private Toolbar toolbar;
+    private CircleImageView icone;
+    private FirebaseUser usuario;
+    private DatabaseReference database_usuario;
+    private ChildEventListener ChildEventListenerperfil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela__inicial__votacao_);
+        toolbar = findViewById(R.id.toolbarsecundario);
+        toolbar.setTitle("PRÊMIO NERD ROCK");
+        setSupportActionBar(toolbar);
 
+
+        icone = findViewById(R.id.icone_user_toolbar);
+        database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         digit_masc = findViewById(R.id.digital_influencer_masc);
         digit_masc.setOnClickListener(this);
         digital_fem = findViewById(R.id.digital_influencer_fem);
@@ -79,8 +110,36 @@ public class Tela_Inicial_Votacao_Activity extends AppCompatActivity implements 
         empreendedor_masc.setOnClickListener(this);
         empreendedora_fem = findViewById(R.id.empreendedora_fem);
         empreendedora_fem.setOnClickListener(this);
+
+
+        TrocarFundos_status_bar();
+        CarregarDados_do_Usuario();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+
+
+    //Botao Voltar
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+
+                Intent it =new Intent(Tela_Inicial_Votacao_Activity.this, MainActivity.class);
+                startActivity(it);
+                finish();
+
+
+
+                break;
+
+            default:
+                break;
+        }
+
+        return true;
+    }
     @Override
     public void onClick(View v) {
 
@@ -185,5 +244,77 @@ public class Tela_Inicial_Votacao_Activity extends AppCompatActivity implements 
                 startActivity(empreendedora_fem);
                 break;
          }
+    }
+
+
+
+    private void CarregarDados_do_Usuario(){
+        usuario = UsuarioFirebase.getUsuarioAtual();
+        String email = usuario.getEmail();
+        ChildEventListenerperfil=database_usuario.orderByChild("tipoconta").equalTo(email).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                assert perfil != null;
+
+
+                String iconeurl = perfil.getFoto();
+                icone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(Tela_Inicial_Votacao_Activity.this, MinhaConta.class);
+                        startActivity(it);
+
+                    }
+                });
+                Glide.with(Tela_Inicial_Votacao_Activity.this)
+                        .load(iconeurl)
+                        .into(icone);
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void TrocarFundos_status_bar(){
+        //mudando a cor do statusbar
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+            //  systemBarTintManager.setStatusBarTintDrawable(Mydrawable);
+        }
+        //make fully Android Transparent Status bar
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().setNavigationBarColor(Color.parseColor("#1565c0"));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setNavigationBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.drawable.gradiente_toolbarstatusbar);
+        }
     }
 }
