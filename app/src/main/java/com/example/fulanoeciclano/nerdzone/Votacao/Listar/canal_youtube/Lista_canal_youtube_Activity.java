@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_Canal_do_youtube;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.canal_do_youtube.Novo_canal_youtube;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_canal_youtube;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_youtube;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
@@ -84,7 +83,7 @@ public class Lista_canal_youtube_Activity extends AppCompatActivity implements S
         setContentView(R.layout.activity_lista_canal_youtube_);
 
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Canal do Youtube");
+        toolbar.setTitle("Canal de Youtube");
         setSupportActionBar(toolbar);
 
         //Configuracoes Originais
@@ -293,9 +292,6 @@ public class Lista_canal_youtube_Activity extends AppCompatActivity implements S
         switch (item.getItemId()) {
 
             case android.R.id.home:
-
-                Intent it =new Intent(Lista_canal_youtube_Activity.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

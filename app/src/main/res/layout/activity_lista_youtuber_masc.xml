@@ -32,6 +32,7 @@
             <LinearLayout
                 android:id="@+id/linear_nada_cadastrado_youtube_masc"
                 android:visibility="gone"
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

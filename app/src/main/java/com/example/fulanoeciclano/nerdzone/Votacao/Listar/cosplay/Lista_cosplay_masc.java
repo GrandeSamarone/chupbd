@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_cosplay_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.cosplay.novo_cosplay_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_cosplay_masc;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_cosplay_masc;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -287,8 +286,6 @@ public class Lista_cosplay_masc extends AppCompatActivity implements SwipeRefres
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_cosplay_masc.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

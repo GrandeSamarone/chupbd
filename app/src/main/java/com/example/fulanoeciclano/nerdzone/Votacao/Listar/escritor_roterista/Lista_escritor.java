@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_escritor_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.escritor_roterista.novo_escritor_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_escritor_roterista;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_escritor_masc;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -283,8 +282,6 @@ public class Lista_escritor extends AppCompatActivity implements SwipeRefreshLay
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_escritor.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

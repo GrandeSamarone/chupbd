@@ -23,16 +23,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
-import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_categoria_pessoa_masc;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Model.Usuario;
-import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_Pessoa_masc;
 import com.example.fulanoeciclano.nerdzone.R;
+import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_categoria_pessoa_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.digital_influencer.novo_digital_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.detalhe_votacao_masc;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
+import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_Pessoa_masc;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -108,7 +107,9 @@ public class Lista_digital_masc extends AppCompatActivity implements SwipeRefres
         refresh.post(new Runnable() {
             @Override
             public void run() {
-
+                CarregarDados_do_Usuario();
+                TrocarFundos_status_bar();
+                RecuperarLista_digital_masc();
             }
         });
         refresh.setColorSchemeResources
@@ -160,13 +161,6 @@ public class Lista_digital_masc extends AppCompatActivity implements SwipeRefres
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        CarregarDados_do_Usuario();
-        TrocarFundos_status_bar();
-        RecuperarLista_digital_masc();
-    }
 
     @Override
     protected void onStop() {
@@ -181,7 +175,7 @@ public class Lista_digital_masc extends AppCompatActivity implements SwipeRefres
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                  Categoria_Pessoa_masc cat = dataSnapshot.getValue(Categoria_Pessoa_masc.class);
-                 lista_digital_influence.add(cat);
+                 lista_digital_influence.add(0,cat);
                  if(lista_digital_influence.size()>0){
                      linear_nada_cadastrado.setVisibility(View.GONE);
                  }
@@ -292,8 +286,6 @@ RecuperarLista_digital_masc();
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_digital_masc.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

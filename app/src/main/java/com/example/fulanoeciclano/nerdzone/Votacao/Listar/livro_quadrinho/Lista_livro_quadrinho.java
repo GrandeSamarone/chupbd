@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_livro_quadrinho;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.livro_quadrinho.novo_livro_quadrinho;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_livro_quadrinho;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_livro_quadrinho;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_pessoa_fem;
 import com.google.firebase.auth.FirebaseAuth;
@@ -288,8 +287,6 @@ public class Lista_livro_quadrinho extends AppCompatActivity implements SwipeRef
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_livro_quadrinho.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

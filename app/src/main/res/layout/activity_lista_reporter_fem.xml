@@ -35,6 +35,7 @@
             <LinearLayout
                 android:id="@+id/linear_nada_cadastrado_reporter_fem"
                 android:visibility="gone"
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

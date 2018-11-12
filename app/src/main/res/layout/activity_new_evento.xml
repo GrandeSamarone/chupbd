@@ -154,6 +154,7 @@
             </LinearLayout>
 
             <Button
+                android:layout_margin="8dp"
                 android:id="@+id/btn_salvar_topico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -20,9 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.ChatActivity;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Comercio_perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Contos_perfil_Fragment;
-import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Evento_perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.FanArts_perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Fragments.perfil.Topico_Perfil_Fragment;
 import com.example.fulanoeciclano.nerdzone.Helper.Main;
@@ -107,8 +105,8 @@ public class Perfil extends AppCompatActivity implements Main, View.OnClickListe
                         .add("TÓPICOS", Topico_Perfil_Fragment.class)
                         .add("CONTOS", Contos_perfil_Fragment.class)
                         .add("FANARTS",FanArts_perfil_Fragment.class)
-                        .add("COMÉRCIO",Comercio_perfil_Fragment.class)
-                        .add("EVENTO",Evento_perfil_Fragment.class)
+                        //.add("COMÉRCIO",Comercio_perfil_Fragment.class)
+                       // .add("EVENTO",Evento_perfil_Fragment.class)
                         // .add("Tops", RankFragment.class)
                         .create()
         );

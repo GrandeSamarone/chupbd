@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_reporter_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.reporter.novo_reporter_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_reporter_masc;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_reporter_masc;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
@@ -293,8 +292,7 @@ public class Lista_reporter_masc extends AppCompatActivity implements SwipeRefre
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_reporter_masc.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
+
                 finish();
 
 

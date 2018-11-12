@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ import com.example.fulanoeciclano.nerdzone.Conto.ListaConto;
 import com.example.fulanoeciclano.nerdzone.Evento.DetalheEvento;
 import com.example.fulanoeciclano.nerdzone.Evento.Evento_Lista;
 import com.example.fulanoeciclano.nerdzone.FanArts.Lista_Arts;
+import com.example.fulanoeciclano.nerdzone.Feed.FeedActivity;
 import com.example.fulanoeciclano.nerdzone.Helper.RecyclerItemClickListener;
 import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
 import com.example.fulanoeciclano.nerdzone.Mercado.Detalhe_Mercado;
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements
     private TextView maiseventoTxt,maiscomercioTxt,maistopicoTxt,maiscontoTxt,maisfanartsTxt;
 
     private Toolbar toolbar;
+    private CardView votacao;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout mdrawer;
     private CircleImageView img_drawer,img_toolbar;
@@ -123,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements
     private DatabaseReference database;
     private SwipeRefreshLayout swipe;
     SharedPreferences sPreferences = null;
+    private LinearLayout line_conto,line_art,line_comercio,line_evento,line_topico;
 
 
     @Override
@@ -131,6 +136,20 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
             //Configuraçoes Originais
+        line_art= findViewById(R.id.nada_encontrado_art_inicial);
+        line_comercio=findViewById(R.id.nada_encontrado_mercado_inicial);
+        line_conto = findViewById(R.id.nada_encontrado_contos_inicial);
+        line_evento = findViewById(R.id.nada_encontrado_evento_inicial);
+        line_topico = findViewById(R.id.nada_encontrado_topico_inicial);
+        votacao=findViewById(R.id.card_votacao);
+        votacao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this,Tela_Inicial_Votacao_Activity.class);
+                startActivity(it);
+                finish();
+            }
+        });
         database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
         //Recycle
         recyclerViewListaConto = findViewById(R.id.RecycleViewConto);
@@ -178,6 +197,8 @@ public class MainActivity extends AppCompatActivity implements
                 MainActivity.this, LinearLayoutManager.HORIZONTAL,false);
         recyclerViewArts.setLayoutManager(layoutManagerArt);
         recyclerViewArts.setHasFixedSize(true);
+        layoutManagerArt.setReverseLayout(true);
+        layoutManagerArt.setStackFromEnd(true);
         adapterArte = new Adapter_FanArtsInicial(listaArt,MainActivity.this);
         recyclerViewArts.setAdapter(adapterArte);
 
@@ -308,14 +329,16 @@ public class MainActivity extends AppCompatActivity implements
     //recupera e nao deixa duplicar
     public void RecuperarEvento(){
         ListaEvento.clear();
-
+      line_evento.setVisibility(View.VISIBLE);
         valueEventListenerEvento =GibiEventos.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot estado : dataSnapshot.getChildren()) {
                     Evento evento = estado.getValue(Evento.class);
                     ListaEvento.add(0, evento);
-
+                    if(ListaEvento.size()>0){
+                        line_evento.setVisibility(View.INVISIBLE);
+                    }
                     adapterEvento.notifyDataSetChanged();
                     swipe.setRefreshing(false);
                 }
@@ -340,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements
     //recupera e nao deixa duplicar
     public void RecuperarMercado(){
         listaGibiComercio.clear();
+        line_comercio.setVisibility(View.VISIBLE);
        valueEventListenerMercado=GibiMercado.addChildEventListener(new ChildEventListener() {
            @Override
            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -347,6 +371,9 @@ public class MainActivity extends AppCompatActivity implements
                    for (DataSnapshot categoria : estado.getChildren()) {
                            Comercio comercio = categoria.getValue(Comercio.class);
                            listaGibiComercio.add(0,comercio);
+                           if(listaGibiComercio.size()>0){
+                               line_comercio.setVisibility(View.GONE);
+                           }
                            adapterMercado.notifyDataSetChanged();
                            swipe.setRefreshing(false);
 
@@ -373,12 +400,15 @@ public class MainActivity extends AppCompatActivity implements
     //recupera e nao deixa duplicar
     public void RecuperarTopico(){
         ListaTopico.clear();
+        line_topico.setVisibility(View.VISIBLE);
         valueEventListenerTopico =Database_Topico.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Topico topicos = dataSnapshot.getValue(Topico.class);
                     ListaTopico.add(0, topicos);
-
+                    if(ListaTopico.size()>0){
+                        line_topico.setVisibility(View.GONE);
+                    }
                     adapterTopico.notifyDataSetChanged();
                     swipe.setRefreshing(false);
                 }
@@ -401,12 +431,15 @@ public class MainActivity extends AppCompatActivity implements
 
     public void RecuperarConto(){
         ListaContos.clear();
-
+        line_conto.setVisibility(View.VISIBLE);
         valueEventListenerContos =Database_Conto.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Conto conto = dataSnapshot.getValue(Conto.class);
                 ListaContos.add(0,conto);
+                if(ListaContos.size()>0){
+                    line_conto.setVisibility(View.GONE);
+                }
                 adapterConto.notifyDataSetChanged();
                 swipe.setRefreshing(false);
             }
@@ -436,13 +469,15 @@ public class MainActivity extends AppCompatActivity implements
 
     public void RecuperarArt(){
         listaArt.clear();
-
+         line_art.setVisibility(View.VISIBLE);
         valueEventListenerArt =Database_Art.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     FanArts fanArts = dataSnapshot.getValue(FanArts.class);
                     listaArt.add(fanArts);
-
+                    if(listaArt.size()>0){
+                        line_art.setVisibility(View.GONE);
+                    }
                     adapterArte.notifyDataSetChanged();
                     swipe.setRefreshing(false);
             }
@@ -702,7 +737,7 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
         if (id == R.id.feed_menu) {
-            Intent it = new Intent(MainActivity.this,Tela_Inicial_Votacao_Activity.class);
+            Intent it = new Intent(MainActivity.this,FeedActivity.class);
             startActivity(it);
         }else if (id == R.id.minhascolecoes_menu) {
             Intent it = new Intent(MainActivity.this,Minhas_Colecoes.class);

@@ -1,22 +1,22 @@
 package com.example.fulanoeciclano.nerdzone.Votacao;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Activits.MainActivity;
-import com.example.fulanoeciclano.nerdzone.Activits.MinhaConta;
 import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
-import com.example.fulanoeciclano.nerdzone.Helper.UsuarioFirebase;
-import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.canal_youtube.Lista_canal_youtube_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.cinema.Lista_cinema_Activity;
@@ -40,8 +40,6 @@ import com.example.fulanoeciclano.nerdzone.Votacao.Listar.youtuber.Lista_youtube
 import com.example.fulanoeciclano.nerdzone.Votacao.Listar.youtuber.Lista_youtuber_masc;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -57,19 +55,20 @@ public class Tela_Inicial_Votacao_Activity extends AppCompatActivity implements 
  private Toolbar toolbar;
     private CircleImageView icone;
     private FirebaseUser usuario;
+    private LinearLayout botaovoltar,informacao;
     private DatabaseReference database_usuario;
     private ChildEventListener ChildEventListenerperfil;
+    private Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela__inicial__votacao_);
-        toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("PRÊMIO NERD ROCK");
-        setSupportActionBar(toolbar);
 
 
-        icone = findViewById(R.id.icone_user_toolbar);
         database_usuario = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
+        informacao=findViewById(R.id.votacao_informacao);
+        informacao.setOnClickListener(this);
         digit_masc = findViewById(R.id.digital_influencer_masc);
         digit_masc.setOnClickListener(this);
         digital_fem = findViewById(R.id.digital_influencer_fem);
@@ -110,11 +109,12 @@ public class Tela_Inicial_Votacao_Activity extends AppCompatActivity implements 
         empreendedor_masc.setOnClickListener(this);
         empreendedora_fem = findViewById(R.id.empreendedora_fem);
         empreendedora_fem.setOnClickListener(this);
+        botaovoltar = findViewById(R.id.votacao_button_back);
+        botaovoltar.setOnClickListener(this);
 
 
         TrocarFundos_status_bar();
-        CarregarDados_do_Usuario();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
 
@@ -243,11 +243,36 @@ public class Tela_Inicial_Votacao_Activity extends AppCompatActivity implements 
                 Intent empreendedora_fem= new Intent(Tela_Inicial_Votacao_Activity.this, Lista_empreendedora.class);
                 startActivity(empreendedora_fem);
                 break;
+            case R.id.votacao_button_back:
+                Intent voltar= new Intent(Tela_Inicial_Votacao_Activity.this, MainActivity.class);
+                startActivity(voltar);
+                finish();
+                break;
+            case  R.id.votacao_informacao:
+                Dialog_duvida();
          }
     }
 
 
 
+    private void Dialog_duvida() {
+        LayoutInflater li = getLayoutInflater();
+        View view = li.inflate(R.layout.dialog_informacao_votacao, null);
+        view.findViewById(R.id.botaoentendi).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                //desfaz o dialog_opcao_foto.
+                dialog.dismiss();
+            }
+        });
+        //Dialog de tela
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
+
+    }
+
+/*
     private void CarregarDados_do_Usuario(){
         usuario = UsuarioFirebase.getUsuarioAtual();
         String email = usuario.getEmail();
@@ -287,7 +312,7 @@ public class Tela_Inicial_Votacao_Activity extends AppCompatActivity implements 
             }
         });
     }
-
+*/
 
     private void TrocarFundos_status_bar(){
         //mudando a cor do statusbar

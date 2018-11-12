@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -92,7 +91,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
     private AlertDialog dialog;
 
 
-    private FloatingActionButton botaoSalvar;
+    private Button botaoSalvar;
     private ChildEventListener ChildEventListenerevento;
 
     @Override
@@ -103,7 +102,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
         Log.i("dataa", String.valueOf(calendar12.getTime()));
         //Configuraçoes
         toolbar = findViewById(R.id.toolbarsecundario);
-        toolbar.setTitle("Editar Evento");
+        toolbar.setTitle("Editando informações");
         setSupportActionBar(toolbar);
 
 
@@ -164,19 +163,13 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
                     }
-
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
                     }
-
                     @Override
                     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
@@ -351,7 +344,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
 
 
     private void validardados() {
-        String idUsuario = ConfiguracaoFirebase.getIdUsuario();
+
 
        String imgcapa = eventos.getCapaevento();
 
@@ -391,7 +384,7 @@ public class Edit_evento_Activity extends AppCompatActivity implements DatePicke
 
                     }
                 });
-                meuDatabaseEvento.child(idUsuario).child(evento.getUid()).setValue(evento).addOnCompleteListener(new OnCompleteListener<Void>() {
+                meuDatabaseEvento.child(identificadorUsuario).child(evento.getUid()).setValue(evento).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         dialog.dismiss();

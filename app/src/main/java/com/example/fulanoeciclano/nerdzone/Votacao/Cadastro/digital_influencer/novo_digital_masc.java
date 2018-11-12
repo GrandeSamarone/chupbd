@@ -96,7 +96,7 @@ public class novo_digital_masc extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_novo_digital_masc);
 
         toolbar = findViewById(R.id.toolbarsecundario_sem_foto);
-        toolbar.setTitle("Novo");
+        toolbar.setTitle("Novo D.Influencer Masculino");
         setSupportActionBar(toolbar);
 
         //Configuração Basica

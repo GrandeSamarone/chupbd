@@ -62,22 +62,6 @@ public class TopicoAdapterPagInicial  extends RecyclerView.Adapter<TopicoAdapter
                         Usuario perfil = dataSnapshot.getValue(Usuario.class );
                         assert perfil != null;
 
-
-                        if(perfil.getFoto()!=null){
-                            Uri uri = Uri.parse(perfil.getFoto());
-                            Glide.with(context)
-                                    .load(uri)
-                                    .into( holder.icone );
-                        }else{
-                            holder.icone.setImageResource(R.drawable.fundo_user);
-                        }
-                    }
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        Usuario perfil = dataSnapshot.getValue(Usuario.class );
-                        assert perfil != null;
-
-
                         if(perfil.getFoto()!=null){
                             Uri uri = Uri.parse(perfil.getFoto());
                             Glide.with(context.getApplicationContext())
@@ -86,6 +70,10 @@ public class TopicoAdapterPagInicial  extends RecyclerView.Adapter<TopicoAdapter
                         }else{
                             holder.icone.setImageResource(R.drawable.fundo_user);
                         }
+                        holder.topicoautor.setText(perfil.getNome());
+                    }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     }
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -114,11 +102,12 @@ public class TopicoAdapterPagInicial  extends RecyclerView.Adapter<TopicoAdapter
     public class MyviewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView icone;
-        TextView topiconome;
+        TextView topiconome,topicoautor;
         LinearLayout eventolayout;
         CardView card;
         public MyviewHolder(View itemView) {
             super(itemView);
+            topicoautor=itemView.findViewById(R.id.topico_autor_pag_inicial);
           topiconome = itemView.findViewById(R.id.titulotopico_adapter);
          icone = itemView.findViewById(R.id.iconetopico_adapter);
 

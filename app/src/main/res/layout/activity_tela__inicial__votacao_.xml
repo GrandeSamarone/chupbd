@@ -1,30 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-
     android:background="@drawable/fundo_votaco1"
     android:layout_height="match_parent"
     tools:context=".Votacao.Tela_Inicial_Votacao_Activity">
-
-    <include android:id="@+id/toolbar"
-        android:visibility="gone"
-        layout="@layout/toolbarsecundario"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+           <LinearLayout
+               android:padding="8dp"
+               android:id="@+id/votacao_button_back"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <ImageView
+
+                   android:layout_width="24dp"
+                   android:layout_height="24dp"
+                   android:src="@drawable/ic_back" />
+           </LinearLayout>
+
+
+           <LinearLayout
+               android:layout_marginRight="8dp"
+               android:layout_alignParentRight="true"
+               android:padding="8dp"
+               android:id="@+id/votacao_informacao"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <ImageView
+
+                   android:layout_width="24dp"
+                   android:layout_height="24dp"
+                   android:src="@drawable/information_premio" />
+           </LinearLayout>
     <LinearLayout
-       android:layout_marginTop="190dp"
+
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:padding="10dp"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="180dp" />
             <LinearLayout
                 android:clipToPadding="false"
                 android:gravity="center"
@@ -552,7 +580,7 @@
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
-                        android:text="Canal do YouTube"/>
+                        android:text="Canal de YouTube"/>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -816,7 +844,7 @@
                     <ImageView
                         android:layout_width="64dp"
                         android:layout_height="64dp"
-                        android:background="@drawable/escritor"
+                        android:background="@drawable/escritora"
                         android:padding="10dp"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -933,5 +961,6 @@
         </LinearLayout>
 
     </LinearLayout>
+       </RelativeLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

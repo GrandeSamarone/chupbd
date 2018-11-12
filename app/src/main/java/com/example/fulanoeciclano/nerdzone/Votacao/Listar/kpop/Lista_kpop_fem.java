@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_kpop_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.kpop.novo_kpop_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_kpop_fem;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_kpop_fem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -286,8 +285,6 @@ public class Lista_kpop_fem extends AppCompatActivity implements SwipeRefreshLay
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_kpop_fem.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

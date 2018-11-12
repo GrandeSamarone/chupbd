@@ -30,7 +30,8 @@
                 />
             <LinearLayout
                 android:id="@+id/linear_nada_cadastrado_cosplay_masc"
-
+                android:layout_margin="8dp"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

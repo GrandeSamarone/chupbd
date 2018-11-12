@@ -32,7 +32,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_youtuber_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.youtuber.novo_youtuber_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_youtube_fem;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_Pessoa_masc;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_youtuber_fem;
 import com.google.firebase.auth.FirebaseAuth;
@@ -289,8 +288,7 @@ public class Lista_youtuber_fem extends AppCompatActivity implements SwipeRefres
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_youtuber_fem.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
+
                 finish();
 
 

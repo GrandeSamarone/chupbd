@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_categoria_portal_noticia;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.portal_de_noticia.novo_portal_de_noticia;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_portal_noticia;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_cosplay_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_portal_noticia;
 import com.google.firebase.auth.FirebaseAuth;
@@ -293,8 +292,6 @@ public class Lista_portal_noticia extends AppCompatActivity implements SwipeRefr
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_portal_noticia.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

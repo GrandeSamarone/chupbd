@@ -52,6 +52,7 @@ public class Adapter_FanArts extends RecyclerView.Adapter<Adapter_FanArts.MyView
 
         }
 
+
    }
 
     @Override
@@ -62,6 +63,7 @@ public class Adapter_FanArts extends RecyclerView.Adapter<Adapter_FanArts.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder {
        private ImageView img;
        private ProgressBar progresso;
+
 
        public MyViewHolder(View itemView) {
             super(itemView);

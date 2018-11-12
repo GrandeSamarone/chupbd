@@ -29,6 +29,7 @@
                 android:scrollbars="vertical"
                 />
             <LinearLayout
+                android:layout_margin="8dp"
                 android:id="@+id/linear_nada_cadastrado_kpop_masc"
                 android:visibility="gone"
                 android:layout_width="match_parent"

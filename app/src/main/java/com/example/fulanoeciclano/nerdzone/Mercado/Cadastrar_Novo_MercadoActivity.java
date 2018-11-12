@@ -212,7 +212,9 @@ public class Cadastrar_Novo_MercadoActivity extends AppCompatActivity implements
                             comercio.setFotos(listaURLFotos);
                             comercio.salvar(seguidoresSnapshot);
                             dialog.dismiss();
-                            finish();
+                           Intent it = new Intent(Cadastrar_Novo_MercadoActivity.this,MercadoActivity.class);
+                           startActivity(it);
+                           finish();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

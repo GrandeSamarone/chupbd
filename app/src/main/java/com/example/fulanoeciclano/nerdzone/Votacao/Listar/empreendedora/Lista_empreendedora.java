@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_empreendedora_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.empreendedor.novo_empreendedora_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_empreendedora;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_empreendedora;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -280,9 +279,6 @@ public class Lista_empreendedora extends AppCompatActivity implements SwipeRefre
         switch (item.getItemId()) {
 
             case android.R.id.home:
-
-                Intent it =new Intent(Lista_empreendedora.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

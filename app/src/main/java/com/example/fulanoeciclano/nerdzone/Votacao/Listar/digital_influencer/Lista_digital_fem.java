@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_categoria_pessoa_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.digital_influencer.novo_digital_fem;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.detalhe_votacao_fem;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_pessoa_fem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -284,9 +283,6 @@ public class Lista_digital_fem extends AppCompatActivity implements SwipeRefresh
         switch (item.getItemId()) {
 
             case android.R.id.home:
-
-                Intent it =new Intent(Lista_digital_fem.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

@@ -140,6 +140,8 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
             public void onClick(View v) {
                 Intent it = new Intent(MercadoActivity.this, Cadastrar_Novo_MercadoActivity.class);
                 startActivity(it);
+                finish();
+
 
 
             }
@@ -201,7 +203,6 @@ public class MercadoActivity extends AppCompatActivity implements SwipeRefreshLa
         CarregarDados_do_Usuario();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
 
 
     @Override

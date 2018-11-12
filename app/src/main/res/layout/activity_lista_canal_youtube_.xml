@@ -54,7 +54,7 @@
             <LinearLayout
                 android:id="@+id/linearinformacoeserro_mercado"
                 android:visibility="gone"
-
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

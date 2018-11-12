@@ -1,22 +1,27 @@
 package com.example.fulanoeciclano.nerdzone.FanArts;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.fulanoeciclano.nerdzone.Abrir_Imagem.AbrirImagem_Art;
@@ -54,6 +59,10 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
     private RecyclerView recyclerView_lista_arts;
     private ArrayList<FanArts> ListaFanarts = new ArrayList<>();
     private ChildEventListener valueEventListenerFanarts;
+    private LinearLayout linear_nada_cadastrado;
+    private SharedPreferences preferences = null;
+    private Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +83,19 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
                 CarregarDados_do_Usuario();
                 TrocarFundos_status_bar();
                 RecuperarArts();
+                preferences = getSharedPreferences("primeiravezats", MODE_PRIVATE);
+                if (preferences.getBoolean("primeiravezats", true)) {
+                    preferences.edit().putBoolean("primeiravezats", false).apply();
+                    Dialog_Primeiravez();
+                }
             }
         });
         refresh.setColorSchemeResources
                 (R.color.colorPrimaryDark, R.color.amareloclaro,
                         R.color.accent);
+
         //Configuraçoes Basicas
+        linear_nada_cadastrado=findViewById(R.id.linear_nada_cadastrado_fanats);
         botaoMaisArts=findViewById(R.id.buton_nova_fanarts);
         botaoMaisArts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,12 +156,16 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
 
 
     private void RecuperarArts(){
+        linear_nada_cadastrado.setVisibility(View.VISIBLE);
         ListaFanarts.clear();
         valueEventListenerFanarts = database_fanarts.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 FanArts fanArts = dataSnapshot.getValue(FanArts.class);
                 ListaFanarts.add(0,fanArts);
+                if(ListaFanarts.size()>0){
+                    linear_nada_cadastrado.setVisibility(View.GONE);
+                }
                 adapter_fanArts.notifyDataSetChanged();
                 refresh.setRefreshing(false);
             }
@@ -266,6 +286,21 @@ public class Lista_Arts extends AppCompatActivity implements SwipeRefreshLayout.
             }
         });
     }
+    private void Dialog_Primeiravez() {
+        LayoutInflater li = getLayoutInflater();
+        View view = li.inflate(R.layout.dialog_informacao_art, null);
+        view.findViewById(R.id.botaoentendi).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                //desfaz o dialog_opcao_foto.
+                dialog.dismiss();
+            }
+        });
+        //Dialog de tela
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
 
+    }
 
 }

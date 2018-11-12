@@ -87,6 +87,7 @@ public int getItemCount() {
 
 public class MyViewHolder extends RecyclerView.ViewHolder {
     private SimpleDraweeView img;
+
     private CardView card;
 
 

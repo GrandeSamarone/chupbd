@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_loja_virtual;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.loja_virtual.novo_loja_virtual;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_Loja_virtual;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_loja_virtual;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -283,8 +282,7 @@ public class Lista_loja_vitural extends AppCompatActivity implements SwipeRefres
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_loja_vitural.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
+
                 finish();
 
 

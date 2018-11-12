@@ -11,8 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.fulanoeciclano.nerdzone.Config.ConfiguracaoFirebase;
 import com.example.fulanoeciclano.nerdzone.Helper.CircleProgressDrawable;
 import com.example.fulanoeciclano.nerdzone.Model.Comercio;
+import com.example.fulanoeciclano.nerdzone.Model.Usuario;
 import com.example.fulanoeciclano.nerdzone.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -21,6 +23,10 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -31,7 +37,8 @@ import java.util.List;
 public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHolder> {
     private Context context;
     private List<Comercio> comercios;
-
+    private DatabaseReference database;
+    private ChildEventListener ChildEventListenerperfil;
 
     public AdapterMercado(List<Comercio> merc, Context cx){
         this.context = cx;
@@ -75,6 +82,33 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
             holder.mercadocapa.setHierarchy(hierarchy);
         }
 
+
+        database = ConfiguracaoFirebase.getDatabase().getReference().child("usuarios");
+        ChildEventListenerperfil=database.orderByChild("id").equalTo(comercio.getIdAutor())
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Usuario perfil = dataSnapshot.getValue(Usuario.class );
+                        assert perfil != null;
+
+                        holder.autor.setText(perfil.getNome());
+                    }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
     @Override
@@ -85,7 +119,7 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
     public class MyviewHolder extends RecyclerView.ViewHolder {
 
         private  SimpleDraweeView mercadocapa;
-        private  TextView mercadonome;
+        private  TextView mercadonome,autor;
         private  LinearLayout mercadolayout;
         private  CardView card;
         private ProgressBar progresso;
@@ -93,6 +127,7 @@ public class AdapterMercado extends RecyclerView.Adapter<AdapterMercado.MyviewHo
 
         public MyviewHolder(View itemView) {
             super(itemView);
+            autor = itemView.findViewById(R.id.nomeautor_evento);
             card = itemView.findViewById(R.id.cardevento);
             mercadocapa = itemView.findViewById(R.id.iconeevento);
             mercadonome = itemView.findViewById(R.id.nomeevento);

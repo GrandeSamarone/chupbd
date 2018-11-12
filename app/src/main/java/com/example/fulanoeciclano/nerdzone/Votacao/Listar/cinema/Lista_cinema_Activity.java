@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_cinema;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.cinema.novo_cinema;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_cinema;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_cinema;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
@@ -292,9 +291,6 @@ public class Lista_cinema_Activity extends AppCompatActivity implements SwipeRef
         switch (item.getItemId()) {
 
             case android.R.id.home:
-
-                Intent it =new Intent(Lista_cinema_Activity.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 

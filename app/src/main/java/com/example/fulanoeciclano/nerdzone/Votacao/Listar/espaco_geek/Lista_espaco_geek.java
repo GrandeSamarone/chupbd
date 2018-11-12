@@ -31,7 +31,6 @@ import com.example.fulanoeciclano.nerdzone.R;
 import com.example.fulanoeciclano.nerdzone.Votacao.Adapter_votacao.Adapter_espaco_geek;
 import com.example.fulanoeciclano.nerdzone.Votacao.Cadastro.espaco_geek.novo_espaco_geek;
 import com.example.fulanoeciclano.nerdzone.Votacao.Detalhe.Detalhe_espaco_geek;
-import com.example.fulanoeciclano.nerdzone.Votacao.Tela_Inicial_Votacao_Activity;
 import com.example.fulanoeciclano.nerdzone.Votacao.model_votacao.Categoria_espaco_geek;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -289,8 +288,6 @@ public class Lista_espaco_geek extends AppCompatActivity implements SwipeRefresh
 
             case android.R.id.home:
 
-                Intent it =new Intent(Lista_espaco_geek.this, Tela_Inicial_Votacao_Activity.class);
-                startActivity(it);
                 finish();
 
 
