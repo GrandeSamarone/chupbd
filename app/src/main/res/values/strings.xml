@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeGeek teste</string>
+    <string name="app_name">WeGeek</string>
     <string name="buscar_usuario">Ei %1$s, nemhum Usuario Foi encontrado.</string>
     <string name="title_activity_cadastrar_icon_nome_">Cadastrar_icon_nome_Activity</string>
 
@@ -77,10 +77,14 @@
     quer se o primeiro? Vale Prêmios!</string>
     <string name="nda_encontrado_conto">Nemhum conto no momento,seja o primeiro!</string>
     <string name="texto_noticia">Venha participar do maior evento de Manaus, são 20 categorias, inscreva-se, e chame seus amigos.</string>
-    <string name="text_mercado_nd">Seja o Primeiro anunciar, oque quiser!</string>
+    <string name="text_mercado_nd">Nemhum comércio no momento.</string>
     <string name="text_nd_event">Nemhum evento no momento.</string>
     <string name="text_nd_fanart">Quer divulgar sua art? Seja o primeiro!</string>
     <string name="text_nd_topico">Nemhum tópico no momento.</string>
+    <string name="default_notification_channel_id">teste</string>
+    <string name="avalie_nos">Avalie-nos</string>
+    <string name="texto_compartilhar">Ola, sou %1$ estou participando de uma competição no App %2$,vamos lá vote em mim!</string>
+    <string name="regulamento"> 1- 1a Fase - 16/ 11/18 até 25/12/18\n 2- 2a Fase - 26/12/18 até 16/01/19\n \n Observação: 2a Fase o voto será secreto, revelando o campeão no dia do evento.</string>
 
     <string-array name="estados">
         <item>Estado</item>
@@ -111,6 +115,21 @@
         <item>SE</item>
         <item>SP</item>
         <item>TO</item>
+    </string-array>
+    <string-array name="fanartcategoria">
+        <item>Categoria</item>
+        <item>Cosplay</item>
+        <item>Design</item>
+        <item>FanArts</item>
+        <item>Fotografia</item>
+    </string-array>
+
+    <string-array name="suporte">
+        <item>Selecione um Motivo</item>
+        <item>Sugestão</item>
+        <item>Reclamação</item>
+        <item>Elogio</item>
+        <item>Bug</item>
     </string-array>
 
     <string-array name="loja">

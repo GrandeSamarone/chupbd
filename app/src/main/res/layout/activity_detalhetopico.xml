@@ -27,18 +27,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/icone_user_toolbar"
+                        android:id="@+id/icone_chat_toolbar"
                         android:background="@drawable/fundo_user"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="8dp"
+                     android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="8dp"
                         android:layout_marginTop="10dp"/>
+                    <TextView
+                        android:id="@+id/detalhe_topico_titulo"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_toRightOf="@+id/icone_user_toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </RelativeLayout>
 
                 <FrameLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/toolbarsecundario">
+                    android:layout_below="@+id/toolbartopico">
                     <View android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:background="@drawable/toolbar_sombra"/>
@@ -54,20 +61,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/conteudo"
                 android:layout_below="@+id/cabecalho"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
 
-                    android:id="@+id/detalhe_topico_titulo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textColor="@color/pretoescrita"
-                    android:textSize="18sp"
-                    tools:text="Titulo" />
 
                 <TextView
                     android:layout_margin="8dp"

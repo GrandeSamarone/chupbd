@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.fulanoeciclano.nerdzone">
+    package="com.wegeekteste.fulanoeciclano.nerdzone">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -27,6 +27,25 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/favicon" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimaryDark" />
+
+        <service
+            android:name=".Helper.notificacao.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Helper.notificacao.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -171,7 +190,12 @@
         <activity android:name=".Votacao.Resultados.Resultado_escritor_masc" />
         <activity android:name=".Votacao.Resultados.Resultado_escritora_fem" />
         <activity android:name=".Votacao.Resultados.Resultado_empreendedor" />
-        <activity android:name=".Votacao.Resultados.Resultado_empreendedora"></activity>
+        <activity android:name=".Votacao.Resultados.Resultado_empreendedora" />
+        <activity
+            android:name=".Splash.TelaSplash"
+            android:theme="@style/AppCompat.TelaCheia" />
+        <activity android:name=".Conto.DetalheConto" />
+        <activity android:name=".Suporte.SuporteActivity"></activity>
     </application>
 
 </manifest>

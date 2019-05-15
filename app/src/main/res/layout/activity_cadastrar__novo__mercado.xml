@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@color/background"
-    tools:context="com.example.fulanoeciclano.nerdzone.Mercado.Cadastrar_Novo_MercadoActivity">
+   >
 
 
     <include layout="@layout/toolbarsecundario"/>
@@ -112,6 +112,8 @@
             android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:counterEnabled="true"
+            app:counterMaxLength="40"
           >
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/nome_mercado"
@@ -119,6 +121,7 @@
             android:layout_height="wrap_content"
             android:hint="Titulo"
             android:padding="10dp"
+            android:maxLength="40"
             android:background="@drawable/bg_edit_text"
             android:textAlignment="center"
             android:inputType="textMultiLine"
